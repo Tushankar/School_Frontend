@@ -1,0 +1,22 @@
+/* Basic global styles. Tailwind utilities are provided by the CDN script included in _app.js */
+:root {
+  --bg: #f7fafc;
+}
+
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background-color: var(--bg);
+}
+
+/* Example of a custom utility class (non-Tailwind) */
+.card {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  background: white;
+}
