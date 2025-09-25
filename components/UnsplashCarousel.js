@@ -1,203 +1,165 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  Star,
+  DollarSign,
+  Clock,
+  Users,
+  MessageSquare,
+  UserX,
+} from "lucide-react";
 
-// Return the carousel CSS with a customizable height value
-const getCarouselStyle = (height) => `
-.uw-carousel {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  height: ${height};
-  position: relative;
-  overflow: hidden;
-}
-.uw-slide {
-  position: absolute;
-  inset: 0;
-  transition: opacity 800ms ease;
-  opacity: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.uw-slide.active {
-  opacity: 1;
-}
-.uw-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.uw-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.12));
-  pointer-events: none;
-}
-.uw-fallback {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
-  background: #f3f3f3;
-}
-.uw-dots {
-  position: absolute;
-  left: 50%;
-  bottom: 1rem;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.5rem;
-  z-index: 10;
-}
-.uw-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 9999px;
-  background: rgba(255,255,255,0.6);
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-}
-.uw-dot.active {
-  background: rgba(255,255,255,1);
-  box-shadow: 0 0 0 4px rgba(0,0,0,0.08) inset;
-}
-.uw-counter {
-  position: absolute;
-  top: 0.75rem;
-  left: 0.75rem;
-  background: rgba(0,0,0,0.5);
-  color: white;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  z-index: 20;
-}
-`;
-
-export default function UnsplashCarousel({
-  interval = 2500,
-  // height can be a CSS size string (e.g. '70vh', '500px') or a number (pixels)
-  height = "60vh",
-  images = [
+const AboutUs = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const images = [
     "https://www.alrasheedacademy.org/Admin/uploads/657a2bbe855ef1702505406.jpg",
     "https://www.alrasheedacademy.org/Admin/uploads/657a2bca0b9781702505418.jpg",
     "https://www.alrasheedacademy.org/Admin/uploads/657a2bf0ccb0c1702505456.jpg",
-  ],
-}) {
-  const [index, setIndex] = useState(0);
-  const [loaded, setLoaded] = useState({});
-  const [mounted, setMounted] = useState(false);
-
-  // Manage the auto-advance timer with a ref so it isn't recreated on every
-  // index change. This is more robust and lets us restart the timer when the
-  // user manually navigates.
-  const timerRef = useRef(null);
+  ];
 
   useEffect(() => {
-    // ensure we only start the timer on the client after mount (avoid SSR/hydration issues)
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000); // Change image every 3 seconds
 
-  useEffect(() => {
-    if (!mounted) return;
-    if (!images || images.length === 0) return;
-    // clear any existing timer
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setIndex((p) => (p + 1) % images.length);
-    }, interval);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [mounted, images, interval]);
-
-  // debugging: log index changes to the console so we can tell whether
-  // the state is updating or the UI is failing to reflect it.
-  useEffect(() => {
-    console.log("UnsplashCarousel: active index ->", index);
-  }, [index]);
-
-  // preload images and track which are loaded
-  useEffect(() => {
-    const trackers = {};
-    images.forEach((src, i) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
-        trackers[i] = true;
-        setLoaded((s) => ({ ...s, [i]: true }));
-      };
-      img.onerror = () => {
-        trackers[i] = false;
-        setLoaded((s) => ({ ...s, [i]: false }));
-      };
-    });
-  }, [images]);
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   return (
-    <div style={{ backgroundColor: "transparent", padding: 0, margin: 0 }}>
-      {/* Resolve numeric heights to pixels, leave strings as-is */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: getCarouselStyle(
-            typeof height === "number" ? `${height}px` : height
-          ),
-        }}
-      />
-      <div className="uw-carousel">
-        {images.length === 0 && (
-          <div className="uw-fallback">No images configured</div>
-        )}
+    <div className="bg-gray-50 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-center mb-8">
+          <span className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 bg-clip-text text-transparent">
+            Know About Us
+          </span>
+        </h1>
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
+          {/* Left Content */}
+          <div className="space-y-4 lg:space-y-6">
+            <div>
+              <h2 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-light text-gray-800 leading-tight">
+                We Innovate Discover ARA
+                <br />
+                <span className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 bg-clip-text text-transparent font-medium">
+                  Our commitment to fostering compassion and kindness reflects
+                  our dedication to the holistic development of each child and
+                  their smooth integration into our school environment.
+                </span>
+              </h2>
+            </div>
 
-        {images.map((src, i) => (
-          <div
-            key={i}
-            className={`uw-slide ${i === index ? "active" : ""}`}
-            aria-hidden={i === index ? "false" : "true"}
-          >
-            {loaded[i] ? (
-              <img className="uw-img" src={src} alt={`slide-${i}`} />
-            ) : (
-              <div className="uw-fallback">Loading image...</div>
-            )}
+            <div className="space-y-4 lg:space-y-6 text-gray-600 leading-relaxed">
+              <div className="flex items-start sm:items-center gap-3">
+                <DollarSign className="w-5 h-5 text-blue-600 mt-0.5 sm:mt-0" />
+                <p className="text-sm sm:text-base">
+                  Quality education shouldn't come with exorbitant fees.
+                </p>
+              </div>
+              <div className="flex items-start sm:items-center gap-3">
+                <Clock className="w-5 h-5 text-green-600 mt-0.5 sm:mt-0" />
+                <p className="text-sm sm:text-base">
+                  Families deserve a streamlined enrollment process.
+                </p>
+              </div>
+              <div className="flex items-start sm:items-center gap-3">
+                <Users className="w-5 h-5 text-purple-600 mt-0.5 sm:mt-0" />
+                <p className="text-sm sm:text-base">
+                  Students thrive with personalized attention and support.
+                </p>
+              </div>
+              <div className="flex items-start sm:items-center gap-3">
+                <MessageSquare className="w-5 h-5 text-orange-600 mt-0.5 sm:mt-0" />
+                <p className="text-sm sm:text-base">
+                  Open communication between parents, teachers, and students.
+                </p>
+              </div>
+              <div className="flex items-start sm:items-center gap-3">
+                <UserX className="w-5 h-5 text-red-600 mt-0.5 sm:mt-0" />
+                <p className="text-sm sm:text-base">
+                  Direct access to educational excellence without barriers.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => (window.location.href = "/admission")}
+              className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg hover:scale-105 transform transition duration-200 font-medium shadow-md focus:outline-none focus:ring-4 focus:ring-yellow-300 text-sm sm:text-base"
+              aria-label="Enroll Now"
+            >
+              Enroll Now
+            </button>
           </div>
-        ))}
 
-        <div className="uw-overlay" />
-        {/* debug counter to confirm index changes visually */}
-        <div className="uw-counter">
-          {index + 1} / {images.length}
-        </div>
-        {/* pagination dots */}
-        {images && images.length > 0 && (
-          <div
-            className="uw-dots"
-            role="tablist"
-            aria-label="Carousel navigation"
-          >
-            {images.map((_, i) => (
-              <button
-                key={i}
-                className={`uw-dot ${i === index ? "active" : ""}`}
-                aria-label={`Go to slide ${i + 1}`}
-                aria-current={i === index ? "true" : "false"}
-                onClick={() => {
-                  setIndex(i);
-                  // restart timer so the next auto-advance waits a full interval
-                  if (timerRef.current) clearInterval(timerRef.current);
-                  timerRef.current = setInterval(() => {
-                    setIndex((p) => (p + 1) % images.length);
-                  }, interval);
+          {/* Right Content - Images Layout */}
+          <div className="relative">
+            {/* Main larger image - top right */}
+            <div className="relative mb-4">
+              <img
+                src={images[currentImageIndex]}
+                alt="School"
+                className="w-full h-64 object-cover rounded-2xl"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://via.placeholder.com/600x256?text=Image+Not+Available";
                 }}
               />
-            ))}
+              {/* Dots for navigation */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {images.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`w-3 h-3 rounded-full ${
+                      index === currentImageIndex
+                        ? "bg-yellow-400"
+                        : "bg-white bg-opacity-50"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom row with smaller image and rating card */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              {/* Smaller image on the left */}
+              <div className="flex-1 order-2 sm:order-1 relative">
+                <img
+                  src={images[(currentImageIndex + 1) % images.length]}
+                  alt="School"
+                  className="w-full h-40 object-cover rounded-2xl"
+                />
+              </div>
+
+              {/* Rating Card on the right */}
+              <div className="flex-1 bg-white rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col justify-center order-1 sm:order-2">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 gap-1 sm:gap-0">
+                  <span className="text-2xl sm:text-3xl font-bold text-gray-800">
+                    4.9/5
+                  </span>
+                  <span className="text-xs sm:text-sm text-gray-500">
+                    ★ 19,201 reviews
+                  </span>
+                </div>
+
+                <p className="text-xs sm:text-sm text-gray-600 mb-4">
+                  Discover Our TrustScore & Customer Reviews
+                </p>
+
+                <div className="flex space-x-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-5 h-5 fill-green-500 text-green-500"
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default AboutUs;

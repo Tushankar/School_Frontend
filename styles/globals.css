@@ -1,10 +1,13 @@
 /* Basic global styles. Tailwind utilities are provided by the CDN script included in _app.js */
 :root {
   --bg: #f7fafc;
+  --gradient-color: #8350e8;
+  --sparkles-color: #8350e8;
 }
 
 html, body, #__next {
   height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -19,4 +22,37 @@ body {
   border-radius: 0.5rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   background: white;
+}
+
+/* Logo slide animation */
+@keyframes slide-left-to-right {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-slide-left-to-right {
+  animation: slide-left-to-right 20s linear infinite;
+}
+
+/* From Uiverse.io by Spacious74 */
+.bgblue {
+  background: linear-gradient(135deg, #fffffff5, #3a4b8a, #ffffff98);
+  padding: 1px;
+  border-radius: 1.2rem;
+  box-shadow: 0px 1rem 1.5rem -0.9rem #000000e1;
+  width: 100%;
+}
+
+.card {
+  font-size: 1rem;
+  color: #bec4cf;
+  background: linear-gradient(135deg, #0d1120 0%, #3a4b8a 43%, #0d1120 100%);
+  padding: 1.5rem;
+  border-radius: 1.2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
