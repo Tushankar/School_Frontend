@@ -1,6 +1,11 @@
 {
   "/_app": "pages/_app.js",
+  "/bento-grid": "pages/bento-grid.html",
   "/_error": "pages/_error.js",
+  "/character-cards": "pages/character-cards.html",
+  "/login": "pages/login.html",
+  "/signup": "pages/signup.html",
+  "/": "pages/index.html",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js"
+  "/404": "pages/404.html"
 }
