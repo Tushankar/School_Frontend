@@ -1,20 +1,25 @@
 import React, { useState } from "react";
+import { NavBar } from "./ui/tubelight-navbar";
+import {
+  Home,
+  User,
+  FileText,
+  BookOpen,
+  Image,
+  Award,
+  Briefcase,
+} from "lucide-react";
 
 const IslamicCenterPage = () => {
-  const [dropdowns, setDropdowns] = useState({
-    about: false,
-    admission: false,
-    learning: false,
-    accreditation: false,
-    career: false,
-  });
-
-  const toggleDropdown = (key) => {
-    setDropdowns((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
+  const navItems = [
+    { name: "Home", url: "#", icon: Home },
+    { name: "About", url: "#", icon: User },
+    { name: "Admission", url: "#", icon: FileText },
+    { name: "Learning", url: "#", icon: BookOpen },
+    { name: "Gallery", url: "#", icon: Image },
+    { name: "Accreditation", url: "#", icon: Award },
+    { name: "Career", url: "#", icon: Briefcase },
+  ];
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
@@ -167,289 +172,10 @@ const IslamicCenterPage = () => {
               </p>
             </div>
           </div>
-
           {/* Navigation Menu */}
           <div className="hidden lg:flex items-center space-x-8 text-lg font-serif relative">
-            <a
-              href="#"
-              className="nav-link relative text-[#D1A041] hover:text-yellow-400 transition-colors font-black"
-            >
-              Home
-            </a>
-
-            {/* About Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown("about")}
-                className="nav-link relative text-[#D1A041] hover:text-yellow-400 transition-colors font-black flex items-center"
-              >
-                About
-                <svg
-                  className={`ml-1 w-4 h-4 transition-transform ${
-                    dropdowns.about ? "rotate-180" : ""
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              {dropdowns.about && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Our Mission
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Our Vision
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    History
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Leadership
-                  </a>
-                </div>
-              )}
-            </div>
-
-            {/* Admission Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown("admission")}
-                className="nav-link relative text-[#D1A041] hover:text-yellow-400 transition-colors font-black flex items-center"
-              >
-                Admission
-                <svg
-                  className={`ml-1 w-4 h-4 transition-transform ${
-                    dropdowns.admission ? "rotate-180" : ""
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              {dropdowns.admission && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Application Process
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Requirements
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Fees
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Deadlines
-                  </a>
-                </div>
-              )}
-            </div>
-
-            {/* Learning at ARA Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown("learning")}
-                className="nav-link relative text-[#D1A041] hover:text-yellow-400 transition-colors font-black flex items-center"
-              >
-                Learning at ARA
-                <svg
-                  className={`ml-1 w-4 h-4 transition-transform ${
-                    dropdowns.learning ? "rotate-180" : ""
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              {dropdowns.learning && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Curriculum
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Islamic Studies
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Academic Programs
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Extracurricular
-                  </a>
-                </div>
-              )}
-            </div>
-
-            <a
-              href="#"
-              className="nav-link relative text-[#D1A041] hover:text-yellow-400 transition-colors font-black"
-            >
-              Gallery
-            </a>
-
-            {/* Accreditation Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown("accreditation")}
-                className="nav-link relative text-[#D1A041] hover:text-yellow-400 transition-colors font-black flex items-center"
-              >
-                Accreditation
-                <svg
-                  className={`ml-1 w-4 h-4 transition-transform ${
-                    dropdowns.accreditation ? "rotate-180" : ""
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              {dropdowns.accreditation && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    COGNIA Accreditation
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Standards & Compliance
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Quality Assurance
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Recognition
-                  </a>
-                </div>
-              )}
-            </div>
-
-            {/* Career Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown("career")}
-                className="nav-link relative text-[#D1A041] hover:text-yellow-400 transition-colors font-black flex items-center"
-              >
-                Career
-                <svg
-                  className={`ml-1 w-4 h-4 transition-transform ${
-                    dropdowns.career ? "rotate-180" : ""
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              {dropdowns.career && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Job Opportunities
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Teaching Positions
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Staff Openings
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Apply Now
-                  </a>
-                </div>
-              )}
-            </div>
-          </div>
-
+            <NavBar items={navItems} />
+          </div>{" "}
           {/* CTA Button */}
           <button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif">
             Contact Us
@@ -475,10 +201,10 @@ const IslamicCenterPage = () => {
           {/* Main Heading */}
           <div className="mb-8">
             <h3 className="text-white text-lg lg:text-xl font-light mb-2 tracking-wider opacity-90">
-              Know the Real
+              Excellence in Islamic Education
             </h3>
-            <h1 className="text-4xl lg:text-6xl xl:text-7xl font-serif font-bold leading-tight tracking-wide">
-              <span className="text-yellow-600">Recognized by</span>
+            <h1 className="text-2xl lg:text-4xl xl:text-5xl font-serif font-bold leading-tight tracking-wide">
+              <span className="text-yellow-600">Accredited by</span>
               <br />
               <span className="text-white">New York State</span>
               <br />
