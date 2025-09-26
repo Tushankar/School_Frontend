@@ -6,13 +6,12 @@ import TrustedBrands from "../components/TrustedBrands";
 import { Demo } from "../components/sparkles-demo";
 import CharacterCards from "./character-cards";
 import BentoGridPage from "./bento-grid";
-import useGsapCards from "../hooks/useGsapCards";
+
 import MapDemo from "../components/ui/demo";
 
 export default function Home() {
-  useGsapCards();
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen bg-white">
       <Header />
       <Ticker />
       <UnsplashCarousel
