@@ -11,38 +11,38 @@ import {
 import Link from 'next/link';
 
 const data = {
-  facebookLink: 'https://facebook.com/mvpblocks',
-  instaLink: 'https://instagram.com/mvpblocks',
-  twitterLink: 'https://twitter.com/mvpblocks',
-  githubLink: 'https://github.com/mvpblocks',
-  dribbbleLink: 'https://dribbble.com/mvpblocks',
+  facebookLink: 'https://facebook.com/alrasheedacademy',
+  instaLink: 'https://instagram.com/alrasheedacademy',
+  twitterLink: 'https://twitter.com/alrasheedacademy',
+  githubLink: 'https://github.com/alrasheedacademy',
+  dribbbleLink: 'https://dribbble.com/alrasheedacademy',
   services: {
-    webdev: '/web-development',
-    webdesign: '/web-design',
-    marketing: '/marketing',
-    googleads: '/google-ads',
+    admission: '/admission',
+    learning: '/learning',
+    accreditation: '/accreditation',
+    career: '/career',
   },
   about: {
-    history: '/company-history',
-    team: '/meet-the-team',
-    handbook: '/employee-handbook',
+    history: '/about/history',
+    faculty: '/about/faculty',
+    mission: '/about/mission',
     careers: '/careers',
   },
   help: {
     faqs: '/faqs',
     support: '/support',
-    livechat: '/live-chat',
+    contact: '/contact',
   },
   contact: {
-    email: 'hello@mvpblocks.com',
-    phone: '+91 8637373116',
-    address: 'Kolkata, West Bengal, India',
+    email: 'info@alrasheedacademy.org',
+    phone: '+1(716) 822-0440',
+    address: '3122 Abbott Road Orchard Park, New York 14127',
   },
   company: {
-    name: 'Mvpblocks',
+    name: 'Al-Rasheed Academy',
     description:
-      'Building beautiful and functional web experiences with modern technologies. We help startups and businesses create their digital presence.',
-    logo: '/logo.webp',
+      'Excellence in Islamic Education. Accredited by New York State Education Department, providing quality K-12 education with Islamic values.',
+    logo: '/logo.png',
   },
 };
 
@@ -55,23 +55,23 @@ const socialLinks = [
 ];
 
 const aboutLinks = [
-  { text: 'Company History', href: data.about.history },
-  { text: 'Meet the Team', href: data.about.team },
-  { text: 'Employee Handbook', href: data.about.handbook },
+  { text: 'Our History', href: data.about.history },
+  { text: 'Faculty & Staff', href: data.about.faculty },
+  { text: 'Mission & Vision', href: data.about.mission },
   { text: 'Careers', href: data.about.careers },
 ];
 
 const serviceLinks = [
-  { text: 'Web Development', href: data.services.webdev },
-  { text: 'Web Design', href: data.services.webdesign },
-  { text: 'Marketing', href: data.services.marketing },
-  { text: 'Google Ads', href: data.services.googleads },
+  { text: 'Admission', href: data.services.admission },
+  { text: 'Learning Programs', href: data.services.learning },
+  { text: 'Accreditation', href: data.services.accreditation },
+  { text: 'Career Services', href: data.services.career },
 ];
 
 const helpfulLinks = [
   { text: 'FAQs', href: data.help.faqs },
-  { text: 'Support', href: data.help.support },
-  { text: 'Live Chat', href: data.help.livechat, hasIndicator: true },
+  { text: 'Student Support', href: data.help.support },
+  { text: 'Contact Us', href: data.help.contact, hasIndicator: true },
 ];
 
 const contactInfo = [
@@ -82,16 +82,88 @@ const contactInfo = [
 
 export default function Footer4Col() {
   return (
-    <footer className="bg-secondary dark:bg-secondary/20 mt-16 w-full place-self-end rounded-t-xl">
+    <footer className="bg-gray-900 text-white mt-auto w-full rounded-t-xl">
       <div className="mx-auto max-w-screen-xl px-4 pt-16 pb-6 sm:px-6 lg:px-8 lg:pt-24">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div>
             <div className="text-primary flex justify-center gap-2 sm:justify-start">
-              <img
-                src={data.company.logo || '/placeholder.svg'}
-                alt="logo"
-                className="h-8 w-8 rounded-full"
-              />
+              <div className="relative w-12 h-12">
+                <img
+                  src="https://www.alrasheedacademy.org/images/Untitled-1.png"
+                  alt="Al-Rasheed Academy Logo"
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/Untitled-2.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/qqdd.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/48999.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/1333.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/Untitled-13.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/Untitled-12.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/Untitled-6.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/qqq.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/Untitled-9.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/7788.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/Untitled-11.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/Untitled-10.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/Untitled-1qwe.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+                <img
+                  src="https://www.alrasheedacademy.org/images/qw.png"
+                  alt=""
+                  className="absolute w-full h-full object-contain"
+                />
+              </div>
               <span className="text-2xl font-semibold">
                 {data.company.name}
               </span>
@@ -134,7 +206,7 @@ export default function Footer4Col() {
             </div>
 
             <div className="text-center sm:text-left">
-              <p className="text-lg font-medium">Our Services</p>
+              <p className="text-lg font-medium">Academics</p>
               <ul className="mt-8 space-y-4 text-sm">
                 {serviceLinks.map(({ text, href }) => (
                   <li key={text}>
