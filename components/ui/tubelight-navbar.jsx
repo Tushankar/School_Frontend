@@ -2,11 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function NavBar({ items, className }) {
   const [isMobile, setIsMobile] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
@@ -28,6 +31,11 @@ export function NavBar({ items, className }) {
             return (
               <div key={item.name} className="relative group">
                 <div
+                  onClick={() =>
+                    setActiveDropdown(
+                      activeDropdown === item.name ? null : item.name
+                    )
+                  }
                   className={cn(
                     "relative cursor-pointer text-lg font-black px-6 py-2 rounded-full transition-colors font-serif flex items-center gap-1",
                     "text-yellow-500 hover:text-yellow-400"
@@ -40,11 +48,25 @@ export function NavBar({ items, className }) {
                   </span>
                   <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
                 </div>
-                <div className="absolute top-full left-0 mt-2 w-48 bg-black/90 border border-yellow-400 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[9999]">
+                <div
+                  className={cn(
+                    "absolute top-full left-0 mt-2 w-48 bg-black/90 border border-yellow-400 rounded-lg shadow-lg transition-all duration-300 z-[9999]",
+                    activeDropdown === item.name
+                      ? "opacity-100 visible"
+                      : "opacity-0 invisible",
+                    "group-hover:opacity-100 group-hover:visible"
+                  )}
+                >
                   {item.dropdown.map((dropdownItem) => (
                     <Link
                       key={dropdownItem.name}
                       href={dropdownItem.url}
+                      onClick={(e) => {
+                        // Use router.push as a reliable navigation fallback and close dropdown
+                        e.preventDefault();
+                        setActiveDropdown(null);
+                        router.push(dropdownItem.url);
+                      }}
                       className="block px-4 py-2 text-sm text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors font-serif"
                     >
                       {dropdownItem.name}

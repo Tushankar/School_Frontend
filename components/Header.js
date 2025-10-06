@@ -20,8 +20,8 @@ const IslamicCenterPage = () => {
       dropdown: [
         { name: "Mission and Vision", url: "/mission-vision" },
         { name: "Principal's message", url: "#" },
-        { name: "School Board", url: "#" },
-        { name: "General Administration", url: "#" },
+        { name: "School Board", url: "/team" },
+        { name: "General Administration", url: "/administration" },
         { name: "Parent handbook", url: "#" },
         { name: "Faculty", url: "#" },
       ],

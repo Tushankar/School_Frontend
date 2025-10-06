@@ -19,9 +19,9 @@ const NavBarOnly = () => {
       icon: User,
       dropdown: [
         { name: "Mission and Vision", url: "/mission-vision" },
-        { name: "Principal's message", url: "#" },
-        { name: "School Board", url: "#" },
-        { name: "General Administration", url: "#" },
+        { name: "Principal's message", url: "/principal-message" },
+        { name: "School Board", url: "/team" },
+        { name: "General Administration", url: "/administration" },
         { name: "Parent handbook", url: "#" },
         { name: "Faculty", url: "#" },
       ],
