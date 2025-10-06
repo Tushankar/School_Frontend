@@ -1,5 +1,6 @@
 import Head from "next/head";
 import NavBarOnly from "../components/NavBarOnly";
+import Ticker from "../components/Ticker";
 import Footer from "../components/Footer";
 import TeamSection from "../components/ui/team";
 import TeamSectionDemo from "../components/ui/team-demo";
@@ -22,6 +23,7 @@ export default function TeamPage() {
       </Head>
 
       <NavBarOnly />
+      <Ticker />
 
       <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         {/* Header Section */}

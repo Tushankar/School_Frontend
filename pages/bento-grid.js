@@ -84,7 +84,7 @@ const features = [
     name: "Academics",
     description:
       "Explore our comprehensive curriculum, subjects, and academic programs designed for excellence.",
-    href: "/",
+    href: "/curricular",
     cta: "Learn more",
     background: (
       <img

@@ -1,5 +1,6 @@
 import Head from "next/head";
 import NavBarOnly from "../components/NavBarOnly";
+import Ticker from "../components/Ticker";
 import Footer from "../components/Footer";
 
 export default function PrincipalMessage() {
@@ -20,6 +21,7 @@ export default function PrincipalMessage() {
       </Head>
 
       <NavBarOnly />
+      <Ticker />
 
       <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-4 py-16">
         <div className="max-w-6xl mx-auto">

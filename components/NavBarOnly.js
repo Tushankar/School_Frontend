@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { NavBar } from "./ui/tubelight-navbar";
+import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   Home,
   User,
@@ -10,9 +11,19 @@ import {
   Briefcase,
 } from "lucide-react";
 
+// Dynamically import NavBar with SSR disabled to prevent hydration issues
+const NavBar = dynamic(
+  () =>
+    import("./ui/tubelight-navbar").then((mod) => ({ default: mod.NavBar })),
+  {
+    ssr: false,
+    loading: () => <div className="h-12 bg-transparent"></div>,
+  }
+);
+
 const NavBarOnly = () => {
   const navItems = [
-    { name: "Home", url: "#", icon: Home },
+    { name: "Home", url: "/", icon: Home },
     {
       name: "About",
       url: "#",
@@ -22,7 +33,7 @@ const NavBarOnly = () => {
         { name: "Principal's message", url: "/principal-message" },
         { name: "School Board", url: "/team" },
         { name: "General Administration", url: "/administration" },
-        { name: "Parent handbook", url: "#" },
+        { name: "Parent handbook", url: "/parent-handbook" },
         { name: "Faculty", url: "#" },
       ],
     },
@@ -46,10 +57,10 @@ const NavBarOnly = () => {
         { name: "Calender", url: "#" },
         { name: "College Preparatory", url: "#" },
         { name: "Islamic Studies & Qur'an", url: "#" },
-        { name: "Curricular", url: "#" },
+        { name: "Curricular", url: "/curricular" },
       ],
     },
-    { name: "Gallery", url: "#", icon: Image },
+    { name: "Gallery", url: "/gallery", icon: Image },
     {
       name: "Accreditation",
       url: "#",
@@ -60,7 +71,15 @@ const NavBarOnly = () => {
         { name: "Students Surveys", url: "#" },
       ],
     },
-    { name: "Career", url: "#", icon: Briefcase },
+    {
+      name: "Career",
+      url: "#",
+      icon: Briefcase,
+      dropdown: [
+        { name: "Job Application", url: "/career/job-application" },
+        { name: "Volunteer Application", url: "/career/volunteer-application" },
+      ],
+    },
   ];
 
   return (
@@ -81,7 +100,7 @@ const NavBarOnly = () => {
       <div className="relative z-[9999]">
         <nav className="flex items-center justify-between px-6 lg:px-12 py-4">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-3">
             <div className="relative w-16 h-16">
               <style
                 dangerouslySetInnerHTML={{
@@ -212,7 +231,7 @@ const NavBarOnly = () => {
                 Islamic center
               </p>
             </div>
-          </div>
+          </Link>
 
           {/* Navigation Menu */}
           <div className="hidden lg:flex items-center space-x-8 text-lg font-serif relative z-[999]">

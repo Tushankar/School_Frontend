@@ -106,3 +106,32 @@ body {
   width: 100%;
   box-sizing: border-box;
 }
+
+/* Spinner animation used by /components/ui/spinner-1.tsx */
+@keyframes fade-spin {
+  0% { opacity: 0.15; }
+  100% { opacity: 1; }
+}
+.animate-fade-spin {
+  animation: fade-spin 1.2s linear infinite;
+}
+
+/* Fullscreen loading overlay */
+.route-loader-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* very subtle tint + slight blur so page shows through with a soft haze */
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 99999;
+  transition: background-color 160ms ease, backdrop-filter 160ms ease;
+}
+.route-loader-overlay.dark {
+  background: rgba(0,0,0,0.06);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}

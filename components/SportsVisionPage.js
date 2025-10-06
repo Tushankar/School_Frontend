@@ -1,9 +1,13 @@
+import Ticker from "./Ticker";
+
 export default function SportsVisionPage() {
   return (
     <div
-      className="min-h-screen px-6 py-12"
-      style={{ backgroundColor: "#F8F9FA" }}
+      className="min-h-screen px-6 pt-0 pb-12"
+      style={{ backgroundColor: "#F8F9FA", marginTop: 0 }}
     >
+      {/* Ticker placed below the navbar */}
+      <Ticker />
       <div className="max-w-5xl mx-auto space-y-16">
         {/* Vision Section */}
         <section className="text-center space-y-6">

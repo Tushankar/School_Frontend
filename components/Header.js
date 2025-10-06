@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { NavBar } from "./ui/tubelight-navbar";
+import Link from "next/link";
 import {
   Home,
   User,
@@ -12,17 +13,17 @@ import {
 
 const IslamicCenterPage = () => {
   const navItems = [
-    { name: "Home", url: "#", icon: Home },
+    { name: "Home", url: "/", icon: Home },
     {
       name: "About",
       url: "#",
       icon: User,
       dropdown: [
         { name: "Mission and Vision", url: "/mission-vision" },
-        { name: "Principal's message", url: "#" },
+        { name: "Principal's message", url: "/principal-message" },
         { name: "School Board", url: "/team" },
         { name: "General Administration", url: "/administration" },
-        { name: "Parent handbook", url: "#" },
+        { name: "Parent handbook", url: "/parent-handbook" },
         { name: "Faculty", url: "#" },
       ],
     },
@@ -60,7 +61,15 @@ const IslamicCenterPage = () => {
         { name: "Students Surveys", url: "#" },
       ],
     },
-    { name: "Career", url: "#", icon: Briefcase },
+    {
+      name: "Career",
+      url: "#",
+      icon: Briefcase,
+      dropdown: [
+        { name: "Job Application", url: "/career/job-application" },
+        { name: "Volunteer Application", url: "/career/volunteer-application" },
+      ],
+    },
   ];
 
   return (
@@ -219,9 +228,11 @@ const IslamicCenterPage = () => {
             <NavBar items={navItems} />
           </div>{" "}
           {/* CTA Button */}
-          <button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif">
-            Contact Us
-          </button>
+          <Link href="/contact">
+            <button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif">
+              Contact Us
+            </button>
+          </Link>
         </nav>
 
         {/* Main Content */}
