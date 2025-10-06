@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function NavBar({ items, className }) {
@@ -22,6 +23,37 @@ export function NavBar({ items, className }) {
       <div className="flex items-center gap-3 bg-black/20 border border-yellow-400 backdrop-blur-lg py-1 px-1 rounded-full shadow-lg">
         {items.map((item) => {
           const Icon = item.icon;
+
+          if (item.dropdown) {
+            return (
+              <div key={item.name} className="relative group">
+                <div
+                  className={cn(
+                    "relative cursor-pointer text-lg font-black px-6 py-2 rounded-full transition-colors font-serif flex items-center gap-1",
+                    "text-yellow-500 hover:text-yellow-400"
+                  )}
+                >
+                  <span className="hidden md:inline">{item.name}</span>
+                  <ChevronDown className="hidden md:inline w-4 h-4" />
+                  <span className="md:hidden">
+                    <Icon size={18} strokeWidth={2.5} />
+                  </span>
+                  <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+                </div>
+                <div className="absolute top-full left-0 mt-2 w-48 bg-black/90 border border-yellow-400 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[9999]">
+                  {item.dropdown.map((dropdownItem) => (
+                    <Link
+                      key={dropdownItem.name}
+                      href={dropdownItem.url}
+                      className="block px-4 py-2 text-sm text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors font-serif"
+                    >
+                      {dropdownItem.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            );
+          }
 
           return (
             <Link
