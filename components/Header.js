@@ -24,7 +24,15 @@ const IslamicCenterPage = () => {
         { name: "School Board", url: "/team" },
         { name: "General Administration", url: "/administration" },
         { name: "Parent handbook", url: "/parent-handbook" },
-        { name: "Faculty", url: "#" },
+        {
+          name: "Faculty",
+          url: "#",
+          dropdown: [
+            { name: "K-3 Section", url: "/k3-section" },
+            { name: "Boys' Section", url: "/boys-section" },
+            { name: "Girls' Section", url: "/girls-section" },
+          ],
+        },
       ],
     },
     {
@@ -44,13 +52,13 @@ const IslamicCenterPage = () => {
       url: "#",
       icon: BookOpen,
       dropdown: [
-        { name: "Calender", url: "#" },
-        { name: "College Preparatory", url: "#" },
-        { name: "Islamic Studies & Qur'an", url: "#" },
-        { name: "Curricular", url: "#" },
+        { name: "Calendar", url: "/calendar" },
+        { name: "College Preparatory", url: "/college-preparatory" },
+        { name: "Islamic Studies & Qur'an", url: "/islamic-studies" },
+        { name: "Curricular", url: "/curricular" },
       ],
     },
-    { name: "Gallery", url: "#", icon: Image },
+    { name: "Gallery", url: "/gallery", icon: Image },
     {
       name: "Accreditation",
       url: "#",
@@ -230,7 +238,7 @@ const IslamicCenterPage = () => {
           {/* CTA Button */}
           <Link href="/contact">
             <button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif">
-              Contact Us
+              Contact 
             </button>
           </Link>
         </nav>

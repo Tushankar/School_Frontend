@@ -169,7 +169,7 @@ export default function Footer4Col() {
               </span>
             </div>
 
-            <p className="text-foreground/50 mt-6 max-w-md text-center leading-relaxed sm:max-w-xs sm:text-left">
+            <p className="text-white/60 mt-6 max-w-md text-center leading-relaxed sm:max-w-xs sm:text-left">
               {data.company.description}
             </p>
 
@@ -194,12 +194,9 @@ export default function Footer4Col() {
               <ul className="mt-8 space-y-4 text-sm">
                 {aboutLinks.map(({ text, href }) => (
                   <li key={text}>
-                    <a
-                      className="text-secondary-foreground/70 transition"
-                      href={href}
-                    >
-                      {text}
-                    </a>
+                      <a className="text-white/70 transition" href={href}>
+                        {text}
+                      </a>
                   </li>
                 ))}
               </ul>
@@ -210,10 +207,7 @@ export default function Footer4Col() {
               <ul className="mt-8 space-y-4 text-sm">
                 {serviceLinks.map(({ text, href }) => (
                   <li key={text}>
-                    <a
-                      className="text-secondary-foreground/70 transition"
-                      href={href}
-                    >
+                    <a className="text-white/70 transition" href={href}>
                       {text}
                     </a>
                   </li>
@@ -231,12 +225,10 @@ export default function Footer4Col() {
                       className={`${
                         hasIndicator
                           ? 'group flex justify-center gap-1.5 sm:justify-start'
-                          : 'text-secondary-foreground/70 transition'
+                          : 'text-white/70 transition'
                       }`}
                     >
-                      <span className="text-secondary-foreground/70 transition">
-                        {text}
-                      </span>
+                      <span className="text-white/70 transition">{text}</span>
                       {hasIndicator && (
                         <span className="relative flex size-2">
                           <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
@@ -260,13 +252,11 @@ export default function Footer4Col() {
                     >
                       <Icon className="text-primary size-5 shrink-0 shadow-sm" />
                       {isAddress ? (
-                        <address className="text-secondary-foreground/70 -mt-0.5 flex-1 not-italic transition">
+                        <address className="text-white/70 -mt-0.5 flex-1 not-italic transition">
                           {text}
                         </address>
                       ) : (
-                        <span className="text-secondary-foreground/70 flex-1 transition">
-                          {text}
-                        </span>
+                        <span className="text-white/70 flex-1 transition">{text}</span>
                       )}
                     </a>
                   </li>
@@ -282,7 +272,7 @@ export default function Footer4Col() {
               <span className="block sm:inline">All rights reserved.</span>
             </p>
 
-            <p className="text-secondary-foreground/70 mt-4 text-sm transition sm:order-first sm:mt-0">
+            <p className="text-white/70 mt-4 text-sm transition sm:order-first sm:mt-0">
               &copy; 2025 {data.company.name}
             </p>
           </div>

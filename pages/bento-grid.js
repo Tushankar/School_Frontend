@@ -68,7 +68,7 @@ const features = [
     name: "Latest News",
     description:
       "Stay updated with school announcements, events, achievements, and community news.",
-    href: "/",
+    href: "/latest-news",
     cta: "Read More",
     background: (
       <img

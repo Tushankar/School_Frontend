@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Spinner from "../components/ui/spinner-1";
+import { Toaster } from "sonner";
 
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -44,6 +45,7 @@ export default function MyApp({ Component, pageProps }) {
       )}
 
       <Component {...pageProps} />
+      <Toaster />
     </>
   );
 }

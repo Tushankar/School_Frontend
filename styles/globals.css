@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Basic global styles. Tailwind utilities are provided by the CDN script included in _app.js */
 :root {
   --bg: #f7fafc;

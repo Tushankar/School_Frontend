@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 export function NavBar({ items, className }) {
   const [isMobile, setIsMobile] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [activeSubDropdown, setActiveSubDropdown] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -22,7 +23,19 @@ export function NavBar({ items, className }) {
   }, []);
 
   return (
-    <div className={cn("flex justify-center py-2", className)}>
+    <div
+      className={cn("flex justify-between items-center py-2 px-4", className)}
+    >
+      {/* <Link href="/" className="flex items-center gap-2">
+        <img
+          src="/assets/common.png"
+          alt="Al-Rasheed Academy Logo"
+          className="w-10 h-10"
+        />
+        <span className="text-yellow-500 font-bold text-lg">
+          Al-Rasheed Academy
+        </span>
+      </Link> */}
       <div className="flex items-center gap-3 bg-black/20 border border-yellow-400 backdrop-blur-lg py-1 px-1 rounded-full shadow-lg">
         {items.map((item) => {
           const Icon = item.icon;
@@ -57,21 +70,59 @@ export function NavBar({ items, className }) {
                     "group-hover:opacity-100 group-hover:visible"
                   )}
                 >
-                  {item.dropdown.map((dropdownItem) => (
-                    <Link
-                      key={dropdownItem.name}
-                      href={dropdownItem.url}
-                      onClick={(e) => {
-                        // Use router.push as a reliable navigation fallback and close dropdown
-                        e.preventDefault();
-                        setActiveDropdown(null);
-                        router.push(dropdownItem.url);
-                      }}
-                      className="block px-4 py-2 text-sm text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors font-serif"
-                    >
-                      {dropdownItem.name}
-                    </Link>
-                  ))}
+                  {item.dropdown.map((dropdownItem) => {
+                    if (dropdownItem.dropdown) {
+                      return (
+                        <div
+                          key={dropdownItem.name}
+                          className="relative"
+                          onMouseEnter={() =>
+                            setActiveSubDropdown(dropdownItem.name)
+                          }
+                          onMouseLeave={() => setActiveSubDropdown(null)}
+                        >
+                          <div className="block px-4 py-2 text-sm text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors font-serif cursor-pointer">
+                            {dropdownItem.name}
+                          </div>
+                          {activeSubDropdown === dropdownItem.name && (
+                            <div className="absolute left-full top-0 mt-0 w-48 bg-black/90 border border-yellow-400 rounded-lg shadow-lg z-[10000]">
+                              {dropdownItem.dropdown.map((subItem) => (
+                                <Link
+                                  key={subItem.name}
+                                  href={subItem.url}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setActiveDropdown(null);
+                                    setActiveSubDropdown(null);
+                                    router.push(subItem.url);
+                                  }}
+                                  className="block px-4 py-2 text-sm text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors font-serif"
+                                >
+                                  {subItem.name}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <Link
+                          key={dropdownItem.name}
+                          href={dropdownItem.url}
+                          onClick={(e) => {
+                            // Use router.push as a reliable navigation fallback and close dropdown
+                            e.preventDefault();
+                            setActiveDropdown(null);
+                            router.push(dropdownItem.url);
+                          }}
+                          className="block px-4 py-2 text-sm text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors font-serif"
+                        >
+                          {dropdownItem.name}
+                        </Link>
+                      );
+                    }
+                  })}
                 </div>
               </div>
             );
