@@ -91,7 +91,7 @@ const NavBarOnly = () => {
   ];
 
   return (
-    <div className="relative bg-black overflow-visible">
+    <div className="relative bg-gradient-to-r from-[#381607] to-black overflow-visible">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
@@ -249,7 +249,7 @@ const NavBarOnly = () => {
           {/* CTA Button */}
           <Link href="/contact">
             <button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif">
-              Contact 
+              Contact
             </button>
           </Link>
         </nav>
