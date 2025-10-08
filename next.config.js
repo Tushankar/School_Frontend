@@ -6,6 +6,9 @@ const path = require("path");
 
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    outputFileTracingRoot: path.join(__dirname, '../'),
+  },
   webpack: (config) => {
     config.resolve.alias["@"] = path.resolve(__dirname);
     return config;

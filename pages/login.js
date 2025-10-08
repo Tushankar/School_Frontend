@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useRouter } from "next/router";
@@ -101,10 +102,10 @@ export default function Login() {
             </form>
 
             <div className="mt-4 text-sm text-gray-600">
-              Don't have an account?{" "}
-              <a href="/signup" className="text-indigo-600">
+              Don&apos;t have an account?{" "}
+              <Link href="/signup" className="text-indigo-600">
                 Sign up
-              </a>
+              </Link>
             </div>
           </div>
         </div>

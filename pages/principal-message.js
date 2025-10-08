@@ -8,7 +8,7 @@ export default function PrincipalMessage() {
   return (
     <>
       <Head>
-        <title>Principal's Message - Al-Rasheed Academy</title>
+        <title>Principal&apos;s Message - Al-Rasheed Academy</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -35,7 +35,7 @@ export default function PrincipalMessage() {
             className="text-center mb-12"
           >
             <h1 className="text-5xl md:text-6xl font-serif font-bold mb-4">
-              <span className="text-black">Principal's</span>{" "}
+              <span className="text-black">Principal&apos;s</span>{" "}
               <span className="text-[#E99544]">Message</span>
             </h1>
             <div className="w-24 h-1 bg-gradient-to-r from-yellow-400 to-amber-500 mx-auto rounded-full"></div>

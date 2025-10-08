@@ -38,7 +38,7 @@ export default function MyApp({ Component, pageProps }) {
           rel="stylesheet"
         />
         {/* Tailwind Play CDN - quick way to use Tailwind without installing PostCSS */}
-        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.tailwindcss.com" async></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -55,8 +55,8 @@ export default function MyApp({ Component, pageProps }) {
           }}
         />
         {/* GSAP + ScrollTrigger CDN (used for simple scroll animations) */}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" async></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" async></script>
       </Head>
 
       {loading && (

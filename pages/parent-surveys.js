@@ -64,7 +64,7 @@ export default function ParentSurveys() {
             </h1>
             <div className="w-24 h-1 bg-gradient-to-r from-purple-400 to-pink-500 mx-auto rounded-full"></div>
             <p className="text-xl text-gray-700 mt-6 max-w-3xl mx-auto font-medium">
-              Share your experience and help us enhance your child's educational journey.
+              Share your experience and help us enhance your child&apos;s educational journey.
             </p>
           </div>
         </div>
@@ -126,7 +126,7 @@ export default function ParentSurveys() {
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-medium flex items-center gap-1">
-                          Student's Grade <span className="text-red-500">*</span>
+                          Student&apos;s Grade <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"

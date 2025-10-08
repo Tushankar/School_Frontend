@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 
@@ -36,7 +36,7 @@ const BentoCard = ({
   name: string;
   className: string;
   background: ReactNode;
-  Icon: any;
+  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   description: string;
   href: string;
   cta: string;

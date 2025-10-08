@@ -64,7 +64,7 @@ const AboutUs = () => {
               <div className="flex items-start sm:items-center gap-3">
                 <DollarSign className="w-5 h-5 text-blue-600 mt-0.5 sm:mt-0" />
                 <p className="text-sm sm:text-base">
-                  Quality education shouldn't come with exorbitant fees.
+                  Quality education shouldn&apos;t come with exorbitant fees.
                 </p>
               </div>
               <div className="flex items-start sm:items-center gap-3">

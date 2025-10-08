@@ -230,7 +230,7 @@ export default function Ticker() {
           >
             Accreditation Al-Rasheed Academy is the 1st Accredited School In the
             Buffalo Area by the COGNIA Accreditation Organization! - Good News!
-            "Unlock Your Future: "
+            &quot;Unlock Your Future: &quot;
             <span
               ref={phraseRef}
               className={`highlight-phrase ${isUnderlined ? "underlined" : ""}`}

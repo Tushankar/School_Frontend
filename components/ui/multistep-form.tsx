@@ -493,7 +493,7 @@ const OnboardingForm = () => {
                     <CardHeader>
                       <CardTitle>Position Details</CardTitle>
                       <CardDescription>
-                        Tell us about the position you're applying for
+                        Tell us about the position you&apos;re applying for
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">

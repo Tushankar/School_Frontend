@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useRouter } from "next/router";
@@ -128,9 +129,9 @@ export default function Signup() {
 
             <div className="mt-4 text-sm text-gray-600">
               Already have an account?{" "}
-              <a href="/login" className="text-indigo-600">
+              <Link href="/login" className="text-indigo-600">
                 Log in
-              </a>
+              </Link>
             </div>
           </div>
         </div>

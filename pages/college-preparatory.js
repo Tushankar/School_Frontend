@@ -239,7 +239,7 @@ const CollegeGuidancePage = () => {
               {/* Right Column - Program Information with Alternating Cards */}
               <div className="bg-white p-6 rounded-lg shadow-md flex flex-col">
                 <p className="text-gray-700 text-base mb-6">
-                  ARA Academy School's college guidance program helps students
+                  ARA Academy School&apos;s college guidance program helps students
                   navigate every step of their path to college, including:
                 </p>
 

@@ -96,10 +96,10 @@ export default function BoysFacultySection() {
                     transition={{ duration: 0.6 }}
                 >
                     <div className="sm:w-2/5">
-                        <h2 className="text-3xl font-bold sm:text-4xl">Boys' Section Faculty</h2>
+                        <h2 className="text-3xl font-bold sm:text-4xl">Boys&apos; Section Faculty</h2>
                     </div>
                     <div className="mt-6 sm:mt-0">
-                        <p>Meet our dedicated faculty members for the Boys' Section at Al-Rasheed Academy.</p>
+                        <p>Meet our dedicated faculty members for the Boys&apos; Section at Al-Rasheed Academy.</p>
                     </div>
                 </motion.div>
                 <div className="mt-12 md:mt-24">
