@@ -1,37 +1,45 @@
 import Head from "next/head";
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Send, Heart, Users, Shield, BookOpen, Building, MessageSquare } from 'lucide-react'
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Send,
+  Heart,
+  Users,
+  Shield,
+  BookOpen,
+  Building,
+  MessageSquare,
+} from "lucide-react";
 import NavBarOnly from "../components/NavBarOnly";
 import Ticker from "../components/Ticker";
 import Footer from "../components/Footer";
 
 export default function ParentSurveys() {
   const [formData, setFormData] = useState({
-    name: '',
-    relationship: '',
-    studentGrade: '',
-    educationQuality: '',
-    communication: '',
-    safetyMeasures: '',
-    activities: '',
-    facilities: '',
-    admissionsFees: '',
-    suggestions: ''
-  })
+    name: "",
+    relationship: "",
+    studentGrade: "",
+    educationQuality: "",
+    communication: "",
+    safetyMeasures: "",
+    activities: "",
+    facilities: "",
+    admissionsFees: "",
+    suggestions: "",
+  });
 
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log('Survey submitted:', formData)
-    alert('Thank you for your feedback! Your survey has been submitted.')
-  }
+    e.preventDefault();
+    console.log("Survey submitted:", formData);
+    alert("Thank you for your feedback! Your survey has been submitted.");
+  };
 
   return (
     <>
@@ -55,7 +63,13 @@ export default function ParentSurveys() {
       <main className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50">
         {/* Header Section */}
         <div className="relative text-center py-16 overflow-hidden">
-          <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=1920&auto=format&fit=crop&q=90')" }}></div>
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-20"
+            style={{
+              backgroundImage:
+                "url('https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=1920&auto=format&fit=crop&q=90')",
+            }}
+          ></div>
           <div className="absolute inset-0 bg-gradient-to-r from-purple-900/30 to-pink-900/30"></div>
           <div className="relative z-10">
             <h1 className="text-5xl md:text-6xl font-serif font-bold mb-4">
@@ -64,14 +78,18 @@ export default function ParentSurveys() {
             </h1>
             <div className="w-24 h-1 bg-gradient-to-r from-purple-400 to-pink-500 mx-auto rounded-full"></div>
             <p className="text-xl text-gray-700 mt-6 max-w-3xl mx-auto font-medium">
-              Share your experience and help us enhance your child&apos;s educational journey.
+              Share your experience and help us enhance your child&apos;s
+              educational journey.
             </p>
           </div>
         </div>
 
         {/* Survey Form */}
         <div className="relative py-16 bg-purple-50">
-          <div className="absolute inset-0 bg-cover bg-center opacity-40" style={{ backgroundImage: "url('/assets/studentExam.jpg')" }}></div>
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-40"
+            style={{ backgroundImage: "url('/assets/studentExam.jpg')" }}
+          ></div>
 
           <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <form onSubmit={handleSubmit} className="space-y-8">
@@ -87,7 +105,9 @@ export default function ParentSurveys() {
                       <div className="p-2 bg-purple-100 rounded-lg">
                         <Heart className="h-5 w-5 text-purple-600" />
                       </div>
-                      <h3 className="text-xl font-semibold">Parent/Guardian Information</h3>
+                      <h3 className="text-xl font-semibold">
+                        Parent/Guardian Information
+                      </h3>
                     </div>
                   </div>
                   <div className="p-6">
@@ -108,7 +128,8 @@ export default function ParentSurveys() {
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-medium flex items-center gap-1">
-                          Relationship to Student <span className="text-red-500">*</span>
+                          Relationship to Student{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <select
                           name="relationship"
@@ -126,7 +147,8 @@ export default function ParentSurveys() {
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-medium flex items-center gap-1">
-                          Student&apos;s Grade <span className="text-red-500">*</span>
+                          Student&apos;s Grade{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -155,13 +177,16 @@ export default function ParentSurveys() {
                       <div className="p-2 bg-pink-100 rounded-lg">
                         <MessageSquare className="h-5 w-5 text-pink-600" />
                       </div>
-                      <h3 className="text-xl font-semibold">Survey Questions</h3>
+                      <h3 className="text-xl font-semibold">
+                        Survey Questions
+                      </h3>
                     </div>
                   </div>
                   <div className="p-6 space-y-6">
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        1. How satisfied are you with the quality of education? <span className="text-red-500">*</span>
+                        1. How satisfied are you with the quality of education?{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="educationQuality"
@@ -181,7 +206,8 @@ export default function ParentSurveys() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        2. How effective is communication from teachers and administration? <span className="text-red-500">*</span>
+                        2. How effective is communication from teachers and
+                        administration? <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="communication"
@@ -201,7 +227,8 @@ export default function ParentSurveys() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        3. How would you rate the safety & discipline measures? <span className="text-red-500">*</span>
+                        3. How would you rate the safety & discipline measures?{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="safetyMeasures"
@@ -221,7 +248,9 @@ export default function ParentSurveys() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        4. How satisfied are you with co-curricular and extra-curricular activities? <span className="text-red-500">*</span>
+                        4. How satisfied are you with co-curricular and
+                        extra-curricular activities?{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="activities"
@@ -241,7 +270,9 @@ export default function ParentSurveys() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        5. How would you rate school facilities (transport, hygiene, campus)? <span className="text-red-500">*</span>
+                        5. How would you rate school facilities (transport,
+                        hygiene, campus)?{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="facilities"
@@ -261,7 +292,9 @@ export default function ParentSurveys() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        6. How satisfied are you with admissions, fees, or grievance redressal? <span className="text-red-500">*</span>
+                        6. How satisfied are you with admissions, fees, or
+                        grievance redressal?{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="admissionsFees"
@@ -314,5 +347,5 @@ export default function ParentSurveys() {
 
       <Footer />
     </>
-  )
+  );
 }

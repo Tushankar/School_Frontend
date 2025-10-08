@@ -55,8 +55,14 @@ export default function MyApp({ Component, pageProps }) {
           }}
         />
         {/* GSAP + ScrollTrigger CDN (used for simple scroll animations) */}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" async></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" async></script>
+        <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
+          async
+        ></script>
+        <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
+          async
+        ></script>
       </Head>
 
       {loading && (
