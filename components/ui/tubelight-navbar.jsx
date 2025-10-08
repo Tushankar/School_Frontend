@@ -51,7 +51,20 @@ export function NavBar({ items, className }) {
                   }
                   className={cn(
                     "relative cursor-pointer text-lg font-black px-6 py-2 rounded-full transition-colors font-serif flex items-center gap-1",
-                    "text-yellow-500 hover:text-yellow-400"
+                    "text-yellow-500 hover:text-yellow-400 slide-top",
+                    item.name === "Home"
+                      ? "delay-200"
+                      : item.name === "About"
+                      ? "delay-400"
+                      : item.name === "Admission"
+                      ? "delay-600"
+                      : item.name === "Learning"
+                      ? "delay-800"
+                      : item.name === "Gallery"
+                      ? "delay-1000"
+                      : item.name === "Accreditation"
+                      ? "delay-1200"
+                      : "delay-1400"
                   )}
                 >
                   <span className="hidden md:inline">{item.name}</span>
@@ -133,8 +146,13 @@ export function NavBar({ items, className }) {
               key={item.name}
               href={item.url}
               className={cn(
-                "relative cursor-pointer text-lg font-black px-6 py-2 rounded-full transition-colors font-serif group",
-                "text-yellow-500 hover:text-yellow-400"
+                "relative cursor-pointer text-lg font-black px-6 py-2 rounded-full transition-colors font-serif group slide-top",
+                "text-yellow-500 hover:text-yellow-400",
+                item.name === "Home"
+                  ? "delay-200"
+                  : item.name === "Gallery"
+                  ? "delay-1000"
+                  : ""
               )}
             >
               <span className="hidden md:inline">{item.name}</span>

@@ -36,7 +36,7 @@ export default function Calendar() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Academic Calendar</h1>
-              <p className="text-gray-600">Al-Rasheed Academy - K12 Schools</p>
+              <p className="text-gray-600 font-montserrat">Al-Rasheed Academy - K12 Schools</p>
             </div>
           </div>
         </div>

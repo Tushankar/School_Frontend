@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavBar } from "./ui/tubelight-navbar";
 import Link from "next/link";
 import {
@@ -40,11 +40,11 @@ const IslamicCenterPage = () => {
       url: "#",
       icon: FileText,
       dropdown: [
-        { name: "New Enrollment", url: "#" },
-        { name: "Re-Enrollment", url: "#" },
-        { name: "Uniform Policy", url: "#" },
+        { name: "New Enrollment", url: "/enrollment" },
+        { name: "Re-Enrollment", url: "/renroll" },
+        { name: "Uniform Policy", url: "/dress-code" },
         { name: "Bus Policy", url: "#" },
-        { name: "Supply List", url: "#" },
+        { name: "Supply List", url: "/supply-list" },
       ],
     },
     {
@@ -80,16 +80,28 @@ const IslamicCenterPage = () => {
     },
   ];
 
+  const [currentImage, setCurrentImage] = useState(1);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev === 7 ? 1 : prev + 1));
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1678395211776-4b2fcb1e3368?w=1920&auto=format&fit=crop&q=90&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fG1hc2ppZCUyMG5pZ2h0fGVufDB8fDB8fHww')",
-        }}
-      />
+      {/* Sliding Background Images */}
+      {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+        <div
+          key={num}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
+          style={{
+            backgroundImage: `url('/assets/istudies_${num}.png')`,
+            opacity: currentImage === num ? 0.9 : 0,
+          }}
+        />
+      ))}
 
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80" />
@@ -100,18 +112,49 @@ const IslamicCenterPage = () => {
         <nav className="flex items-center justify-between px-6 lg:px-12 py-8">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="relative w-16 h-16">
+            <div className="relative w-24 h-24">
               <style
                 dangerouslySetInnerHTML={{
                   __html: `
-                    @keyframes customAnimationIn {
-                      0% { opacity: 0; transform: scale(0.8); }
-                      100% { opacity: 1; transform: scale(1); }
+                    @keyframes slideInFromLeft {
+                      0% { opacity: 0; transform: translateX(-100%); }
+                      100% { opacity: 1; transform: translateX(0); }
                     }
-                    .animate-custom {
-                      animation: customAnimationIn 1500ms ease-in-out;
+                    @keyframes slideInFromRight {
+                      0% { opacity: 0; transform: translateX(100%); }
+                      100% { opacity: 1; transform: translateX(0); }
+                    }
+                    @keyframes slideInFromTop {
+                      0% { opacity: 0; transform: translateY(-100%); }
+                      100% { opacity: 1; transform: translateY(0); }
+                    }
+                    @keyframes slideInFromBottom {
+                      0% { opacity: 0; transform: translateY(100%); }
+                      100% { opacity: 1; transform: translateY(0); }
+                    }
+                    .slide-left {
+                      animation: slideInFromLeft 1500ms ease-in-out;
                       animation-fill-mode: both;
                     }
+                    .slide-right {
+                      animation: slideInFromRight 1500ms ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                    .slide-top {
+                      animation: slideInFromTop 1500ms ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                    .slide-bottom {
+                      animation: slideInFromBottom 1500ms ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                    .delay-200 { animation-delay: 200ms; }
+                    .delay-400 { animation-delay: 400ms; }
+                    .delay-600 { animation-delay: 600ms; }
+                    .delay-800 { animation-delay: 800ms; }
+                    .delay-1000 { animation-delay: 1000ms; }
+                    .delay-1200 { animation-delay: 1200ms; }
+                    .delay-1400 { animation-delay: 1400ms; }
                     .nav-link::after {
                       content: '';
                       position: absolute;
@@ -131,102 +174,108 @@ const IslamicCenterPage = () => {
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-1.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-left"
+                style={{ animationDelay: "200ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-2.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-left"
+                style={{ animationDelay: "400ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/qqdd.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-left"
+                style={{ animationDelay: "600ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/48999.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
+                className="absolute w-full h-full object-contain slide-left"
                 style={{
-                  animationDelay: "1000ms",
+                  animationDelay: "800ms",
                   animationDuration: "1000ms",
                 }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/1333.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-right"
+                style={{ animationDelay: "300ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-13.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-right"
+                style={{ animationDelay: "500ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-12.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-right"
+                style={{ animationDelay: "700ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-6.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-right"
+                style={{ animationDelay: "900ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/qqq.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1500ms" }}
+                className="absolute w-full h-full object-contain slide-top"
+                style={{ animationDelay: "400ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-9.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-top"
+                style={{ animationDelay: "600ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/7788.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-top"
+                style={{ animationDelay: "800ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-11.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-bottom"
+                style={{ animationDelay: "500ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-10.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-bottom"
+                style={{ animationDelay: "700ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-1qwe.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-bottom"
+                style={{ animationDelay: "900ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/qw.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-bottom"
+                style={{ animationDelay: "1100ms" }}
               />
             </div>
             <div>
-              <h1 className="text-white font-bold text-xl tracking-wide">
-                k12 schools
+              <h1
+                className="text-white font-bold text-xl tracking-wide font-montserrat slide-bottom"
+                style={{ animationDelay: "1200ms" }}
+              >
+                K-12 Schools
               </h1>
-              <p className="text-yellow-400 text-xs font-light tracking-widest">
+              <p
+                className="text-yellow-400 text-xs font-light tracking-widest slide-bottom"
+                style={{ animationDelay: "1400ms" }}
+              >
                 Islamic center
               </p>
             </div>
@@ -237,8 +286,8 @@ const IslamicCenterPage = () => {
           </div>{" "}
           {/* CTA Button */}
           <Link href="/contact">
-            <button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif">
-              Contact 
+            <button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif slide-bottom delay-1000">
+              Contact
             </button>
           </Link>
         </nav>
@@ -248,7 +297,7 @@ const IslamicCenterPage = () => {
           {/* Arabic Text */}
           <div className="mb-2">
             <h2
-              className="text-white text-xl lg:text-2xl mb-6 opacity-90"
+              className="text-white text-xl lg:text-2xl mb-6 opacity-90 slide-top delay-200"
               style={{
                 fontFamily: "serif",
                 letterSpacing: "0.1em",
@@ -261,10 +310,10 @@ const IslamicCenterPage = () => {
 
           {/* Main Heading */}
           <div className="mb-8">
-            <h3 className="text-white text-lg lg:text-xl font-light mb-2 tracking-wider opacity-90">
+            <h3 className="text-white text-lg lg:text-xl font-light mb-2 tracking-wider opacity-90 slide-left delay-400">
               Excellence in Islamic Education
             </h3>
-            <h1 className="text-2xl lg:text-4xl xl:text-5xl font-serif font-bold leading-tight tracking-wide">
+            <h1 className="text-2xl lg:text-4xl xl:text-5xl font-serif font-bold leading-tight tracking-wide slide-right delay-600">
               <span className="text-yellow-600">Accredited by</span>
               <br />
               <span className="text-white">New York State</span>
@@ -274,7 +323,7 @@ const IslamicCenterPage = () => {
           </div>
 
           {/* Social Media Icons */}
-          <div className="flex space-x-6">
+          <div className="flex space-x-6 slide-bottom delay-800">
             <a
               href="#"
               className="text-yellow-500 hover:text-yellow-400 transition-colors"

@@ -50,11 +50,11 @@ const NavBarOnly = () => {
       url: "#",
       icon: FileText,
       dropdown: [
-        { name: "New Enrollment", url: "#" },
-        { name: "Re-Enrollment", url: "#" },
-        { name: "Uniform Policy", url: "#" },
+        { name: "New Enrollment", url: "/enrollment" },
+        { name: "Re-Enrollment", url: "/renroll" },
+        { name: "Uniform Policy", url: "/dress-code" },
         { name: "Bus Policy", url: "#" },
-        { name: "Supply List", url: "#" },
+        { name: "Supply List", url: "/supply-list" },
       ],
     },
     {
@@ -109,133 +109,170 @@ const NavBarOnly = () => {
         <nav className="flex items-center justify-between px-6 lg:px-12 py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
-            <div className="relative w-16 h-16">
+            <div className="relative w-20 h-20">
               <style
                 dangerouslySetInnerHTML={{
                   __html: `
-                @keyframes customAnimationIn {
-                  0% { opacity: 0; transform: scale(0.8); }
-                  100% { opacity: 1; transform: scale(1); }
-                }
-                .animate-custom {
-                  animation: customAnimationIn 1500ms ease-in-out;
-                  animation-fill-mode: both;
-                }
-                .nav-link::after {
-                  content: '';
-                  position: absolute;
-                  bottom: 0;
-                  left: 0;
-                  width: 0;
-                  height: 2px;
-                  background-color: #fbbf24;
-                  transition: width 0.3s ease;
-                }
-                .nav-link:hover::after {
-                  width: 100%;
-                }
-              `,
+                    @keyframes slideInFromLeft {
+                      0% { opacity: 0; transform: translateX(-100%); }
+                      100% { opacity: 1; transform: translateX(0); }
+                    }
+                    @keyframes slideInFromRight {
+                      0% { opacity: 0; transform: translateX(100%); }
+                      100% { opacity: 1; transform: translateX(0); }
+                    }
+                    @keyframes slideInFromTop {
+                      0% { opacity: 0; transform: translateY(-100%); }
+                      100% { opacity: 1; transform: translateY(0); }
+                    }
+                    @keyframes slideInFromBottom {
+                      0% { opacity: 0; transform: translateY(100%); }
+                      100% { opacity: 1; transform: translateY(0); }
+                    }
+                    .slide-left {
+                      animation: slideInFromLeft 1500ms ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                    .slide-right {
+                      animation: slideInFromRight 1500ms ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                    .slide-top {
+                      animation: slideInFromTop 1500ms ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                    .slide-bottom {
+                      animation: slideInFromBottom 1500ms ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                    .delay-200 { animation-delay: 200ms; }
+                    .delay-400 { animation-delay: 400ms; }
+                    .delay-600 { animation-delay: 600ms; }
+                    .delay-800 { animation-delay: 800ms; }
+                    .delay-1000 { animation-delay: 1000ms; }
+                    .delay-1200 { animation-delay: 1200ms; }
+                    .delay-1400 { animation-delay: 1400ms; }
+                    .nav-link::after {
+                      content: '';
+                      position: absolute;
+                      bottom: 0;
+                      left: 0;
+                      width: 0;
+                      height: 2px;
+                      background-color: #fbbf24;
+                      transition: width 0.3s ease;
+                    }
+                    .nav-link:hover::after {
+                      width: 100%;
+                    }
+                  `,
                 }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-1.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-left"
+                style={{ animationDelay: "200ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-2.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-left"
+                style={{ animationDelay: "400ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/qqdd.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-left"
+                style={{ animationDelay: "600ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/48999.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
+                className="absolute w-full h-full object-contain slide-left"
                 style={{
-                  animationDelay: "1000ms",
+                  animationDelay: "800ms",
                   animationDuration: "1000ms",
                 }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/1333.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-right"
+                style={{ animationDelay: "300ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-13.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-right"
+                style={{ animationDelay: "500ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-12.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-right"
+                style={{ animationDelay: "700ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-6.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-right"
+                style={{ animationDelay: "900ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/qqq.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1500ms" }}
+                className="absolute w-full h-full object-contain slide-top"
+                style={{ animationDelay: "400ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-9.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-top"
+                style={{ animationDelay: "600ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/7788.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-top"
+                style={{ animationDelay: "800ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-11.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-bottom"
+                style={{ animationDelay: "500ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-10.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-bottom"
+                style={{ animationDelay: "700ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-1qwe.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-bottom"
+                style={{ animationDelay: "900ms" }}
               />
               <img
                 src="https://www.alrasheedacademy.org/images/qw.png"
                 alt=""
-                className="absolute w-full h-full object-contain animate-custom"
-                style={{ animationDelay: "1000ms" }}
+                className="absolute w-full h-full object-contain slide-bottom"
+                style={{ animationDelay: "1100ms" }}
               />
             </div>
             <div>
-              <h1 className="text-white font-bold text-xl tracking-wide">
-                k12 schools
+              <h1
+                className="text-white font-bold text-xl tracking-wide font-montserrat slide-bottom"
+                style={{ animationDelay: "1200ms" }}
+              >
+                K-12 Schools
               </h1>
-              <p className="text-yellow-400 text-xs font-light tracking-widest">
+              <p
+                className="text-yellow-400 text-xs font-light tracking-widest slide-bottom"
+                style={{ animationDelay: "1400ms" }}
+              >
                 Islamic center
               </p>
             </div>
@@ -248,7 +285,7 @@ const NavBarOnly = () => {
 
           {/* CTA Button */}
           <Link href="/contact">
-            <button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif">
+            <button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif slide-bottom delay-1000">
               Contact
             </button>
           </Link>

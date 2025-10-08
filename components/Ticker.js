@@ -16,7 +16,7 @@ const tickerStyle = `
   color: #ffffff;
   width: 84px;
   min-width: 84px;
-  height: 56px;
+  height: 72px; /* increased from 56px */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,7 +33,7 @@ const tickerStyle = `
 .ticker-body {
   flex: 1;
   overflow: hidden;
-  height: 56px;
+  height: 72px; /* increased from 56px */
   display: flex;
   align-items: center;
   background: transparent;
@@ -205,7 +205,7 @@ export default function Ticker() {
         <div
           className="ticker-body"
           ref={bodyRef}
-          style={{ margin: 0, padding: 0, height: "56px" }}
+          style={{ margin: 0, padding: 0, height: "72px" }}
           onMouseEnter={() => {
             if (pauseRef.current) pauseRef.current();
             setIsUnderlined(true);
