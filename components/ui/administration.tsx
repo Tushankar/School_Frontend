@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 const members = [
     {
@@ -25,18 +26,31 @@ export default function AdministrationSection() {
     return (
         <section className="bg-gray-50 py-4 md:py-8 dark:bg-transparent">
             <div className="mx-auto max-w-5xl border-t px-6">
-                <div className="mt-12 gap-4 sm:grid sm:grid-cols-2 md:mt-24">
+                <motion.div
+                    initial={{ opacity: 0, y: -100 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="mt-12 gap-4 sm:grid sm:grid-cols-2 md:mt-24"
+                >
                     <div className="sm:w-2/5">
                         <h2 className="text-3xl font-bold sm:text-4xl">General Administration</h2>
                     </div>
                     <div className="mt-6 sm:mt-0">
                         <p>Our dedicated administration team ensures the smooth operation of our educational institution and provides comprehensive support to students, faculty, and families.</p>
                     </div>
-                </div>
+                </motion.div>
                 <div className="mt-12 md:mt-24">
                     <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
                         {members.map((member, index) => (
-                            <div key={index} className="group overflow-hidden">
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, x: index === 0 ? -200 : index === 1 ? 0 : 200, y: index === 1 ? 100 : 0 }}
+                                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                                viewport={{ once: false, amount: 0.2 }}
+                                transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: index * 0.2 }}
+                                className="group overflow-hidden"
+                            >
                                 <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar} alt="administration member" width="826" height="1239" />
                                 <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
                                     <div className="flex justify-between">
@@ -53,7 +67,7 @@ export default function AdministrationSection() {
                                         </Link>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </div>

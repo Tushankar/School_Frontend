@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import {
   BookOpenIcon,
   UsersIcon,
@@ -116,8 +117,17 @@ const features = [
 function BentoDemo() {
   return (
     <BentoGrid className="lg:grid-rows-4">
-      {features.map((feature) => (
-        <BentoCard key={feature.name} {...feature} />
+      {features.map((feature, index) => (
+        <motion.div
+          key={feature.name}
+          className={feature.className}
+          initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
+        >
+          <BentoCard {...feature} className="h-full" />
+        </motion.div>
       ))}
     </BentoGrid>
   );
@@ -127,7 +137,13 @@ export default function BentoGridPage() {
   return (
     <div className="bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
           <h1 className="text-2xl sm:text-3xl font-bold text-center mb-8">
             <span className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 bg-clip-text text-transparent">
               Our Features & Programs
@@ -136,7 +152,7 @@ export default function BentoGridPage() {
           <p className="text-xl text-gray-600">
             Discover what makes ARA Academy exceptional
           </p>
-        </div>
+        </motion.div>
 
         <BentoDemo />
       </div>

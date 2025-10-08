@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 const TrustedBrands = () => {
   return (
@@ -10,7 +11,11 @@ const TrustedBrands = () => {
       }}
     >
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-        <h1
+        <motion.h1
+          initial={{ opacity: 0, y: -100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           style={{
             fontSize: "clamp(32px, 5vw, 48px)",
             fontWeight: "bold",
@@ -30,7 +35,7 @@ const TrustedBrands = () => {
           >
             Accreditations, Memberships, and Recognitions
           </span>
-        </h1>
+        </motion.h1>
 
         {/* Logos Row (left-aligned) */}
         <div
@@ -44,7 +49,11 @@ const TrustedBrands = () => {
             minHeight: "240px",
           }}
         >
-          <div
+          <motion.div
+            initial={{ opacity: 0, x: -200 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -86,9 +95,13 @@ const TrustedBrands = () => {
               University of the State of New York Education Department Board of
               Regents
             </p>
-          </div>
+          </motion.div>
 
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -129,9 +142,13 @@ const TrustedBrands = () => {
             >
               The Council of Islamic Schools
             </p>
-          </div>
+          </motion.div>
 
-          <div
+          <motion.div
+            initial={{ opacity: 0, x: 200 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.4 }}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -172,11 +189,15 @@ const TrustedBrands = () => {
             >
               Cognia Accreditation Organization
             </p>
-          </div>
+          </motion.div>
         </div>
 
         {/* Bottom Section */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           style={{
             display: "flex",
             justifyContent: "center",
@@ -198,7 +219,7 @@ const TrustedBrands = () => {
           >
             View All Accreditations
           </button>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

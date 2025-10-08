@@ -74,9 +74,9 @@ const NavBarOnly = () => {
       url: "#",
       icon: Award,
       dropdown: [
-        { name: "Staff Surveys", url: "#" },
-        { name: "Parents Surveys", url: "#" },
-        { name: "Students Surveys", url: "#" },
+        { name: "Staff Surveys", url: "/staff-surveys" },
+        { name: "Parents Surveys", url: "/parent-surveys" },
+        { name: "Students Surveys", url: "/student-surveys" },
       ],
     },
     {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   Star,
   DollarSign,
@@ -27,14 +28,26 @@ const AboutUs = () => {
   return (
     <div className="bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-center mb-8">
+        <motion.h1
+          initial={{ opacity: 0, y: -100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-2xl sm:text-3xl font-bold text-center mb-8"
+        >
           <span className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 bg-clip-text text-transparent">
             Know About Us
           </span>
-        </h1>
+        </motion.h1>
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
           {/* Left Content */}
-          <div className="space-y-4 lg:space-y-6">
+          <motion.div
+            initial={{ opacity: 0, x: -200 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+            className="space-y-4 lg:space-y-6"
+          >
             <div>
               <h2 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-light text-gray-800 leading-tight">
                 We Innovate Discover ARA
@@ -87,10 +100,16 @@ const AboutUs = () => {
             >
               Enroll Now
             </button>
-          </div>
+          </motion.div>
 
           {/* Right Content - Images Layout */}
-          <div className="relative">
+          <motion.div
+            initial={{ opacity: 0, x: 200 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+            className="relative"
+          >
             {/* Main larger image - top right */}
             <div className="relative mb-4">
               <img
@@ -155,7 +174,7 @@ const AboutUs = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

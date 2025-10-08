@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { motion } from "framer-motion";
 import NavBarOnly from "../components/NavBarOnly";
 import Ticker from "../components/Ticker";
 import Footer from "../components/Footer";
@@ -26,16 +27,28 @@ export default function PrincipalMessage() {
       <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-4 py-16">
         <div className="max-w-6xl mx-auto">
           {/* Header Section */}
-          <div className="text-center mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: -100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-center mb-12"
+          >
             <h1 className="text-5xl md:text-6xl font-serif font-bold mb-4">
               <span className="text-black">Principal's</span>{" "}
               <span className="text-[#E99544]">Message</span>
             </h1>
             <div className="w-24 h-1 bg-gradient-to-r from-yellow-400 to-amber-500 mx-auto rounded-full"></div>
-          </div>
+          </motion.div>
 
           {/* Logo Header */}
-          <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-t-3xl p-8 flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, x: -200 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+            className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-t-3xl p-8 flex items-center justify-center"
+          >
             <div className="relative w-48 h-48">
               <img
                 src="https://www.alrasheedacademy.org/images/Untitled-1.png"
@@ -113,10 +126,16 @@ export default function PrincipalMessage() {
                 className="absolute w-full h-full object-contain"
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* Main Content */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-b-3xl shadow-2xl border border-white/20">
+          <motion.div
+            initial={{ opacity: 0, x: 200 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+            className="bg-white/80 backdrop-blur-sm rounded-b-3xl shadow-2xl border border-white/20"
+          >
             <div className="p-8 lg:p-12">
               <div className="prose prose-lg max-w-none">
                 <p className="text-2xl font-serif text-blue-900 mb-8 font-medium">
@@ -191,7 +210,7 @@ export default function PrincipalMessage() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </main>
 

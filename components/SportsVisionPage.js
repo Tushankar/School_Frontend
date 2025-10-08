@@ -1,4 +1,5 @@
 import Ticker from "./Ticker";
+import { motion } from "framer-motion";
 
 export default function SportsVisionPage() {
   return (
@@ -10,7 +11,13 @@ export default function SportsVisionPage() {
       <Ticker />
       <div className="max-w-5xl mx-auto space-y-16">
         {/* Vision Section */}
-        <section className="text-center space-y-6">
+        <motion.section
+          initial={{ opacity: 0, y: -100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center space-y-6"
+        >
           <div className="relative py-4">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300"></div>
             <h2 className="text-7xl font-extralight tracking-wider">
@@ -66,10 +73,16 @@ export default function SportsVisionPage() {
               lifelong learning.
             </p>
           </div>
-        </section>
+        </motion.section>
 
         {/* Missions Section */}
-        <section className="text-center space-y-8">
+        <motion.section
+          initial={{ opacity: 0, x: -200 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+          className="text-center space-y-8"
+        >
           <div className="relative py-4">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300"></div>
             <h2 className="text-7xl font-extralight tracking-wider">
@@ -132,7 +145,13 @@ export default function SportsVisionPage() {
             {/* Three Circles */}
             <div className="flex flex-wrap justify-center items-center gap-0 pt-6">
               {/* Circle 1 */}
-              <div className="w-56 h-56 rounded-full bg-white/60 backdrop-blur-sm border border-gray-300 flex items-center justify-center p-8 -mr-6">
+              <motion.div
+                initial={{ opacity: 0, x: -150 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
+                className="w-56 h-56 rounded-full bg-white/60 backdrop-blur-sm border border-gray-300 flex items-center justify-center p-8 -mr-6"
+              >
                 <p className="text-gray-700 text-sm text-center leading-relaxed">
                   Provide a
                   <br />
@@ -142,10 +161,16 @@ export default function SportsVisionPage() {
                   <br />
                   Nurturing Islamic Environment
                 </p>
-              </div>
+              </motion.div>
 
               {/* Circle 2 */}
-              <div className="w-56 h-56 rounded-full bg-white/60 backdrop-blur-sm border border-gray-300 flex items-center justify-center p-8 -mr-6 z-10">
+              <motion.div
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.4 }}
+                className="w-56 h-56 rounded-full bg-white/60 backdrop-blur-sm border border-gray-300 flex items-center justify-center p-8 -mr-6 z-10"
+              >
                 <p className="text-gray-700 text-sm text-center leading-relaxed">
                   Skilled, Creative &amp;
                   <br />
@@ -153,10 +178,14 @@ export default function SportsVisionPage() {
                   <br />
                   Professionals
                 </p>
-              </div>
+              </motion.div>
 
               {/* Circle 3 - Blue */}
-              <div
+              <motion.div
+                initial={{ opacity: 0, x: 150 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.6 }}
                 className="w-56 h-56 rounded-full flex items-center justify-center p-8 shadow-xl z-20"
                 style={{ backgroundColor: "#E99544" }}
               >
@@ -167,12 +196,18 @@ export default function SportsVisionPage() {
                   <br />
                   Upstanding citizen &amp; productive individual
                 </p>
-              </div>
+              </motion.div>
             </div>
           </div>
 
           {/* Philosophy Section */}
-          <section className="mt-8">
+          <motion.section
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="mt-8"
+          >
             <div
               className="rounded-2xl overflow-hidden shadow-lg mx-4 md:mx-0"
               style={{
@@ -207,12 +242,12 @@ export default function SportsVisionPage() {
                 </div>
               </div>
             </div>
-          </section>
+          </motion.section>
 
           <div className="relative pt-8">
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300"></div>
           </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   );

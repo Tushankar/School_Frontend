@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 const members = [
     {
@@ -40,21 +41,63 @@ export default function TeamSectionDemo() {
 
                 <div className="mt-12 gap-4 sm:grid sm:grid-cols-2 md:mt-24">
                     <div className="sm:w-2/5">
-                        <h2 className="text-3xl font-bold sm:text-4xl">The Board Members</h2>
+                        <h2 className="text-3xl font-bold sm:text-4xl">
+                            {"The Board Members".split("").map((char, index) => (
+                                <motion.span
+                                    key={index}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: false, amount: 0.3 }}
+                                    transition={{ duration: 0.3, delay: index * 0.03, ease: "easeOut" }}
+                                    style={{ display: "inline-block" }}
+                                >
+                                    {char === " " ? "\u00A0" : char}
+                                </motion.span>
+                            ))}
+                        </h2>
                     </div>
-                    <div className="mt-6 sm:mt-0">
+                    <motion.div 
+                        className="mt-6 sm:mt-0"
+                        initial={{ opacity: 0, x: 100 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: false, amount: 0.3 }}
+                        transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+                    >
                         <p>During the working process, we perform regular fitting with the client because he is the only person who can feel whether a new suit fits or not.</p>
-                    </div>
+                    </motion.div>
                 </div>
                 <div className="mt-12 md:mt-24">
                     <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
                         {members.map((member, index) => (
-                            <div key={index} className="group overflow-hidden">
+                            <motion.div 
+                                key={index} 
+                                className="group overflow-hidden"
+                                initial={{ opacity: 0, x: index % 2 === 0 ? -200 : 200 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: false, amount: 0.2 }}
+                                transition={{ duration: 0.7, delay: index * 0.08, ease: "easeOut" }}
+                            >
                                 <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar} alt="team member" width="826" height="1239" />
                                 <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
                                     <div className="flex justify-between">
-                                        <h3 className="text-title text-base font-medium transition-all duration-500 group-hover:tracking-wider">{member.name}</h3>
-                                        <span className="text-xs">_0{index + 1}</span>
+                                        <motion.h3 
+                                            className="text-title text-base font-medium transition-all duration-500 group-hover:tracking-wider"
+                                            initial={{ opacity: 0, y: -30 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: false, amount: 0.2 }}
+                                            transition={{ duration: 0.6, delay: 0.3 + index * 0.08, ease: "easeOut" }}
+                                        >
+                                            {member.name}
+                                        </motion.h3>
+                                        <motion.span 
+                                            className="text-xs"
+                                            initial={{ opacity: 0, y: -30 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: false, amount: 0.2 }}
+                                            transition={{ duration: 0.6, delay: 0.35 + index * 0.08, ease: "easeOut" }}
+                                        >
+                                            _0{index + 1}
+                                        </motion.span>
                                     </div>
                                     <div className="mt-1 flex items-center justify-between">
                                         <span className="text-muted-foreground inline-block translate-y-6 text-sm opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">{member.role}</span>
@@ -66,7 +109,7 @@ export default function TeamSectionDemo() {
                                         </Link>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </div>

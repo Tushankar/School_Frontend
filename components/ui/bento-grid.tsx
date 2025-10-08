@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { motion } from "framer-motion";
 
 import { cn } from "../../lib/utils";
 import { Button } from "./button";
@@ -40,8 +41,10 @@ const BentoCard = ({
   href: string;
   cta: string;
 }) => (
-  <div
+  <motion.div
     key={name}
+    whileHover={{ scale: 1.02 }}
+    transition={{ duration: 0.3 }}
     className={cn(
       "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-xl",
       // light styles
@@ -72,7 +75,7 @@ const BentoCard = ({
       </Button>
     </div>
     <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/[.03]" />
-  </div>
+  </motion.div>
 );
 
 export { BentoCard, BentoGrid };

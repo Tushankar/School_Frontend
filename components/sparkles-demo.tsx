@@ -1,10 +1,17 @@
 import { Sparkles } from "./ui/sparkles"
+import { motion } from "framer-motion"
 
 export function Demo() {
   return (
     <div className="w-full overflow-hidden bg-gray-50">
       <div className="mx-auto mt-32 w-full max-w-6xl">
-        <div className="text-center text-3xl text-gray-800">
+        <motion.div
+          initial={{ opacity: 0, y: -100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center text-3xl text-gray-800"
+        >
           <span className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 bg-clip-text text-transparent">
            Affiliation.
           </span>
@@ -12,9 +19,15 @@ export function Demo() {
           <br />
 
           {/* <span>Used by the leaders.</span> */}
-        </div>
+        </motion.div>
 
-        <div className="mt-14 overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, x: -200 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+          className="mt-14 overflow-hidden"
+        >
           <div className="flex gap-16 animate-slide-left-to-right">
             <div className="h-32 flex items-center justify-center flex-shrink-0">
               <Retool />
@@ -48,10 +61,16 @@ export function Demo() {
               <Raycast />
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="relative mt-0 h-64 w-full overflow-hidden [mask-image:radial-gradient(50%_50%,white,transparent)]">
+      <motion.div
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.2 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative mt-0 h-64 w-full overflow-hidden [mask-image:radial-gradient(50%_50%,white,transparent)]"
+      >
         <div className="absolute inset-0 before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_bottom_center,#8350e8,transparent_70%)] before:opacity-40" />
         <div className="absolute -left-1/2 top-1/2 aspect-[1/0.7] z-10 w-[200%] rounded-[100%] border-t border-zinc-900/20 bg-white" />
         <Sparkles
@@ -59,7 +78,7 @@ export function Demo() {
           className="absolute inset-x-0 bottom-0 h-full w-full [mask-image:radial-gradient(50%_50%,white,transparent_85%)]"
           color="#8350e8"
         />
-      </div>
+      </motion.div>
     </div>
   )
 }

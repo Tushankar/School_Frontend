@@ -64,7 +64,7 @@ const IslamicCenterPage = () => {
       url: "#",
       icon: Award,
       dropdown: [
-        { name: "Staff Surveys", url: "#" },
+        { name: "Staff Surveys", url: "/staff-surveys" },
         { name: "Parents Surveys", url: "#" },
         { name: "Students Surveys", url: "#" },
       ],

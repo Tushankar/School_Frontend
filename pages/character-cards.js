@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 export default function CharacterCards() {
   const cards = [
@@ -22,7 +23,13 @@ export default function CharacterCards() {
   return (
     <div className="bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: -100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center mb-12"
+        >
           <h1 className="text-2xl sm:text-3xl font-bold text-center mb-8">
             <span className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 bg-clip-text text-transparent">
               Our Core Values
@@ -31,11 +38,18 @@ export default function CharacterCards() {
           <p className="text-xl text-gray-600">
             Building character, compassion, and community at ARA
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {cards.map((card, index) => (
-            <div key={index} className="bgblue">
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: index === 0 ? -200 : index === 1 ? 0 : 200, y: index === 1 ? 100 : 0 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
+              transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: index * 0.2 }}
+              className="bgblue"
+            >
               <div className="card">
                 <div className="text-center mb-4">
                   <h2 className="text-2xl font-bold mb-2">
@@ -49,7 +63,7 @@ export default function CharacterCards() {
                   {card.description}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
