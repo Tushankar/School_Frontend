@@ -112,7 +112,7 @@ const IslamicCenterPage = () => {
         <nav className="flex items-center justify-between px-6 lg:px-12 py-8">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="relative w-24 h-24">
+            <div className="relative w-32 h-32">
               <style
                 dangerouslySetInnerHTML={{
                   __html: `
@@ -269,20 +269,6 @@ const IslamicCenterPage = () => {
                 style={{ animationDelay: "1100ms" }}
               />
             </div>
-            <div>
-              <h1
-                className="text-white font-bold text-xl tracking-wide font-montserrat slide-bottom"
-                style={{ animationDelay: "1200ms" }}
-              >
-                K-12 Schools
-              </h1>
-              <p
-                className="text-yellow-400 text-xs font-light tracking-widest slide-bottom"
-                style={{ animationDelay: "1400ms" }}
-              >
-                Islamic center
-              </p>
-            </div>
           </div>
           {/* Navigation Menu */}
           <div className="hidden lg:flex items-center space-x-8 text-lg font-serif relative">
@@ -328,7 +314,7 @@ const IslamicCenterPage = () => {
               className="text-2xl lg:text-4xl xl:text-5xl font-serif font-bold leading-tight tracking-wide slide-right"
               style={{ animationDelay: "2000ms" }}
             >
-              <span className="text-yellow-600">Accredited by</span>
+              <span className="text-yellow-600">Recognized by</span>
               <br />
               <span className="text-white">New York State</span>
               <br />
