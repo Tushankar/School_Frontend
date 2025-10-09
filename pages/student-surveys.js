@@ -54,20 +54,40 @@ export default function StudentSurveys() {
 
       <main className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
         {/* Header Section */}
-        <div className="relative text-center py-16 overflow-hidden">
+        <motion.div 
+          className="relative text-center py-16 overflow-hidden"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: "url('/assets/hall.jpg')" }}></div>
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/30 to-teal-900/30"></div>
           <div className="relative z-10">
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-4">
+            <motion.h1 
+              className="text-5xl md:text-6xl font-serif font-bold mb-4"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               <span className="text-black">Student</span>{" "}
               <span className="text-black">Surveys</span>
-            </h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-emerald-400 to-teal-500 mx-auto rounded-full"></div>
-            <p className="text-xl text-gray-700 mt-6 max-w-3xl mx-auto font-medium">
+            </motion.h1>
+            <motion.div 
+              className="w-24 h-1 bg-gradient-to-r from-emerald-400 to-teal-500 mx-auto rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: 96 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            />
+            <motion.p 
+              className="text-xl text-gray-700 mt-6 max-w-3xl mx-auto font-medium"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
               Share your academic experience and help us improve your learning environment.
-            </p>
+            </motion.p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Survey Form */}
         <div className="relative py-16 bg-emerald-50">
@@ -77,9 +97,10 @@ export default function StudentSurveys() {
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Student Information Card */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 0.5 }}
               >
                 <div className="bg-white/20 backdrop-blur-md border border-white/30 hover:border-emerald-200/50 transition-colors rounded-lg shadow-xl">
                   <div className="bg-emerald-50/30 backdrop-blur-sm border-b border-white/20 px-6 py-4">
@@ -158,9 +179,10 @@ export default function StudentSurveys() {
 
               {/* Survey Questions Card */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
               >
                 <div className="bg-white/20 backdrop-blur-md border border-white/30 hover:border-teal-200/50 transition-colors rounded-lg shadow-xl">
                   <div className="bg-teal-50/30 backdrop-blur-sm border-b border-white/20 px-6 py-4">

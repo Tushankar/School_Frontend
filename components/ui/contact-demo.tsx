@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 export default function Contact() {
 
     const contactMethods = [
@@ -32,7 +34,13 @@ export default function Contact() {
         <main className="py-14">
             <div className="max-w-screen-xl mx-auto px-4 text-gray-600 md:px-8">
                 <div className="max-w-lg mx-auto gap-12 justify-between lg:flex lg:max-w-none">
-                    <div className="max-w-lg space-y-0">
+                    <motion.div
+                        initial={{ opacity: 0, x: -100 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: false, amount: 0.2 }}
+                        transition={{ duration: 0.8 }}
+                        className="max-w-lg space-y-0"
+                    >
                         <h3 className="text-indigo-600 font-semibold">
                             Contact
                         </h3>
@@ -67,8 +75,14 @@ export default function Contact() {
                                 referrerPolicy="no-referrer-when-downgrade"
                             ></iframe>
                         </div>
-                    </div>
-                    <div className="flex-1 mt-6 sm:max-w-lg lg:max-w-md">
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, x: 100 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: false, amount: 0.2 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="flex-1 mt-6 sm:max-w-lg lg:max-w-md"
+                    >
                         <form
                             onSubmit={(e) => e.preventDefault()}
                             className="space-y-5"
@@ -105,7 +119,7 @@ export default function Contact() {
                                 Submit
                             </button>
                         </form>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </main>

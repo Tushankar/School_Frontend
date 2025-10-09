@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import NavBarOnly from "../components/NavBarOnly";
 import Footer from "../components/Footer";
 
@@ -34,12 +35,22 @@ const SectionCard = ({
   const titleStyle = { color: accent };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.2 }}
+      transition={{ duration: 0.6 }}
       className={`group flex flex-col ${
         reverse ? "md:flex-row-reverse" : "md:flex-row"
       } md:items-stretch items-center gap-8 md:gap-12`}
     >
-      <div className="md:w-1/3 flex justify-center md:items-stretch">
+      <motion.div
+        initial={{ opacity: 0, x: reverse ? 100 : -100 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: false, amount: 0.3 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="md:w-1/3 flex justify-center md:items-stretch"
+      >
         <img
           alt={imageAlt}
           className={`object-contain w-auto ${
@@ -50,8 +61,14 @@ const SectionCard = ({
           src={imageSrc}
           style={{ maxWidth: "100%" }}
         />
-      </div>
-      <div className="md:w-2/3">
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: reverse ? -100 : 100 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: false, amount: 0.3 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+        className="md:w-2/3"
+      >
         <div className="bg-white p-8 rounded-lg shadow-lg relative overflow-hidden h-full flex flex-col">
           <span
             style={{
@@ -85,8 +102,8 @@ const SectionCard = ({
             <p className="text-gray-600 leading-relaxed">{children}</p>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
@@ -105,7 +122,13 @@ function CurricularPage() {
             `}</style>
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-12">
-        <div className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
           <h1 className="text-4xl sm:text-5xl font-bold text-blue-600 mb-4">
             Our Curriculum
           </h1>
@@ -115,7 +138,7 @@ function CurricularPage() {
             equipped with the skills and knowledge needed to thrive in an
             ever-changing global landscape.
           </p>
-        </div>
+        </motion.div>
 
         <div className="space-y-16">
           <SectionCard

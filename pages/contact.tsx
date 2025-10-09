@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, forwardRef, ButtonHTMLAttributes } from 'react';
+import { motion } from 'framer-motion';
 import {
   Check,
   Copy,
@@ -201,68 +202,164 @@ export default function ContactPage() {
             <div className="bg-[radial-gradient(50%_50%_at_50%_50%,hsl(var(--foreground)/.04)_0,hsl(var(--foreground)/.01)_80%,transparent_100%)] absolute top-0 left-0 h-320 w-60 [translate:5%_-50%] -rotate-45 rounded-full" />
             <div className="bg-[radial-gradient(50%_50%_at_50%_50%,hsl(var(--foreground)/.04)_0,hsl(var(--foreground)/.01)_80%,transparent_100%)] absolute top-0 left-0 h-320 w-60 -translate-y-87.5 -rotate-45 rounded-full" />
           </div>
-          <div className="flex grow flex-col justify-center px-4 md:px-6 pt-16 pb-16">
-            <h1 className="text-4xl font-bold md:text-5xl">
-              Contact Us
-            </h1>
-            <p className="text-muted-foreground mb-5 text-base">
-              Contact the support team at Asme.
-            </p>
-          </div>
-          <BorderSeparator />
-          <div className="grid md:grid-cols-3">
-            <Box
-              icon={Mail}
-              title="Email"
-              description="We respond to all emails within 24 hours."
-            >
-              <a
-                href={`mailto:${APP_EMAIL}`}
-                className="font-mono text-base font-medium tracking-wide hover:underline"
-              >
-                {APP_EMAIL}
-              </a>
-              <CopyButton className="size-6" text={APP_EMAIL} />
-            </Box>
-            <Box
-              icon={MapPin}
-              title="Office"
-              description="Drop by our office for a chat."
-            >
-              <span className="font-mono text-base font-medium tracking-wide">
-                3122 Abbott Rd, Orchard Park, NY 14127
-              </span>
-            </Box>
-            <Box
-              icon={Phone}
-              title="Phone"
-              description="We're available Mon-Fri, 9am-5pm."
-              className="border-b-0 md:border-r-0"
-            >
-              <div>
-                <div className="flex items-center gap-x-2">
-                  <a
-                    href={`tel:${APP_PHONE}`}
-                    className="block font-mono text-base font-medium tracking-wide hover:underline"
-                  >
-                    {APP_PHONE}
-                  </a>
-                  <CopyButton className="size-6" text={APP_PHONE} />
-                </div>
-                <div className="flex items-center gap-x-2">
-                  <a
-                    href={`tel:${APP_PHONE_2}`}
-                    className="block font-mono text-base font-medium tracking-wide hover:underline"
-                  >
-                    {APP_PHONE_2}
-                  </a>
-                  <CopyButton className="size-6" text={APP_PHONE_2} />
-                </div>
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.8 }}
+            className="flex grow flex-col justify-center px-4 md:px-6 pt-16 pb-8"
+          >
+            <div className="flex items-center gap-4">
+              <div className="relative w-24 h-24 flex-shrink-0">
+                <style dangerouslySetInnerHTML={{
+                  __html: `
+                    @keyframes slideInFromLeft {
+                      0% { opacity: 0; transform: translateX(-100%); }
+                      100% { opacity: 1; transform: translateX(0); }
+                    }
+                    @keyframes slideInFromRight {
+                      0% { opacity: 0; transform: translateX(100%); }
+                      100% { opacity: 1; transform: translateX(0); }
+                    }
+                    @keyframes slideInFromTop {
+                      0% { opacity: 0; transform: translateY(-100%); }
+                      100% { opacity: 1; transform: translateY(0); }
+                    }
+                    @keyframes slideInFromBottom {
+                      0% { opacity: 0; transform: translateY(100%); }
+                      100% { opacity: 1; transform: translateY(0); }
+                    }
+                    .slide-left {
+                      animation: slideInFromLeft 1500ms ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                    .slide-right {
+                      animation: slideInFromRight 1500ms ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                    .slide-top {
+                      animation: slideInFromTop 1500ms ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                    .slide-bottom {
+                      animation: slideInFromBottom 1500ms ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                  `
+                }} />
+                <img src="https://www.alrasheedacademy.org/images/Untitled-1.png" alt="" className="absolute w-full h-full object-contain slide-left" style={{ animationDelay: "200ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/Untitled-2.png" alt="" className="absolute w-full h-full object-contain slide-left" style={{ animationDelay: "400ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/qqdd.png" alt="" className="absolute w-full h-full object-contain slide-left" style={{ animationDelay: "600ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/48999.png" alt="" className="absolute w-full h-full object-contain slide-left" style={{ animationDelay: "800ms", animationDuration: "1000ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/1333.png" alt="" className="absolute w-full h-full object-contain slide-right" style={{ animationDelay: "300ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/Untitled-13.png" alt="" className="absolute w-full h-full object-contain slide-right" style={{ animationDelay: "500ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/Untitled-12.png" alt="" className="absolute w-full h-full object-contain slide-right" style={{ animationDelay: "700ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/Untitled-6.png" alt="" className="absolute w-full h-full object-contain slide-right" style={{ animationDelay: "900ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/qqq.png" alt="" className="absolute w-full h-full object-contain slide-top" style={{ animationDelay: "400ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/Untitled-9.png" alt="" className="absolute w-full h-full object-contain slide-top" style={{ animationDelay: "600ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/7788.png" alt="" className="absolute w-full h-full object-contain slide-top" style={{ animationDelay: "800ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/Untitled-11.png" alt="" className="absolute w-full h-full object-contain slide-bottom" style={{ animationDelay: "500ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/Untitled-10.png" alt="" className="absolute w-full h-full object-contain slide-bottom" style={{ animationDelay: "700ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/Untitled-1qwe.png" alt="" className="absolute w-full h-full object-contain slide-bottom" style={{ animationDelay: "900ms" }} />
+                <img src="https://www.alrasheedacademy.org/images/qw.png" alt="" className="absolute w-full h-full object-contain slide-bottom" style={{ animationDelay: "1100ms" }} />
               </div>
-            </Box>
-          </div>
+              <div>
+                <h1 className="text-4xl font-bold md:text-5xl">
+                  Contact Us
+                </h1>
+                <p className="text-muted-foreground mb-5 text-base">
+                  Contact the support team at Al-Rasheed Academy.
+                </p>
+              </div>
+            </div>
+          </motion.div>
           <BorderSeparator />
-          <div className="relative flex h-full min-h-[320px] items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="grid md:grid-cols-3"
+          >
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <Box
+                icon={Mail}
+                title="Email"
+                description="We respond to all emails within 24 hours."
+              >
+                <a
+                  href={`mailto:${APP_EMAIL}`}
+                  className="font-mono text-base font-medium tracking-wide hover:underline"
+                >
+                  {APP_EMAIL}
+                </a>
+                <CopyButton className="size-6" text={APP_EMAIL} />
+              </Box>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <Box
+                icon={MapPin}
+                title="Office"
+                description="Drop by our office for a chat."
+              >
+                <span className="font-mono text-base font-medium tracking-wide">
+                  3122 Abbott Rd, Orchard Park, NY 14127
+                </span>
+              </Box>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              <Box
+                icon={Phone}
+                title="Phone"
+                description="We're available Mon-Fri, 9am-5pm."
+                className="border-b-0 md:border-r-0"
+              >
+                <div>
+                  <div className="flex items-center gap-x-2">
+                    <a
+                      href={`tel:${APP_PHONE}`}
+                      className="block font-mono text-base font-medium tracking-wide hover:underline"
+                    >
+                      {APP_PHONE}
+                    </a>
+                    <CopyButton className="size-6" text={APP_PHONE} />
+                  </div>
+                  <div className="flex items-center gap-x-2">
+                    <a
+                      href={`tel:${APP_PHONE_2}`}
+                      className="block font-mono text-base font-medium tracking-wide hover:underline"
+                    >
+                      {APP_PHONE_2}
+                    </a>
+                    <CopyButton className="size-6" text={APP_PHONE_2} />
+                  </div>
+                </div>
+              </Box>
+            </motion.div>
+          </motion.div>
+          <BorderSeparator />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="relative flex h-full min-h-[320px] items-center justify-center"
+          >
             <div
               className={cn(
                 'z--10 absolute inset-0 size-full',
@@ -273,13 +370,29 @@ export default function ContactPage() {
             />
 
             <div className="relative z-1 space-y-6">
-              <h2 className="text-center text-3xl font-bold md:text-4xl mt-8">
+              <motion.h2
+                initial={{ opacity: 0, y: -30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="text-center text-3xl font-bold md:text-4xl mt-8"
+              >
                 Find us online
-              </h2>
-              <div className="flex flex-wrap items-center justify-center gap-8">
-                {socialLinks.map((link) => (
-                  <a
+              </motion.h2>
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="flex flex-wrap items-center justify-center gap-8"
+              >
+                {socialLinks.map((link, idx) => (
+                  <motion.a
                     key={link.label}
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 0.4, delay: 0.6 + idx * 0.1 }}
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -289,13 +402,13 @@ export default function ContactPage() {
                     <span className="font-mono text-sm font-medium tracking-wide">
                       {link.label}
                     </span>
-                  </a>
+                  </motion.a>
                 ))}
-              </div>
+              </motion.div>
               <ContactSections />
               <ContactDemo />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
       <Footer />
