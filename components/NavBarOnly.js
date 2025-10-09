@@ -53,7 +53,7 @@ const NavBarOnly = () => {
         { name: "New Enrollment", url: "/enrollment" },
         { name: "Re-Enrollment", url: "/renroll" },
         { name: "Uniform Policy", url: "/dress-code" },
-        { name: "Bus Policy", url: "#" },
+        { name: "Bus Policy", url: "/bus-policy" },
         { name: "Supply List", url: "/supply-list" },
       ],
     },

@@ -43,7 +43,7 @@ const IslamicCenterPage = () => {
         { name: "New Enrollment", url: "/enrollment" },
         { name: "Re-Enrollment", url: "/renroll" },
         { name: "Uniform Policy", url: "/dress-code" },
-        { name: "Bus Policy", url: "#" },
+        { name: "Bus Policy", url: "/bus-policy" },
         { name: "Supply List", url: "/supply-list" },
       ],
     },
@@ -276,7 +276,7 @@ const IslamicCenterPage = () => {
           </div>{" "}
           {/* CTA Button */}
           <Link href="/contact">
-            <button 
+            <button
               className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif slide-bottom"
               style={{ animationDelay: "1400ms" }}
             >
@@ -304,13 +304,13 @@ const IslamicCenterPage = () => {
 
           {/* Main Heading */}
           <div className="mb-8">
-            <h3 
+            <h3
               className="text-white text-lg lg:text-xl font-light mb-2 tracking-wider opacity-90 slide-left"
               style={{ animationDelay: "1800ms" }}
             >
               Excellence in Islamic Education
             </h3>
-            <h1 
+            <h1
               className="text-2xl lg:text-4xl xl:text-5xl font-serif font-bold leading-tight tracking-wide slide-right"
               style={{ animationDelay: "2000ms" }}
             >
@@ -323,7 +323,7 @@ const IslamicCenterPage = () => {
           </div>
 
           {/* Social Media Icons */}
-          <div 
+          <div
             className="flex space-x-6 slide-bottom"
             style={{ animationDelay: "2200ms" }}
           >
