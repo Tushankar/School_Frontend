@@ -1,6 +1,50 @@
 import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { toast } from 'sonner';
+import Spinner from './spinner-1';
 
 export default function Contact() {
+    const nameRef = useRef<HTMLInputElement>(null);
+    const emailRef = useRef<HTMLInputElement>(null);
+    const messageRef = useRef<HTMLTextAreaElement>(null);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const name = nameRef.current.value;
+        const email = emailRef.current.value;
+        const message = messageRef.current.value;
+
+        if (!name || !email || !message) {
+            toast.error('Please fill in all fields');
+            return;
+        }
+
+        try {
+            setSending(true);
+            const response = await fetch('http://localhost:4000/api/contact/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, message }),
+            });
+
+            if (response.ok) {
+                toast.success('Message sent successfully!');
+                nameRef.current.value = '';
+                emailRef.current.value = '';
+                messageRef.current.value = '';
+            } else {
+                toast.error('Failed to send message');
+            }
+        } catch (error) {
+            toast.error('Error sending message');
+        }
+        finally {
+            setSending(false);
+        }
+    };
+    const [sending, setSending] = useState(false);
 
     const contactMethods = [
         {
@@ -84,7 +128,7 @@ export default function Contact() {
                         className="flex-1 mt-6 sm:max-w-lg lg:max-w-md"
                     >
                         <form
-                            onSubmit={(e) => e.preventDefault()}
+                            onSubmit={handleSubmit}
                             className="space-y-5"
                         >
                             <div>
@@ -94,6 +138,7 @@ export default function Contact() {
                                 <input
                                     type="text"
                                     required
+                                    ref={nameRef}
                                     className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                                 />
                             </div>
@@ -104,6 +149,7 @@ export default function Contact() {
                                 <input
                                     type="email"
                                     required
+                                    ref={emailRef}
                                     className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                                 />
                             </div>
@@ -111,12 +157,13 @@ export default function Contact() {
                                 <label className="font-medium">
                                     Message
                                 </label>
-                                <textarea required className="w-full mt-2 h-36 px-3 py-2 resize-none appearance-none bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"></textarea>
+                                <textarea required ref={messageRef} className="w-full mt-2 h-36 px-3 py-2 resize-none appearance-none bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"></textarea>
                             </div>
                             <button
-                                className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150"
+                                className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150 flex items-center justify-center gap-2"
+                                disabled={sending}
                             >
-                                Submit
+                                {sending ? <><Spinner size={18} color="#ffffff" /> Sending...</> : 'Submit'}
                             </button>
                         </form>
                     </motion.div>

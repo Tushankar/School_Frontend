@@ -32,6 +32,8 @@ import {
   Edit,
 } from "lucide-react";
 
+import { toast } from "sonner";
+
 import {
   Table,
   TableBody,
@@ -686,7 +688,7 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
             )}
             {selected.startsWith("contact-form-detail-") && (
               <ContactFormDetailView
-                formId={selected.split("-")[2]}
+                formId={selected.split("-")[3]}
                 setSelected={setSelected}
               />
             )}
@@ -986,7 +988,6 @@ const CMSManagement = ({ setSelected }) => {
     ],
   });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchCmsData();
@@ -1006,12 +1007,12 @@ const CMSManagement = ({ setSelected }) => {
       }
     } catch (err) {
       console.error("Failed to fetch CMS data", err);
+      toast.error("Failed to fetch CMS data");
     }
   };
 
   const handleSave = async () => {
     setLoading(true);
-    setMessage("");
     try {
       const response = await fetch(
         "http://localhost:4000/api/auth/cms/contact",
@@ -1025,12 +1026,12 @@ const CMSManagement = ({ setSelected }) => {
         }
       );
       if (response.ok) {
-        setMessage("CMS updated successfully!");
+        toast.success("CMS updated successfully!");
       } else {
-        setMessage("Failed to update CMS");
+        toast.error("Failed to update CMS");
       }
     } catch (err) {
-      setMessage("Error updating CMS");
+      toast.error("Error updating CMS");
     } finally {
       setLoading(false);
     }
@@ -1065,17 +1066,6 @@ const CMSManagement = ({ setSelected }) => {
           {loading ? "Saving..." : "Save Changes"}
         </Button>
       </div>
-      {message && (
-        <div
-          className={`p-4 rounded-lg border ${
-            message.includes("success")
-              ? "bg-green-50 border-green-200 text-green-800"
-              : "bg-red-50 border-red-200 text-red-800"
-          }`}
-        >
-          {message}
-        </div>
-      )}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
           <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
