@@ -2,12 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import {
   BookOpenIcon,
-  UsersIcon,
-  TrophyIcon,
-  HeartIcon,
   GraduationCapIcon,
-  LightbulbIcon,
-  GlobeIcon,
   UserPlusIcon,
   NewspaperIcon,
   BriefcaseIcon,
