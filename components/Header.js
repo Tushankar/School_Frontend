@@ -117,35 +117,39 @@ const IslamicCenterPage = () => {
                 dangerouslySetInnerHTML={{
                   __html: `
                     @keyframes slideInFromLeft {
-                      0% { opacity: 0; transform: translateX(-100%); }
-                      100% { opacity: 1; transform: translateX(0); }
+                      0% { opacity: 0; transform: translateX(-300px) scale(0.8); }
+                      50% { opacity: 0.7; transform: translateX(-50px) scale(0.9); }
+                      100% { opacity: 1; transform: translateX(0) scale(1); }
                     }
                     @keyframes slideInFromRight {
-                      0% { opacity: 0; transform: translateX(100%); }
-                      100% { opacity: 1; transform: translateX(0); }
+                      0% { opacity: 0; transform: translateX(300px) scale(0.8); }
+                      50% { opacity: 0.7; transform: translateX(50px) scale(0.9); }
+                      100% { opacity: 1; transform: translateX(0) scale(1); }
                     }
                     @keyframes slideInFromTop {
-                      0% { opacity: 0; transform: translateY(-100%); }
-                      100% { opacity: 1; transform: translateY(0); }
+                      0% { opacity: 0; transform: translateY(-300px) scale(0.8); }
+                      50% { opacity: 0.7; transform: translateY(-50px) scale(0.9); }
+                      100% { opacity: 1; transform: translateY(0) scale(1); }
                     }
                     @keyframes slideInFromBottom {
-                      0% { opacity: 0; transform: translateY(100%); }
-                      100% { opacity: 1; transform: translateY(0); }
+                      0% { opacity: 0; transform: translateY(300px) scale(0.8); }
+                      50% { opacity: 0.7; transform: translateY(50px) scale(0.9); }
+                      100% { opacity: 1; transform: translateY(0) scale(1); }
                     }
                     .slide-left {
-                      animation: slideInFromLeft 1500ms ease-in-out;
+                      animation: slideInFromLeft 2500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
                       animation-fill-mode: both;
                     }
                     .slide-right {
-                      animation: slideInFromRight 1500ms ease-in-out;
+                      animation: slideInFromRight 2500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
                       animation-fill-mode: both;
                     }
                     .slide-top {
-                      animation: slideInFromTop 1500ms ease-in-out;
+                      animation: slideInFromTop 2500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
                       animation-fill-mode: both;
                     }
                     .slide-bottom {
-                      animation: slideInFromBottom 1500ms ease-in-out;
+                      animation: slideInFromBottom 2500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
                       animation-fill-mode: both;
                     }
                     .delay-200 { animation-delay: 200ms; }
@@ -195,7 +199,7 @@ const IslamicCenterPage = () => {
                 className="absolute w-full h-full object-contain slide-left"
                 style={{
                   animationDelay: "800ms",
-                  animationDuration: "1000ms",
+                  animationDuration: "2500ms",
                 }}
               />
               <img
@@ -286,7 +290,10 @@ const IslamicCenterPage = () => {
           </div>{" "}
           {/* CTA Button */}
           <Link href="/contact">
-            <button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif slide-bottom delay-1000">
+            <button 
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif slide-bottom"
+              style={{ animationDelay: "1400ms" }}
+            >
               Contact
             </button>
           </Link>
@@ -297,11 +304,12 @@ const IslamicCenterPage = () => {
           {/* Arabic Text */}
           <div className="mb-2">
             <h2
-              className="text-white text-xl lg:text-2xl mb-6 opacity-90 slide-top delay-200"
+              className="text-white text-xl lg:text-2xl mb-6 opacity-90 slide-top"
               style={{
                 fontFamily: "serif",
                 letterSpacing: "0.1em",
                 lineHeight: "1.8",
+                animationDelay: "1600ms",
               }}
             >
               بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِیْمِ
@@ -310,10 +318,16 @@ const IslamicCenterPage = () => {
 
           {/* Main Heading */}
           <div className="mb-8">
-            <h3 className="text-white text-lg lg:text-xl font-light mb-2 tracking-wider opacity-90 slide-left delay-400">
+            <h3 
+              className="text-white text-lg lg:text-xl font-light mb-2 tracking-wider opacity-90 slide-left"
+              style={{ animationDelay: "1800ms" }}
+            >
               Excellence in Islamic Education
             </h3>
-            <h1 className="text-2xl lg:text-4xl xl:text-5xl font-serif font-bold leading-tight tracking-wide slide-right delay-600">
+            <h1 
+              className="text-2xl lg:text-4xl xl:text-5xl font-serif font-bold leading-tight tracking-wide slide-right"
+              style={{ animationDelay: "2000ms" }}
+            >
               <span className="text-yellow-600">Accredited by</span>
               <br />
               <span className="text-white">New York State</span>
@@ -323,7 +337,10 @@ const IslamicCenterPage = () => {
           </div>
 
           {/* Social Media Icons */}
-          <div className="flex space-x-6 slide-bottom delay-800">
+          <div 
+            className="flex space-x-6 slide-bottom"
+            style={{ animationDelay: "2200ms" }}
+          >
             <a
               href="#"
               className="text-yellow-500 hover:text-yellow-400 transition-colors"
