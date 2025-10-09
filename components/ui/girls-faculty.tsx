@@ -1,4 +1,6 @@
+'use client'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 const members = [
     {
@@ -92,24 +94,51 @@ export default function GirlsFacultySection() {
         <section className="bg-gray-50 py-4 md:py-8 dark:bg-transparent">
             <div className="mx-auto max-w-5xl border-t px-6">
 
-                <div className="mt-12 gap-4 sm:grid sm:grid-cols-2 md:mt-24">
+                <motion.div
+                    className="mt-12 gap-4 sm:grid sm:grid-cols-2 md:mt-24"
+                    initial={{ opacity: 0, y: -50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 0.6 }}
+                >
                     <div className="sm:w-2/5">
                         <h2 className="text-3xl font-bold sm:text-4xl">Girls&apos; Section Faculty</h2>
                     </div>
                     <div className="mt-6 sm:mt-0">
                         <p>Meet our dedicated faculty members for the Girls&apos; Section at Al-Rasheed Academy.</p>
                     </div>
-                </div>
+                </motion.div>
                 <div className="mt-12 md:mt-24">
                     <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-                        {members.map((member, index) => (
-                            <div key={index} className="group overflow-hidden">
-                                <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar} alt="faculty member" width="826" height="1239" />
-                                <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
-                                    <div className="flex justify-between">
-                                        <h3 className="text-title text-base font-medium transition-all duration-500 group-hover:tracking-wider">{member.name}</h3>
-                                        <span className="text-xs">_0{index + 1}</span>
-                                    </div>
+                        {members.map((member, index) => {
+                            const directions = [
+                                { x: -100, y: 0 },
+                                { x: 0, y: -100 },
+                                { x: 100, y: 0 }
+                            ]
+                            const direction = directions[index % 3]
+                            
+                            return (
+                                <motion.div
+                                    key={index}
+                                    className="group overflow-hidden"
+                                    initial={{ opacity: 0, x: direction.x, y: direction.y }}
+                                    whileInView={{ opacity: 1, x: 0, y: 0 }}
+                                    viewport={{ once: false, amount: 0.3 }}
+                                    transition={{ duration: 0.6, ease: "easeOut" }}
+                                >
+                                    <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar} alt="faculty member" width="826" height="1239" />
+                                    <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
+                                        <motion.div
+                                            className="flex justify-between"
+                                            initial={{ opacity: 0, y: 20 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: false, amount: 0.3 }}
+                                            transition={{ duration: 0.5, delay: 0.2 }}
+                                        >
+                                            <h3 className="text-title text-base font-medium transition-all duration-500 group-hover:tracking-wider">{member.name}</h3>
+                                            <span className="text-xs">_0{index + 1}</span>
+                                        </motion.div>
                                     <div className="mt-1 flex items-center justify-between">
                                         <span className="text-muted-foreground inline-block translate-y-6 text-sm opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">{member.role}</span>
                                         <Link href={member.link} className="group-hover:text-primary-600 dark:group-hover:text-primary-400 inline-flex items-center gap-1 translate-y-8 text-sm tracking-wide opacity-0 transition-all duration-500 hover:underline group-hover:translate-y-0 group-hover:opacity-100">
@@ -119,8 +148,9 @@ export default function GirlsFacultySection() {
                                         </Link>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                                </motion.div>
+                            )
+                        })}
                     </div>
                 </div>
             </div>

@@ -18,21 +18,57 @@ export default function Calendar() {
         <div className="p-6">
           <div className="flex items-center justify-center">
             <div className="relative w-32 h-32 mr-4 flex-shrink-0">
-              <img src="https://www.alrasheedacademy.org/images/Untitled-1.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/Untitled-2.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/qqdd.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/48999.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/1333.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/Untitled-13.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/Untitled-12.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/Untitled-6.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/qqq.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/Untitled-9.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/7788.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/Untitled-11.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/Untitled-10.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/Untitled-1qwe.png" alt="" className="absolute w-full h-full object-contain" />
-              <img src="https://www.alrasheedacademy.org/images/qw.png" alt="" className="absolute w-full h-full object-contain" />
+              <style dangerouslySetInnerHTML={{
+                __html: `
+                  @keyframes slideInFromLeft {
+                    0% { opacity: 0; transform: translateX(-100%); }
+                    100% { opacity: 1; transform: translateX(0); }
+                  }
+                  @keyframes slideInFromRight {
+                    0% { opacity: 0; transform: translateX(100%); }
+                    100% { opacity: 1; transform: translateX(0); }
+                  }
+                  @keyframes slideInFromTop {
+                    0% { opacity: 0; transform: translateY(-100%); }
+                    100% { opacity: 1; transform: translateY(0); }
+                  }
+                  @keyframes slideInFromBottom {
+                    0% { opacity: 0; transform: translateY(100%); }
+                    100% { opacity: 1; transform: translateY(0); }
+                  }
+                  .slide-left {
+                    animation: slideInFromLeft 1500ms ease-in-out;
+                    animation-fill-mode: both;
+                  }
+                  .slide-right {
+                    animation: slideInFromRight 1500ms ease-in-out;
+                    animation-fill-mode: both;
+                  }
+                  .slide-top {
+                    animation: slideInFromTop 1500ms ease-in-out;
+                    animation-fill-mode: both;
+                  }
+                  .slide-bottom {
+                    animation: slideInFromBottom 1500ms ease-in-out;
+                    animation-fill-mode: both;
+                  }
+                `
+              }} />
+              <img src="https://www.alrasheedacademy.org/images/Untitled-1.png" alt="" className="absolute w-full h-full object-contain slide-left" style={{ animationDelay: "200ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/Untitled-2.png" alt="" className="absolute w-full h-full object-contain slide-left" style={{ animationDelay: "400ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/qqdd.png" alt="" className="absolute w-full h-full object-contain slide-left" style={{ animationDelay: "600ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/48999.png" alt="" className="absolute w-full h-full object-contain slide-left" style={{ animationDelay: "800ms", animationDuration: "1000ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/1333.png" alt="" className="absolute w-full h-full object-contain slide-right" style={{ animationDelay: "300ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/Untitled-13.png" alt="" className="absolute w-full h-full object-contain slide-right" style={{ animationDelay: "500ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/Untitled-12.png" alt="" className="absolute w-full h-full object-contain slide-right" style={{ animationDelay: "700ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/Untitled-6.png" alt="" className="absolute w-full h-full object-contain slide-right" style={{ animationDelay: "900ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/qqq.png" alt="" className="absolute w-full h-full object-contain slide-top" style={{ animationDelay: "400ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/Untitled-9.png" alt="" className="absolute w-full h-full object-contain slide-top" style={{ animationDelay: "600ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/7788.png" alt="" className="absolute w-full h-full object-contain slide-top" style={{ animationDelay: "800ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/Untitled-11.png" alt="" className="absolute w-full h-full object-contain slide-bottom" style={{ animationDelay: "500ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/Untitled-10.png" alt="" className="absolute w-full h-full object-contain slide-bottom" style={{ animationDelay: "700ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/Untitled-1qwe.png" alt="" className="absolute w-full h-full object-contain slide-bottom" style={{ animationDelay: "900ms" }} />
+              <img src="https://www.alrasheedacademy.org/images/qw.png" alt="" className="absolute w-full h-full object-contain slide-bottom" style={{ animationDelay: "1100ms" }} />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Academic Calendar</h1>
