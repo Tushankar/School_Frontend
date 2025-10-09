@@ -91,23 +91,43 @@ const members = [
 
 export default function GirlsFacultySection() {
     return (
-        <section className="bg-gray-50 py-4 md:py-8 dark:bg-transparent">
-            <div className="mx-auto max-w-5xl border-t px-6">
-
-                <motion.div
-                    className="mt-12 gap-4 sm:grid sm:grid-cols-2 md:mt-24"
-                    initial={{ opacity: 0, y: -50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.3 }}
-                    transition={{ duration: 0.6 }}
+        <>
+        {/* Banner Section */}
+        <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
+            <motion.div
+                initial={{ x: -100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute inset-0"
+                style={{
+                    backgroundImage: "url('/assets/hall.jpg')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center"
+                }}
+            />
+            <div className="absolute inset-0 bg-black/50"></div>
+            <div className="relative z-10 text-center text-white">
+                <motion.h1
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                    className="text-5xl font-light tracking-wide"
                 >
-                    <div className="sm:w-2/5">
-                        <h2 className="text-3xl font-bold sm:text-4xl">Girls&apos; Section Faculty</h2>
-                    </div>
-                    <div className="mt-6 sm:mt-0">
-                        <p>Meet our dedicated faculty members for the Girls&apos; Section at Al-Rasheed Academy.</p>
-                    </div>
-                </motion.div>
+                    Girls&apos; Section Faculty
+                </motion.h1>
+                <motion.p
+                    initial={{ x: 100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+                    className="mt-4 text-sm"
+                >
+                    Home › Girls Faculty
+                </motion.p>
+            </div>
+        </div>
+        
+        <section className="py-4 md:py-8">
+            <div className="mx-auto max-w-5xl px-6">
                 <div className="mt-12 md:mt-24">
                     <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
                         {members.map((member, index) => {
@@ -155,5 +175,6 @@ export default function GirlsFacultySection() {
                 </div>
             </div>
         </section>
+        </>
     )
 }

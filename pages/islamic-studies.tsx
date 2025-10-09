@@ -75,6 +75,27 @@ export default function IslamicStudies() {
       <NavBarOnly />
       <Ticker />
 
+      {/* Banner Section */}
+      <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url('/assets/hall.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }}
+        />
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="relative z-10 text-center text-white">
+          <h1 className="text-5xl font-light tracking-wide">
+            Islamic Studies
+          </h1>
+          <p className="mt-4 text-sm">
+            Home › Islamic Studies
+          </p>
+        </div>
+      </div>
+
       <div className="min-h-screen flex flex-col items-center justify-center bg-white">
         <style jsx>{`
           @keyframes fadeInUp {

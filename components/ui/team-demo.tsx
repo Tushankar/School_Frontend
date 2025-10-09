@@ -36,36 +36,43 @@ const members = [
 
 export default function TeamSectionDemo() {
     return (
-        <section className="bg-gray-50 py-4 md:py-8 dark:bg-transparent">
-            <div className="mx-auto max-w-5xl border-t px-6">
-
-                <div className="mt-12 gap-4 sm:grid sm:grid-cols-2 md:mt-24">
-                    <div className="sm:w-2/5">
-                        <h2 className="text-3xl font-bold sm:text-4xl">
-                            {"The Board Members".split("").map((char, index) => (
-                                <motion.span
-                                    key={index}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: false, amount: 0.3 }}
-                                    transition={{ duration: 0.3, delay: index * 0.03, ease: "easeOut" }}
-                                    style={{ display: "inline-block" }}
-                                >
-                                    {char === " " ? "\u00A0" : char}
-                                </motion.span>
-                            ))}
-                        </h2>
-                    </div>
-                    <motion.div 
-                        className="mt-6 sm:mt-0"
-                        initial={{ opacity: 0, x: 100 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
-                        transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-                    >
-                        <p>During the working process, we perform regular fitting with the client because he is the only person who can feel whether a new suit fits or not.</p>
-                    </motion.div>
-                </div>
+        <>
+        {/* Banner Section */}
+        <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
+            <motion.div
+                initial={{ x: -100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute inset-0"
+                style={{
+                    backgroundImage: "url('/assets/hall.jpg')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center"
+                }}
+            />
+            <div className="absolute inset-0 bg-black/50"></div>
+            <div className="relative z-10 text-center text-white">
+                <motion.h1
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                    className="text-5xl font-light tracking-wide"
+                >
+                    The Board Members
+                </motion.h1>
+                <motion.p
+                    initial={{ x: 100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+                    className="mt-4 text-sm"
+                >
+                    Home › Team
+                </motion.p>
+            </div>
+        </div>
+        
+        <section className="py-4 md:py-8">
+            <div className="mx-auto max-w-5xl px-6">
                 <div className="mt-12 md:mt-24">
                     <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
                         {members.map((member, index) => (
@@ -115,5 +122,6 @@ export default function TeamSectionDemo() {
                 </div>
             </div>
         </section>
+        </>
     )
 }

@@ -22,6 +22,7 @@ export default function Login() {
       const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
@@ -32,15 +33,29 @@ export default function Login() {
         return;
       }
 
-      // store token and user in localStorage
+      setLoading(false);
+      // redirect based on role
+      // Save token + user for future visits (token also set as httpOnly cookie by server)
       if (data.token) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        try {
+          localStorage.setItem("token", data.token);
+        } catch (e) {
+          console.warn("Could not save token to localStorage", e);
+        }
+      }
+      if (data.user) {
+        try {
+          localStorage.setItem("user", JSON.stringify(data.user));
+        } catch (e) {
+          console.warn("Could not save user to localStorage", e);
+        }
       }
 
-      setLoading(false);
-      // redirect to home or dashboard
-      router.push("/");
+      if (data.user && data.user.role === "admin") {
+        router.push("/administration");
+      } else {
+        router.push("/");
+      }
     } catch (err) {
       console.error(err);
       setError("Network error");

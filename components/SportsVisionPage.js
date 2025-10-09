@@ -3,12 +3,45 @@ import { motion } from "framer-motion";
 
 export default function SportsVisionPage() {
   return (
-    <div
-      className="min-h-screen px-6 pt-0 pb-12"
-      style={{ backgroundColor: "#F8F9FA", marginTop: 0 }}
-    >
+    <div className="min-h-screen" style={{ backgroundColor: "#F8F9FA", marginTop: 0 }}>
       {/* Ticker placed below the navbar */}
       <Ticker />
+      
+      {/* Banner Section */}
+      <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url('/assets/hall.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }}
+        />
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="relative z-10 text-center text-white">
+          <motion.h1
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            className="text-5xl font-light tracking-wide"
+          >
+            About Us
+          </motion.h1>
+          <motion.p
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+            className="mt-4 text-sm"
+          >
+            Home › About
+          </motion.p>
+        </div>
+      </div>
+      
+      <div className="px-6 pb-12">
       <div className="max-w-5xl mx-auto space-y-16">
         {/* Vision Section */}
         <motion.section
@@ -248,6 +281,7 @@ export default function SportsVisionPage() {
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300"></div>
           </div>
         </motion.section>
+      </div>
       </div>
     </div>
   );

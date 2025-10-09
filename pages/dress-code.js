@@ -23,6 +23,41 @@ const DressCodePage = () => {
     <>
       <NavBarOnly />
       <Ticker />
+
+      {/* Banner Section */}
+      <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url('/assets/hall.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }}
+        />
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="relative z-10 text-center text-white">
+          <motion.h1
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            className="text-5xl font-light tracking-wide"
+          >
+            Dress Code
+          </motion.h1>
+          <motion.p
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+            className="mt-4 text-sm"
+          >
+            Home › Dress Code
+          </motion.p>
+        </div>
+      </div>
+
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Hero Section with Logo */}

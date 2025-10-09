@@ -64,6 +64,74 @@ export const Dashboard = () => {
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const [authorized, setAuthorized] = useState(null);
+
+  // Auth guard: verify user on mount. If not authenticated, set authorized=false so parent can show sign-in.
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const storedToken =
+          typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        const headers = storedToken
+          ? { Authorization: `Bearer ${storedToken}` }
+          : {};
+
+        const res = await fetch("http://localhost:4000/api/auth/me", {
+          credentials: "include",
+          headers,
+        });
+        if (res.ok) {
+          setAuthorized(true);
+          return;
+        }
+
+        // try local token decode fallback
+        if (storedToken) {
+          try {
+            const parts = storedToken.split(".");
+            if (parts.length === 3) {
+              const payload = JSON.parse(
+                atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))
+              );
+              const now = Math.floor(Date.now() / 1000);
+              if (!payload.exp || payload.exp > now) {
+                setAuthorized(true);
+                return;
+              }
+            }
+          } catch (e) {
+            // ignore
+          }
+        }
+
+        setAuthorized(false);
+      } catch (err) {
+        // network error, try fallback
+        const storedToken =
+          typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        if (storedToken) {
+          try {
+            const parts = storedToken.split(".");
+            if (parts.length === 3) {
+              const payload = JSON.parse(
+                atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))
+              );
+              const now = Math.floor(Date.now() / 1000);
+              if (!payload.exp || payload.exp > now) {
+                setAuthorized(true);
+                return;
+              }
+            }
+          } catch (e) {
+            // ignore
+          }
+        }
+        setAuthorized(false);
+      }
+    };
+
+    if (mounted) checkAuth();
+  }, [mounted]);
 
   useEffect(() => {
     setMounted(true);
@@ -82,7 +150,8 @@ export const Dashboard = () => {
     }
   }, [isDark, mounted]);
 
-  if (!mounted) {
+  // Wait until mounted and authorized check completes. If not authorized, render null
+  if (!mounted || authorized !== true) {
     return null;
   }
 
@@ -897,6 +966,262 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
         </div>
       </div>
     </main>
+  );
+};
+
+const CMSManagement = ({ setSelected }) => {
+  const [cmsData, setCmsData] = useState({
+    title: "Contact Us",
+    description: "Contact the support team at Al-Rasheed Academy.",
+    email: "info@alrasheedacademy.org",
+    address: "3122 Abbott Rd, Orchard Park, NY 14127",
+    phone1: "+1(716) 822-0440",
+    phone2: "+1(716) 822-0440",
+    socialHeading: "Find us online",
+    socialLinks: [
+      { label: "GitHub", href: "https://github.com/sshahaider" },
+      { label: "Twitter", href: "https://twitter.com/sshahaider" },
+      { label: "LinkedIn", href: "https://linkedin.com/in/sshahaider" },
+      { label: "Instagram", href: "https://instagram.com/sshahaider" },
+    ],
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetchCmsData();
+  }, []);
+
+  const fetchCmsData = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:4000/api/auth/cms/contact",
+        {
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setCmsData(data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch CMS data", err);
+    }
+  };
+
+  const handleSave = async () => {
+    setLoading(true);
+    setMessage("");
+    try {
+      const response = await fetch(
+        "http://localhost:4000/api/auth/cms/contact",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ content: cmsData }),
+        }
+      );
+      if (response.ok) {
+        setMessage("CMS updated successfully!");
+      } else {
+        setMessage("Failed to update CMS");
+      }
+    } catch (err) {
+      setMessage("Error updating CMS");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (field, value) => {
+    setCmsData({ ...cmsData, [field]: value });
+  };
+
+  const handleSocialChange = (index, field, value) => {
+    const newSocialLinks = [...cmsData.socialLinks];
+    newSocialLinks[index][field] = value;
+    setCmsData({ ...cmsData, socialLinks: newSocialLinks });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Contact Page CMS
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+            Edit contact page content and information
+          </p>
+        </div>
+        <Button
+          onClick={handleSave}
+          disabled={loading}
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          {loading ? "Saving..." : "Save Changes"}
+        </Button>
+      </div>
+      {message && (
+        <div
+          className={`p-4 rounded-lg border ${
+            message.includes("success")
+              ? "bg-green-50 border-green-200 text-green-800"
+              : "bg-red-50 border-red-200 text-red-800"
+          }`}
+        >
+          {message}
+        </div>
+      )}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-6">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Page Content
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Page Title
+                </label>
+                <Input
+                  value={cmsData.title}
+                  onChange={(e) => handleChange("title", e.target.value)}
+                  placeholder="Contact Us"
+                  className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Description
+                </label>
+                <Input
+                  value={cmsData.description}
+                  onChange={(e) => handleChange("description", e.target.value)}
+                  placeholder="Contact the support team..."
+                  className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Social Links Heading
+                </label>
+                <Input
+                  value={cmsData.socialHeading}
+                  onChange={(e) =>
+                    handleChange("socialHeading", e.target.value)
+                  }
+                  placeholder="Find us online"
+                  className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Contact Information
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Email
+                </label>
+                <Input
+                  value={cmsData.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  placeholder="info@example.com"
+                  className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Address
+                </label>
+                <Input
+                  value={cmsData.address}
+                  onChange={(e) => handleChange("address", e.target.value)}
+                  placeholder="123 Main St, City, State"
+                  className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Phone 1
+                  </label>
+                  <Input
+                    value={cmsData.phone1}
+                    onChange={(e) => handleChange("phone1", e.target.value)}
+                    placeholder="+1(123) 456-7890"
+                    className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Phone 2
+                  </label>
+                  <Input
+                    value={cmsData.phone2}
+                    onChange={(e) => handleChange("phone2", e.target.value)}
+                    placeholder="+1(123) 456-7890"
+                    className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Social Links
+            </h3>
+            <div className="space-y-4">
+              {cmsData.socialLinks.map((link, index) => (
+                <div
+                  key={index}
+                  className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Platform
+                      </label>
+                      <Input
+                        value={link.label}
+                        onChange={(e) =>
+                          handleSocialChange(index, "label", e.target.value)
+                        }
+                        placeholder="Platform"
+                        className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        URL
+                      </label>
+                      <Input
+                        value={link.href}
+                        onChange={(e) =>
+                          handleSocialChange(index, "href", e.target.value)
+                        }
+                        placeholder="https://..."
+                        className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

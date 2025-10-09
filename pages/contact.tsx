@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, forwardRef, ButtonHTMLAttributes } from 'react';
+import React, { useState, useEffect, forwardRef, ButtonHTMLAttributes } from 'react';
 import { motion } from 'framer-motion';
 import {
   Check,
@@ -159,39 +159,85 @@ function Box({
 }
 
 // Constants
-const APP_EMAIL = 'info@alrasheedacademy.org';
-const APP_PHONE = '+1(716) 822-0440';
-const APP_PHONE_2 = '+1(716) 822-0440';
 
 // Main Contact Page Component
 export default function ContactPage() {
-  const socialLinks = [
-    {
-      icon: GithubIcon,
-      href: 'https://github.com/sshahaider',
-      label: 'GitHub',
-    },
-    {
-      icon: TwitterIcon,
-      href: 'https://twitter.com/sshahaider',
-      label: 'Twitter',
-    },
-    {
-      icon: LinkedinIcon,
-      href: 'https://linkedin.com/in/sshahaider',
-      label: 'LinkedIn',
-    },
-    {
-      icon: InstagramIcon,
-      href: 'https://instagram.com/sshahaider',
-      label: 'Instagram',
-    },
-  ];
+  const [cmsData, setCmsData] = useState({
+    title: "Contact Us",
+    description: "Contact the support team at Al-Rasheed Academy.",
+    email: "info@alrasheedacademy.org",
+    address: "3122 Abbott Rd, Orchard Park, NY 14127",
+    phone1: "+1(716) 822-0440",
+    phone2: "+1(716) 822-0440",
+    socialHeading: "Find us online",
+    socialLinks: [
+      { label: "GitHub", href: "https://github.com/sshahaider" },
+      { label: "Twitter", href: "https://twitter.com/sshahaider" },
+      { label: "LinkedIn", href: "https://linkedin.com/in/sshahaider" },
+      { label: "Instagram", href: "https://instagram.com/sshahaider" },
+    ],
+  });
+
+  useEffect(() => {
+    const fetchCmsData = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/api/auth/cms/contact");
+        if (response.ok) {
+          const data = await response.json();
+          setCmsData(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch CMS data", err);
+      }
+    };
+    fetchCmsData();
+  }, []);
+
+  const socialLinks = cmsData.socialLinks.map(link => ({
+    icon: link.label === "GitHub" ? GithubIcon : link.label === "Twitter" ? TwitterIcon : link.label === "LinkedIn" ? LinkedinIcon : InstagramIcon,
+    href: link.href,
+    label: link.label,
+  }));
 
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBarOnly />
       <Ticker />
+
+      {/* Banner Section */}
+      <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url('/assets/hall.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }}
+        />
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="relative z-10 text-center text-white">
+          <motion.h1
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            className="text-5xl font-light tracking-wide"
+          >
+            Contact Us
+          </motion.h1>
+          <motion.p
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+            className="mt-4 text-sm"
+          >
+            Home › Contact
+          </motion.p>
+        </div>
+      </div>
+
       <div className="min-h-screen w-full">
         <div className="mx-auto h-full max-w-6xl lg:border-x">
           <div
@@ -265,10 +311,10 @@ export default function ContactPage() {
               </div>
               <div>
                 <h1 className="text-4xl font-bold md:text-5xl">
-                  Contact Us
+                  {cmsData.title}
                 </h1>
                 <p className="text-muted-foreground mb-5 text-base">
-                  Contact the support team at Al-Rasheed Academy.
+                  {cmsData.description}
                 </p>
               </div>
             </div>
@@ -293,12 +339,12 @@ export default function ContactPage() {
                 description="We respond to all emails within 24 hours."
               >
                 <a
-                  href={`mailto:${APP_EMAIL}`}
+                  href={`mailto:${cmsData.email}`}
                   className="font-mono text-base font-medium tracking-wide hover:underline"
                 >
-                  {APP_EMAIL}
+                  {cmsData.email}
                 </a>
-                <CopyButton className="size-6" text={APP_EMAIL} />
+                <CopyButton className="size-6" text={cmsData.email} />
               </Box>
             </motion.div>
             <motion.div
@@ -313,7 +359,7 @@ export default function ContactPage() {
                 description="Drop by our office for a chat."
               >
                 <span className="font-mono text-base font-medium tracking-wide">
-                  3122 Abbott Rd, Orchard Park, NY 14127
+                  {cmsData.address}
                 </span>
               </Box>
             </motion.div>
@@ -332,21 +378,21 @@ export default function ContactPage() {
                 <div>
                   <div className="flex items-center gap-x-2">
                     <a
-                      href={`tel:${APP_PHONE}`}
+                      href={`tel:${cmsData.phone1}`}
                       className="block font-mono text-base font-medium tracking-wide hover:underline"
                     >
-                      {APP_PHONE}
+                      {cmsData.phone1}
                     </a>
-                    <CopyButton className="size-6" text={APP_PHONE} />
+                    <CopyButton className="size-6" text={cmsData.phone1} />
                   </div>
                   <div className="flex items-center gap-x-2">
                     <a
-                      href={`tel:${APP_PHONE_2}`}
+                      href={`tel:${cmsData.phone2}`}
                       className="block font-mono text-base font-medium tracking-wide hover:underline"
                     >
-                      {APP_PHONE_2}
+                      {cmsData.phone2}
                     </a>
-                    <CopyButton className="size-6" text={APP_PHONE_2} />
+                    <CopyButton className="size-6" text={cmsData.phone2} />
                   </div>
                 </div>
               </Box>
@@ -377,7 +423,7 @@ export default function ContactPage() {
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="text-center text-3xl font-bold md:text-4xl mt-8"
               >
-                Find us online
+                {cmsData.socialHeading}
               </motion.h2>
               <motion.div
                 initial={{ opacity: 0 }}

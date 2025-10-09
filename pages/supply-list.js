@@ -13,6 +13,7 @@ import {
   Download,
 } from "lucide-react";
 import jsPDF from "jspdf";
+import { motion } from "framer-motion";
 
 // Load Lucide Icons: Assumed to be available in the React environment.
 
@@ -475,6 +476,40 @@ const SupplyList = () => {
 
       <NavBarOnly />
       <Ticker />
+
+      {/* Banner Section */}
+      <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url('/assets/hall.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }}
+        />
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="relative z-10 text-center text-white">
+          <motion.h1
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            className="text-5xl font-light tracking-wide"
+          >
+            Supply List
+          </motion.h1>
+          <motion.p
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+            className="mt-4 text-sm"
+          >
+            Home › Supply List
+          </motion.p>
+        </div>
+      </div>
 
       <main className="flex h-screen bg-white">
         <div className="w-[25%]">

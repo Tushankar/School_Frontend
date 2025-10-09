@@ -3,6 +3,7 @@ import Head from "next/head";
 import NavBarOnly from "../components/NavBarOnly";
 import Ticker from "../components/Ticker";
 import Footer from "../components/Footer";
+import { motion } from 'framer-motion'
 
 // College logos as public asset paths
 const mainImage =
@@ -204,7 +205,43 @@ const CollegeGuidancePage = () => {
       </Head>
 
       <NavBarOnly />
+      
       <Ticker />
+
+            
+      {/* Banner Section */}
+      <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url('/assets/hall.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }}
+        />
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="relative z-10 text-center text-white">
+          <motion.h1
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            className="text-5xl font-light tracking-wide"
+          >
+            Our Curriculum
+          </motion.h1>
+          <motion.p
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+            className="mt-4 text-sm"
+          >
+            Home › Curriculum
+          </motion.p>
+        </div>
+      </div>
 
       <div className="min-h-screen bg-white">
         {/* Header Banner - Full Width */}

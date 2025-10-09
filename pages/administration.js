@@ -1,10 +1,57 @@
 import Head from "next/head";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import NavBarOnly from "../components/NavBarOnly";
 import Ticker from "../components/Ticker";
 import Footer from "../components/Footer";
 import AdministrationSection from "../components/ui/administration";
 
 export default function AdministrationPage() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        // Try to send Authorization Bearer token if stored in localStorage (works when server returned token)
+        const storedToken =
+          typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        const headers = storedToken
+          ? { Authorization: `Bearer ${storedToken}` }
+          : {};
+
+        const response = await fetch("http://localhost:4000/api/auth/me", {
+          credentials: "include",
+          headers,
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.user.role === "admin") {
+            setUser(data.user);
+          } else {
+            router.push("/login");
+          }
+        } else {
+          router.push("/login");
+        }
+      } catch (err) {
+        router.push("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkAuth();
+  }, [router]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user) {
+    return null; // Will redirect
+  }
+
   return (
     <>
       <Head>
