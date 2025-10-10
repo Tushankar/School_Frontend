@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "./button";
 import { Input } from "./input";
 import {
@@ -9,45 +9,57 @@ import {
   TableHeader,
   TableRow,
 } from "./table";
-import { User, Settings } from "lucide-react";
+import { User, Settings, Loader2 } from "lucide-react";
 
 const ReEnrollmentTable = ({ setSelected }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [reenrollments] = useState([
-    {
-      id: 1,
-      firstName: "Ahmed",
-      lastName: "Hassan",
-      gradeLevel: "Grade 5",
-      studentId: "STU2024001",
-      parentEmail: "ahmed.hassan@email.com",
-      status: "Pending",
-      submittedAt: "2024-01-15",
-      lastYearGrade: "Grade 4",
-    },
-    {
-      id: 2,
-      firstName: "Fatima",
-      lastName: "Ali",
-      gradeLevel: "Grade 3",
-      studentId: "STU2024002",
-      parentEmail: "fatima.ali@email.com",
-      status: "Approved",
-      submittedAt: "2024-01-10",
-      lastYearGrade: "Grade 2",
-    },
-    {
-      id: 3,
-      firstName: "Omar",
-      lastName: "Khan",
-      gradeLevel: "Grade 7",
-      studentId: "STU2024003",
-      parentEmail: "omar.khan@email.com",
-      status: "Under Review",
-      submittedAt: "2024-01-20",
-      lastYearGrade: "Grade 6",
-    },
-  ]);
+  const [reenrollments, setReenrollments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchReenrollments();
+  }, []);
+
+  const fetchReenrollments = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        "http://localhost:4000/api/renroll/renroll-form"
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        // Transform backend data to match frontend expectations
+        const transformedData = data.forms.map((form) => ({
+          id: form._id,
+          firstName: form.childFirstName,
+          lastName: form.childLastName,
+          gradeLevel: form.gradeLevel,
+          studentId: `REN${form._id.slice(-6).toUpperCase()}`, // Generate student ID from MongoDB ID
+          parentEmail: form.fatherEmail,
+          status: form.isCompleted
+            ? "Approved"
+            : form.currentStep === 0
+            ? "Pending"
+            : "Under Review",
+          submittedAt: new Date(form.submittedAt).toLocaleDateString(),
+          lastYearGrade: form.gradeLevel
+            ? `Grade ${parseInt(form.gradeLevel.replace("Grade ", "")) - 1}`
+            : "N/A",
+          // Store the full form data for detail view
+          formData: form,
+        }));
+        setReenrollments(transformedData);
+      } else {
+        setError("Failed to fetch reenrollments");
+      }
+    } catch (err) {
+      setError("Error fetching reenrollments: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredReenrollments = reenrollments.filter((reenrollment) =>
     `${reenrollment.firstName} ${reenrollment.lastName}`
@@ -69,6 +81,32 @@ const ReEnrollmentTable = ({ setSelected }) => {
       "bg-gray-100 dark:bg-gray-900/20 text-gray-800 dark:text-gray-300"
     );
   };
+
+  if (loading) {
+    return (
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8">
+        <div className="flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-600 dark:text-gray-400" />
+          <span className="ml-2 text-gray-600 dark:text-gray-400">
+            Loading reenrollments...
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8">
+        <div className="text-center text-red-600 dark:text-red-400">
+          <p>{error}</p>
+          <Button onClick={fetchReenrollments} className="mt-4">
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
@@ -173,185 +211,163 @@ const ReEnrollmentTable = ({ setSelected }) => {
 };
 
 const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
-  // Get data from the table based on enrollmentId
-  const reenrollments = [
-    {
-      id: 1,
-      firstName: "Ahmed",
-      lastName: "Hassan",
-      gradeLevel: "Grade 5",
-      studentId: "STU2024001",
-      parentEmail: "ahmed.hassan@email.com",
-      status: "Pending",
-      submittedAt: "2024-01-15",
-      lastYearGrade: "Grade 4",
-      dateOfBirth: "2014-03-15",
-      gender: "Male",
-      parentFirstName: "Omar",
-      parentLastName: "Hassan",
-      parentPhone: "(716) 555-0123",
-      parentAddress1: "123 Main Street",
-      parentAddress2: "Apt 4B",
-      parentCity: "Buffalo",
-      parentState: "New York",
-      parentZip: "14201",
-      currentGPA: "3.8",
-      attendanceRate: "95%",
-      disciplinaryIncidents: "0",
-      academicAwards: "Honor Roll, Math Excellence Award",
-      extracurricularActivities: "Soccer Team, Science Club",
-      specialNeeds: "None",
-      learningStyle: "Visual learner",
-      medicalConditions: "None",
-      allergies: "None",
-      medications: "None",
-      emergencyContactName: "Fatima Hassan",
-      emergencyContactPhone: "(716) 555-0125",
-      emergencyContactRelationship: "Mother",
-      transportationMethod: "School Bus",
-      busRoute: "Route 15",
-      pickupPerson1: "Omar Hassan (Father)",
-      pickupPerson2: "Fatima Hassan (Mother)",
-      tuitionPlan: "Annual Payment",
-      paymentMethod: "Bank Transfer",
-      discountApplied: "Sibling Discount (10%)",
-      totalAmount: "$8,500",
-      paymentSchedule: "Annual - Due August 1st",
-      reasonForReenrollment: "Continue excellent education and Islamic values",
-      expectations:
-        "Continue academic excellence, participate in extracurricular activities",
-      specialRequests: "None",
-      comments:
-        "Ahmed has been an outstanding student and we are excited to continue his education at the school.",
-      parentSignature: "Omar Hassan",
-      dateSigned: "2024-01-15",
-    },
-    {
-      id: 2,
-      firstName: "Fatima",
-      lastName: "Ali",
-      gradeLevel: "Grade 3",
-      studentId: "STU2024002",
-      parentEmail: "fatima.ali@email.com",
-      status: "Approved",
-      submittedAt: "2024-01-10",
-      lastYearGrade: "Grade 2",
-      dateOfBirth: "2016-07-22",
-      gender: "Female",
-      parentFirstName: "Ali",
-      parentLastName: "Ali",
-      parentPhone: "(716) 555-0124",
-      parentAddress1: "456 Oak Street",
-      parentAddress2: "",
-      parentCity: "Buffalo",
-      parentState: "New York",
-      parentZip: "14202",
-      currentGPA: "4.0",
-      attendanceRate: "98%",
-      disciplinaryIncidents: "0",
-      academicAwards: "Perfect Attendance, Science Fair Winner",
-      extracurricularActivities: "Art Club, Choir",
-      specialNeeds: "None",
-      learningStyle: "Auditory learner",
-      medicalConditions: "None",
-      allergies: "None",
-      medications: "None",
-      emergencyContactName: "Sara Ali",
-      emergencyContactPhone: "(716) 555-0126",
-      emergencyContactRelationship: "Aunt",
-      transportationMethod: "Parent Pickup",
-      busRoute: "N/A",
-      pickupPerson1: "Ali Ali (Father)",
-      pickupPerson2: "Fatima Ali (Mother)",
-      tuitionPlan: "Semi-Annual Payment",
-      paymentMethod: "Check",
-      discountApplied: "None",
-      totalAmount: "$7,200",
-      paymentSchedule: "Semi-Annual - Due January 1st and July 1st",
-      reasonForReenrollment:
-        "Excellent academic program and Islamic environment",
-      expectations:
-        "Continue strong academic performance and develop leadership skills",
-      specialRequests: "None",
-      comments: "Fatima is a dedicated student who excels in all subjects.",
-      parentSignature: "Ali Ali",
-      dateSigned: "2024-01-10",
-    },
-    {
-      id: 3,
-      firstName: "Omar",
-      lastName: "Khan",
-      gradeLevel: "Grade 7",
-      studentId: "STU2024003",
-      parentEmail: "omar.khan@email.com",
-      status: "Under Review",
-      submittedAt: "2024-01-20",
-      lastYearGrade: "Grade 6",
-      dateOfBirth: "2012-11-08",
-      gender: "Male",
-      parentFirstName: "Khan",
-      parentLastName: "Khan",
-      parentPhone: "(716) 555-0127",
-      parentAddress1: "789 Pine Avenue",
-      parentAddress2: "Suite 3C",
-      parentCity: "Buffalo",
-      parentState: "New York",
-      parentZip: "14203",
-      currentGPA: "3.5",
-      attendanceRate: "92%",
-      disciplinaryIncidents: "1",
-      academicAwards: "Math Award",
-      extracurricularActivities: "Basketball Team",
-      specialNeeds: "None",
-      learningStyle: "Kinesthetic learner",
-      medicalConditions: "Mild asthma",
-      allergies: "Dust",
-      medications: "Albuterol as needed",
-      emergencyContactName: "Aisha Khan",
-      emergencyContactPhone: "(716) 555-0128",
-      emergencyContactRelationship: "Sister",
-      transportationMethod: "School Bus",
-      busRoute: "Route 22",
-      pickupPerson1: "Khan Khan (Father)",
-      pickupPerson2: "Aisha Khan (Mother)",
-      tuitionPlan: "Monthly Payment",
-      paymentMethod: "Bank Transfer",
-      discountApplied: "Early Bird Discount (5%)",
-      totalAmount: "$9,200",
-      paymentSchedule: "Monthly - Due 1st of each month",
-      reasonForReenrollment:
-        "Strong Islamic foundation and academic excellence",
-      expectations:
-        "Improve study habits and increase participation in extracurricular activities",
-      specialRequests: "Extra time for asthma medication during PE",
-      comments:
-        "Omar has great potential and we want to continue his development at this school.",
-      parentSignature: "Khan Khan",
-      dateSigned: "2024-01-20",
-    },
-  ];
+  const [reenrollmentData, setReenrollmentData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const reenrollmentData = reenrollments.find(
-    (r) => r.id === parseInt(enrollmentId)
-  );
+  useEffect(() => {
+    if (enrollmentId) {
+      // Extract the actual enrollment ID from the selected value
+      const actualId = enrollmentId.replace("reenrollment-detail-", "");
+      fetchReenrollmentDetails(actualId);
+    }
+  }, [enrollmentId]);
+
+  const fetchReenrollmentDetails = async (id) => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `http://localhost:4000/api/renroll/renroll-form/${id}`
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        // Transform backend data to match frontend expectations
+        const form = data.form;
+        const transformedData = {
+          id: form._id,
+          firstName: form.childFirstName,
+          lastName: form.childLastName,
+          gradeLevel: form.gradeLevel,
+          studentId: `REN${form._id.slice(-6).toUpperCase()}`,
+          parentEmail: form.fatherEmail,
+          status: form.isCompleted
+            ? "Approved"
+            : form.currentStep === 0
+            ? "Pending"
+            : "Under Review",
+          submittedAt: new Date(form.submittedAt).toLocaleDateString(),
+          lastYearGrade: form.gradeLevel
+            ? `Grade ${parseInt(form.gradeLevel.replace("Grade ", "")) - 1}`
+            : "N/A",
+
+          // Student details
+          dateOfBirth: form.dateOfBirth
+            ? new Date(form.dateOfBirth).toLocaleDateString()
+            : "",
+          gender: form.gender,
+          parentFirstName: form.fatherFirstName,
+          parentLastName: form.fatherLastName,
+          parentPhone: form.fatherPhone,
+          parentAddress1: form.address1,
+          parentAddress2: form.address2,
+          parentCity: form.city,
+          parentState: form.state,
+          parentZip: form.zipCode,
+
+          // Academic info - not collected in reenrollment forms for existing students
+          currentGPA: "Available in student records",
+          attendanceRate: "Available in student records",
+          disciplinaryIncidents: "Available in student records",
+          academicAwards: "Available in student records",
+          extracurricularActivities: "Available in student records",
+          specialNeeds: "Available in student records",
+          learningStyle: "Available in student records",
+
+          // Health info - map available fields
+          medicalConditions:
+            form.child1HealthChanges === "yes"
+              ? "Health changes reported"
+              : "No health changes reported",
+          allergies: "Not specified in reenrollment form",
+          medications: "Not specified in reenrollment form",
+          hospitalPreference: form.hospitalPreference || "Not specified",
+
+          // Emergency contacts
+          emergencyContactName: form.emergency1Name,
+          emergencyContactPhone: form.emergency1Phone,
+          emergencyContactRelationship: form.emergency1Relationship,
+
+          // Transportation - map available fields
+          transportationMethod: "To be determined",
+          busRoute: "To be assigned",
+          pickupPerson1: form.authorizedPerson1
+            ? `${form.authorizedPerson1} (${form.authorizedPerson1Relationship})`
+            : "",
+          pickupPerson2: form.authorizedPerson2
+            ? `${form.authorizedPerson2} (${form.authorizedPerson2Relationship})`
+            : "",
+
+          // Tuition info - map available fields
+          tuitionPlan: form.paymentOption || "Not specified",
+          paymentMethod: "To be determined",
+          discountApplied: "To be determined",
+          totalAmount: "To be calculated",
+          paymentSchedule: "Based on selected plan",
+          tuitionAcknowledged: form.acknowledgeTuition === "yes" ? "Yes" : "No",
+          textbookFeeAcknowledged:
+            form.acknowledgeTextbookFee === "yes" ? "Yes" : "No",
+
+          // Additional info - not collected in reenrollment forms
+          reasonForReenrollment: "Continuing enrollment",
+          expectations: "Continuing academic progress",
+          specialRequests: "None specified",
+          comments: "Re-enrollment completed",
+
+          // Signatures
+          parentSignature: form.parentSignature || form.tuitionSignature,
+          dateSigned: new Date(form.submittedAt).toLocaleDateString(),
+        };
+
+        setReenrollmentData(transformedData);
+      } else {
+        setError("Failed to fetch reenrollment details");
+      }
+    } catch (err) {
+      setError("Error fetching reenrollment details: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8">
+        <div className="flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-600 dark:text-gray-400" />
+          <span className="ml-2 text-gray-600 dark:text-gray-400">
+            Loading reenrollment details...
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8">
+        <div className="text-center text-red-600 dark:text-red-400">
+          <p>{error}</p>
+          <Button
+            onClick={() =>
+              fetchReenrollmentDetails(
+                enrollmentId.replace("reenrollment-detail-", "")
+              )
+            }
+            className="mt-4"
+          >
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (!reenrollmentData) {
     return (
-      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Re-Enrollment Details
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            Re-enrollment data not found.
-          </p>
-          <Button
-            variant="outline"
-            onClick={() => setSelected("Re Enrollment")}
-            className="mt-4"
-          >
-            ← Back to List
-          </Button>
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8">
+        <div className="text-center text-gray-600 dark:text-gray-400">
+          <p>No reenrollment data found</p>
         </div>
       </div>
     );
@@ -526,6 +542,14 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
                   {reenrollmentData.medications}
                 </p>
               </div>
+              <div>
+                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Hospital Preference
+                </label>
+                <p className="text-gray-900 dark:text-gray-100">
+                  {reenrollmentData.hospitalPreference}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -693,6 +717,24 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
               <p className="text-gray-900 dark:text-gray-100">
                 {reenrollmentData.paymentSchedule}
               </p>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Tuition Acknowledged
+                </label>
+                <p className="text-gray-900 dark:text-gray-100">
+                  {reenrollmentData.tuitionAcknowledged}
+                </p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Textbook Fee Acknowledged
+                </label>
+                <p className="text-gray-900 dark:text-gray-100">
+                  {reenrollmentData.textbookFeeAcknowledged}
+                </p>
+              </div>
             </div>
           </div>
 

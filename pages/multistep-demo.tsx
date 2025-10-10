@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { Toaster } from "sonner";
 import NavBarOnly from "../components/NavBarOnly";
 import Ticker from "../components/Ticker";
 import Footer from "../components/Footer";
@@ -11,6 +12,7 @@ export default function MultistepDemo() {
         <title>Multistep Form Demo - Al-Rasheed Academy</title>
       </Head>
 
+      <Toaster position="top-right" richColors closeButton />
       <NavBarOnly />
       <Ticker />
 

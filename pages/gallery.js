@@ -9,21 +9,8 @@ export default function ArcGalleryHeroDemo() {
     cardSize: 120,
   });
   const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const memoryImages = [
-    "/assets/hall.jpg",
-    "/assets/studentExam.jpg",
-    "/assets/science.jpeg",
-    "/assets/gardening.jpeg",
-    "/assets/chemicalReaction.jpg",
-    "/assets/istudies_1.png",
-    "/assets/istudies_2.png",
-    "/assets/istudies_3.png",
-    "/assets/istudies_4.png",
-    "/assets/istudies_5.png",
-    "/assets/istudies_6.png",
-    "/assets/istudies_7.png",
-  ];
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const startAngle = 20;
   const endAngle = 160;
@@ -50,6 +37,42 @@ export default function ArcGalleryHeroDemo() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Fetch gallery images from backend
+  useEffect(() => {
+    const fetchGalleryImages = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/gallery?category=${selectedCategory}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setGalleryImages(data);
+        }
+      } catch (error) {
+        console.error("Error fetching gallery images:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGalleryImages();
+  }, [selectedCategory]);
+
+  const memoryImages = [
+    "/assets/hall.jpg",
+    "/assets/studentExam.jpg",
+    "/assets/science.jpeg",
+    "/assets/gardening.jpeg",
+    "/assets/chemicalReaction.jpg",
+    "/assets/istudies_1.png",
+    "/assets/istudies_2.png",
+    "/assets/istudies_3.png",
+    "/assets/istudies_4.png",
+    "/assets/istudies_5.png",
+    "/assets/istudies_6.png",
+    "/assets/istudies_7.png",
+  ];
 
   const count = Math.max(memoryImages.length, 2);
   const step = (endAngle - startAngle) / (count - 1);
@@ -166,7 +189,7 @@ export default function ArcGalleryHeroDemo() {
           `}</style>
         </section>
 
-        {selectedCategory === "All" && <MasonryImageGallery />}
+        <MasonryImageGallery images={galleryImages} />
       </div>
       <Footer />
     </>
@@ -225,29 +248,33 @@ function AnimatedImage({ alt, src, ratio, placeholder }) {
 }
 
 // Masonry Image Gallery Component
-function MasonryImageGallery() {
+function MasonryImageGallery({ images }) {
+  if (!images || images.length === 0) {
+    return (
+      <div className="relative flex w-full flex-col items-center justify-center py-10 px-4">
+        <div className="text-center">
+          <p className="text-gray-500">No images available in this category.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative flex w-full flex-col items-center justify-center py-10 px-4">
       <div className="mx-auto grid w-full max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, col) => (
-          <div key={col} className="grid gap-6">
-            {Array.from({ length: 10 }).map((_, index) => {
-              const isPortrait = Math.random() > 0.5;
-              const width = isPortrait ? 1080 : 1920;
-              const height = isPortrait ? 1920 : 1080;
-              const ratio = isPortrait ? 9 / 16 : 16 / 9;
-              return (
-                <AnimatedImage
-                  key={`${col}-${index}`}
-                  alt={`Image ${col}-${index}`}
-                  src={`https://picsum.photos/seed/${col}-${index}/${width}/${height}`}
-                  ratio={ratio}
-                  placeholder={`https://placehold.co/${width}x${height}/EEE/999`}
-                />
-              );
-            })}
-          </div>
-        ))}
+        {images.map((image, index) => {
+          const isPortrait = Math.random() > 0.5;
+          const ratio = isPortrait ? 9 / 16 : 16 / 9;
+          return (
+            <AnimatedImage
+              key={image._id || index}
+              alt={image.title}
+              src={`http://localhost:4000${image.imageUrl}`}
+              ratio={ratio}
+              placeholder={`https://placehold.co/400x400/EEE/999?text=${image.title}`}
+            />
+          );
+        })}
       </div>
     </div>
   );

@@ -1,44 +1,46 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Image, Upload, Edit, Trash2 } from "lucide-react";
 
 import { Button } from "./button";
 import { Input } from "./input";
 
 const GalleryManagement = ({ setSelected }) => {
-  const [images, setImages] = useState([
-    {
-      id: 1,
-      url: "https://images.unsplash.com/photo-1755004609214-c252674df1ca?q=80&w=400&auto=format&fit=crop",
-      title: "School Event 1",
-      category: "Events",
-      uploadedAt: "2024-01-15",
-    },
-    {
-      id: 2,
-      url: "https://images.unsplash.com/photo-1750218537952-0ae056c7f53a?q=80&w=400&auto=format&fit=crop",
-      title: "Art Exhibition",
-      category: "Art",
-      uploadedAt: "2024-01-12",
-    },
-    {
-      id: 3,
-      url: "https://images.unsplash.com/photo-1755038995605-038a7345658f?q=80&w=400&auto=format&fit=crop",
-      title: "Science Fair",
-      category: "Science Fair",
-      uploadedAt: "2024-01-10",
-    },
-  ]);
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [newImage, setNewImage] = useState({
     title: "",
     category: "Events",
     file: null,
     url: "",
+    previewUrl: "",
   });
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const categories = ["All", "Art", "Events", "Science Fair"];
+
+  // Fetch images from backend
+  const fetchImages = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/gallery?category=All`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setImages(data);
+      }
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchImages();
+  }, []);
 
   const filteredImages =
     selectedCategory === "All"
@@ -48,29 +50,72 @@ const GalleryManagement = ({ setSelected }) => {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const url = URL.createObjectURL(file);
-      setNewImage({ ...newImage, file, url });
+      const previewUrl = URL.createObjectURL(file);
+      setNewImage({ ...newImage, file, previewUrl, url: "" });
     }
   };
 
-  const handleAddImage = () => {
-    if (!newImage.title || !newImage.url) return;
+  const handleAddImage = async () => {
+    if (!newImage.title || (!newImage.file && !newImage.url)) return;
 
-    const image = {
-      id: Date.now(),
-      url: newImage.url,
-      title: newImage.title,
-      category: newImage.category,
-      uploadedAt: new Date().toISOString().split("T")[0],
-    };
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("title", newImage.title);
+      formData.append("category", newImage.category);
 
-    setImages([...images, image]);
-    setNewImage({ title: "", category: "Events", file: null, url: "" });
-    setShowUploadModal(false);
+      if (newImage.file) {
+        formData.append("image", newImage.file);
+      } else if (newImage.url) {
+        // For URL uploads, we'll need to fetch the image and upload as file
+        const response = await fetch(newImage.url);
+        const blob = await response.blob();
+        const file = new File([blob], `image-${Date.now()}.jpg`, {
+          type: blob.type,
+        });
+        formData.append("image", file);
+      }
+
+      const response = await fetch("http://localhost:4000/api/gallery/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setImages([result.image, ...images]);
+        setNewImage({
+          title: "",
+          category: "Events",
+          file: null,
+          url: "",
+          previewUrl: "",
+        });
+        setShowUploadModal(false);
+      } else {
+        console.error("Upload failed");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      setUploading(false);
+    }
   };
 
-  const handleDeleteImage = (id) => {
-    setImages(images.filter((img) => img.id !== id));
+  const handleDeleteImage = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/gallery/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setImages(images.filter((img) => img._id !== id));
+      } else {
+        console.error("Delete failed");
+      }
+    } catch (error) {
+      console.error("Error deleting image:", error);
+    }
   };
 
   return (
@@ -118,12 +163,12 @@ const GalleryManagement = ({ setSelected }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredImages.map((image) => (
             <div
-              key={image.id}
+              key={image._id}
               className="group relative bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200"
             >
               <div className="aspect-square relative">
                 <img
-                  src={image.url}
+                  src={`http://localhost:4000${image.imageUrl}`}
                   alt={image.title}
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -144,7 +189,7 @@ const GalleryManagement = ({ setSelected }) => {
                       size="sm"
                       variant="ghost"
                       className="text-white hover:bg-red-500/20"
-                      onClick={() => handleDeleteImage(image.id)}
+                      onClick={() => handleDeleteImage(image._id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -250,20 +295,25 @@ const GalleryManagement = ({ setSelected }) => {
                 <Input
                   value={newImage.url}
                   onChange={(e) =>
-                    setNewImage({ ...newImage, url: e.target.value })
+                    setNewImage({
+                      ...newImage,
+                      url: e.target.value,
+                      file: null,
+                      previewUrl: e.target.value,
+                    })
                   }
                   placeholder="https://example.com/image.jpg"
                   className="w-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100"
                 />
               </div>
 
-              {newImage.url && (
+              {newImage.previewUrl && (
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Preview
                   </label>
                   <img
-                    src={newImage.url}
+                    src={newImage.previewUrl}
                     alt="Preview"
                     className="w-full h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
                     onError={(e) => {
@@ -279,9 +329,13 @@ const GalleryManagement = ({ setSelected }) => {
               <Button
                 onClick={handleAddImage}
                 className="flex-1 bg-blue-600 hover:bg-blue-700"
-                disabled={!newImage.title || !newImage.url}
+                disabled={
+                  !newImage.title ||
+                  (!newImage.file && !newImage.url) ||
+                  uploading
+                }
               >
-                Upload Image
+                {uploading ? "Uploading..." : "Upload Image"}
               </Button>
               <Button
                 variant="outline"

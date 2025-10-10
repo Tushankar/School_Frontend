@@ -14,6 +14,8 @@ import {
 } from "./components/ui/card";
 import { Progress } from "./components/ui/progress";
 import { Separator } from "./components/ui/separator";
+import { toast } from "sonner";
+import { Toaster } from "sonner";
 
 const gradeLevels = [
   "Pre-K",
@@ -90,6 +92,93 @@ const steps = [
   { id: "tuition", title: "Tuition Contract" },
 ];
 const araLogo = "/assets/logo.png";
+
+// Validation functions for each step
+const validateStep1 = (formData) => {
+  const errors = [];
+
+  if (!formData.childFirstName?.trim())
+    errors.push("Child first name is required");
+  if (!formData.childLastName?.trim())
+    errors.push("Child last name is required");
+  if (!formData.gender) errors.push("Gender is required");
+  if (!formData.dateOfBirth) errors.push("Date of birth is required");
+  if (!formData.ethnicity?.trim()) errors.push("Ethnicity is required");
+  if (!formData.gradeLevel) errors.push("Grade level is required");
+  if (!formData.address1?.trim()) errors.push("Address is required");
+  if (!formData.city?.trim()) errors.push("City is required");
+  if (!formData.state) errors.push("State is required");
+  if (!formData.zipCode?.trim()) errors.push("Zip code is required");
+  if (!formData.schoolDistrict?.trim())
+    errors.push("School district is required");
+
+  // Parent information validation
+  if (!formData.fatherFirstName?.trim())
+    errors.push("Father first name is required");
+  if (!formData.fatherLastName?.trim())
+    errors.push("Father last name is required");
+  if (!formData.fatherPhone?.trim()) errors.push("Father phone is required");
+  if (!formData.fatherEmail?.trim()) errors.push("Father email is required");
+
+  if (!formData.motherFirstName?.trim())
+    errors.push("Mother first name is required");
+  if (!formData.motherLastName?.trim())
+    errors.push("Mother last name is required");
+  if (!formData.motherPhone?.trim()) errors.push("Mother phone is required");
+  if (!formData.motherEmail?.trim()) errors.push("Mother email is required");
+
+  return errors;
+};
+
+const validateStep2 = (formData) => {
+  const errors = [];
+
+  if (!formData.emergency1Name?.trim())
+    errors.push("Emergency contact 1 name is required");
+  if (!formData.emergency1Phone?.trim())
+    errors.push("Emergency contact 1 phone is required");
+  if (!formData.emergency1Relationship?.trim())
+    errors.push("Emergency contact 1 relationship is required");
+
+  if (!formData.emergency2Name?.trim())
+    errors.push("Emergency contact 2 name is required");
+  if (!formData.emergency2Phone?.trim())
+    errors.push("Emergency contact 2 phone is required");
+  if (!formData.emergency2Relationship?.trim())
+    errors.push("Emergency contact 2 relationship is required");
+
+  if (!formData.authorizedPerson1?.trim())
+    errors.push("Authorized person 1 name is required");
+  if (!formData.authorizedPerson1Phone?.trim())
+    errors.push("Authorized person 1 phone is required");
+  if (!formData.authorizedPerson1Relationship?.trim())
+    errors.push("Authorized person 1 relationship is required");
+
+  if (!formData.hospitalPreference?.trim())
+    errors.push("Hospital preference is required");
+  if (!formData.parentSignature?.trim())
+    errors.push("Parent signature is required");
+
+  return errors;
+};
+
+const validateStep3 = (formData) => {
+  const errors = [];
+
+  if (!formData.guardianName?.trim()) errors.push("Guardian name is required");
+  if (!formData.homePhone?.trim()) errors.push("Home phone is required");
+  if (!formData.guardianEmail?.trim())
+    errors.push("Guardian email is required");
+  if (formData.acknowledgeTuition !== "yes")
+    errors.push("Tuition acknowledgment is required");
+  if (formData.acknowledgeTextbookFee !== "yes")
+    errors.push("Textbook fee acknowledgment is required");
+  if (!formData.paymentOption) errors.push("Payment option is required");
+  if (!formData.tuitionSignature?.trim())
+    errors.push("Tuition signature is required");
+
+  return errors;
+};
 
 function ProgressBar({ currentStep }) {
   const progress = ((currentStep + 1) / steps.length) * 100;
@@ -1577,13 +1666,13 @@ function TuitionContract({ formData, setFormData }) {
 
         {/* Signature */}
         <div className="space-y-2">
-          <Label htmlFor="signature">Signature *</Label>
+          <Label htmlFor="tuitionSignature">Signature *</Label>
           <Input
-            id="signature"
+            id="tuitionSignature"
             placeholder="Type your full name as signature"
-            value={formData.signature}
+            value={formData.tuitionSignature}
             onChange={(e) =>
-              setFormData({ ...formData, signature: e.target.value })
+              setFormData({ ...formData, tuitionSignature: e.target.value })
             }
             required
           />
@@ -1763,10 +1852,11 @@ function App() {
     acknowledgeTuition: "",
     acknowledgeTextbookFee: "",
     paymentOption: "",
-    signature: "",
+    tuitionSignature: "",
   });
 
   const [currentStep, setCurrentStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -1782,29 +1872,151 @@ function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSubmit = () => {
-    // Handle form submission here
-    console.log("Form submitted:", formData);
+  // Validate current step before proceeding
+  const validateCurrentStep = () => {
+    let errors = [];
+    switch (currentStep) {
+      case 0:
+        errors = validateStep1(formData);
+        break;
+      case 1:
+        errors = validateStep2(formData);
+        break;
+      case 2:
+        errors = validateStep3(formData);
+        break;
+    }
+    return errors;
+  };
+
+  // Handle next step with validation
+  const handleNextStep = async () => {
+    const errors = validateCurrentStep();
+
+    if (errors.length > 0) {
+      toast.error("Please fix the following errors:", {
+        description: errors.join(", "),
+      });
+      return;
+    }
+
+    // Save current step to backend
+    try {
+      const response = await fetch(
+        "http://localhost:4000/api/renroll/renroll-form",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...formData,
+            currentStep: currentStep,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(data.message);
+        setCurrentStep(currentStep + 1);
+
+        // Scroll to the top of the form content with smooth animation
+        document.getElementById("form-content")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      } else {
+        toast.error("Failed to save form data", {
+          description: data.errors?.join(", ") || data.message,
+        });
+      }
+    } catch (error) {
+      toast.error("Network error", {
+        description: "Failed to save form data. Please try again.",
+      });
+    }
+  };
+
+  const handleSubmit = async () => {
+    const errors = validateCurrentStep();
+
+    if (errors.length > 0) {
+      toast.error("Please fix the following errors:", {
+        description: errors.join(", "),
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    toast.loading("Submitting renroll form...", { id: "submit-toast" });
+
+    try {
+      const response = await fetch(
+        "http://localhost:4000/api/renroll/renroll-form",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...formData,
+            currentStep: currentStep,
+            isCompleted: true,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.dismiss("submit-toast");
+        toast.success("Renroll form submitted successfully!", {
+          description:
+            "Your form has been submitted. You will receive a confirmation email shortly.",
+          duration: 5000,
+        });
+
+        // Reset form or redirect
+        setTimeout(() => {
+          window.location.reload(); // Or redirect to success page
+        }, 3000);
+      } else {
+        toast.dismiss("submit-toast");
+        toast.error("Submission failed", {
+          description: data.errors?.join(", ") || data.message,
+        });
+      }
+    } catch (error) {
+      toast.dismiss("submit-toast");
+      toast.error("Network error", {
+        description:
+          "Failed to submit form. Please check your connection and try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const progress = ((currentStep + 1) / steps.length) * 100;
 
   return (
     <FormProvider>
+      <Toaster position="top-right" richColors />
       <main className="flex h-screen bg-white">
         <div className="w-[25%]">
           <ImageCarousel />
         </div>
-        <div className="w-[75%] p-4 h-full bg-gray-50 border-l-[12px] border-white overflow-y-auto hide-scrollbar" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+        <div
+          className="w-[75%] p-4 h-full bg-gray-50 border-l-[12px] border-white overflow-y-auto hide-scrollbar"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
           <div className="w-full h-full">
             <MiniProgressBar progress={progress} isVisible={showMiniProgress} />
-        <div className="w-full space-y-8">
-          <div className="flex items-center justify-between pb-6 border-b">
-            <div className="flex items-center gap-4">
-              <div className="relative w-24 h-24">
-                <style
-                  dangerouslySetInnerHTML={{
-                    __html: `
+            <div className="w-full space-y-8">
+              <div className="flex items-center justify-between pb-6 border-b">
+                <div className="flex items-center gap-4">
+                  <div className="relative w-24 h-24">
+                    <style
+                      dangerouslySetInnerHTML={{
+                        __html: `
                   @keyframes slideInFromLeft {
                     0% { opacity: 0; transform: translateX(-100%); }
                     100% { opacity: 1; transform: translateX(0); }
@@ -1838,186 +2050,187 @@ function App() {
                     animation-fill-mode: both;
                   }
                 `,
-                  }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/Untitled-1.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-left"
-                  style={{ animationDelay: "200ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/Untitled-2.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-left"
-                  style={{ animationDelay: "400ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/qqdd.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-left"
-                  style={{ animationDelay: "600ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/48999.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-left"
-                  style={{
-                    animationDelay: "800ms",
-                    animationDuration: "1000ms",
-                  }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/1333.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-right"
-                  style={{ animationDelay: "300ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/Untitled-13.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-right"
-                  style={{ animationDelay: "500ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/Untitled-12.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-right"
-                  style={{ animationDelay: "700ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/Untitled-6.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-right"
-                  style={{ animationDelay: "900ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/qqq.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-top"
-                  style={{ animationDelay: "400ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/Untitled-9.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-top"
-                  style={{ animationDelay: "600ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/7788.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-top"
-                  style={{ animationDelay: "800ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/Untitled-11.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-bottom"
-                  style={{ animationDelay: "500ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/Untitled-10.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-bottom"
-                  style={{ animationDelay: "700ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/Untitled-1qwe.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-bottom"
-                  style={{ animationDelay: "900ms" }}
-                />
-                <img
-                  src="https://www.alrasheedacademy.org/images/qw.png"
-                  alt=""
-                  className="absolute w-full h-full object-contain slide-bottom"
-                  style={{ animationDelay: "1100ms" }}
-                />
+                      }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/Untitled-1.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-left"
+                      style={{ animationDelay: "200ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/Untitled-2.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-left"
+                      style={{ animationDelay: "400ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/qqdd.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-left"
+                      style={{ animationDelay: "600ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/48999.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-left"
+                      style={{
+                        animationDelay: "800ms",
+                        animationDuration: "1000ms",
+                      }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/1333.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-right"
+                      style={{ animationDelay: "300ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/Untitled-13.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-right"
+                      style={{ animationDelay: "500ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/Untitled-12.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-right"
+                      style={{ animationDelay: "700ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/Untitled-6.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-right"
+                      style={{ animationDelay: "900ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/qqq.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-top"
+                      style={{ animationDelay: "400ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/Untitled-9.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-top"
+                      style={{ animationDelay: "600ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/7788.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-top"
+                      style={{ animationDelay: "800ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/Untitled-11.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-bottom"
+                      style={{ animationDelay: "500ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/Untitled-10.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-bottom"
+                      style={{ animationDelay: "700ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/Untitled-1qwe.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-bottom"
+                      style={{ animationDelay: "900ms" }}
+                    />
+                    <img
+                      src="https://www.alrasheedacademy.org/images/qw.png"
+                      alt=""
+                      className="absolute w-full h-full object-contain slide-bottom"
+                      style={{ animationDelay: "1100ms" }}
+                    />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-[#1B4965]">
+                      ARA 2025-2026 Re-Enrollment Form
+                    </h1>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Current students must re-enroll for the upcoming school
+                      year
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-[#1B4965]">
-                  ARA 2025-2026 Re-Enrollment Form
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Current students must re-enroll for the upcoming school year
-                </p>
-              </div>
+
+              <Card id="main-progress-bar">
+                <CardHeader>
+                  <ProgressBar currentStep={currentStep} />
+                </CardHeader>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>{steps[currentStep].title}</CardTitle>
+                </CardHeader>
+                <CardContent id="form-content">
+                  <div className="transition-opacity duration-300 ease-in-out">
+                    {currentStep === 0 && (
+                      <div className="animate-fadeIn">
+                        <StudentInfo
+                          formData={formData}
+                          setFormData={setFormData}
+                        />
+                      </div>
+                    )}
+                    {currentStep === 1 && (
+                      <div className="animate-fadeIn">
+                        <EmergencyContacts
+                          formData={formData}
+                          setFormData={setFormData}
+                        />
+                      </div>
+                    )}
+                    {currentStep === 2 && (
+                      <div className="animate-fadeIn">
+                        <TuitionContract
+                          formData={formData}
+                          setFormData={setFormData}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+                <Separator />
+                <CardFooter className="flex justify-between p-6 mb-32">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setCurrentStep(Math.max(0, currentStep - 1));
+                      // Scroll to the top of the form content with smooth animation
+                      document.getElementById("form-content")?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
+                    disabled={currentStep === 0}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      if (currentStep === steps.length - 1) {
+                        handleSubmit();
+                      } else {
+                        handleNextStep();
+                      }
+                    }}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting
+                      ? "Submitting..."
+                      : currentStep === steps.length - 1
+                      ? "Submit"
+                      : "Next"}
+                  </Button>
+                </CardFooter>
+              </Card>
             </div>
-          </div>
-
-          <Card id="main-progress-bar">
-            <CardHeader>
-              <ProgressBar currentStep={currentStep} />
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>{steps[currentStep].title}</CardTitle>
-            </CardHeader>
-            <CardContent id="form-content">
-              <div className="transition-opacity duration-300 ease-in-out">
-                {currentStep === 0 && (
-                  <div className="animate-fadeIn">
-                    <StudentInfo
-                      formData={formData}
-                      setFormData={setFormData}
-                    />
-                  </div>
-                )}
-                {currentStep === 1 && (
-                  <div className="animate-fadeIn">
-                    <EmergencyContacts
-                      formData={formData}
-                      setFormData={setFormData}
-                    />
-                  </div>
-                )}
-                {currentStep === 2 && (
-                  <div className="animate-fadeIn">
-                    <TuitionContract
-                      formData={formData}
-                      setFormData={setFormData}
-                    />
-                  </div>
-                )}
-              </div>
-            </CardContent>
-            <Separator />
-            <CardFooter className="flex justify-between p-6 mb-32">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setCurrentStep(Math.max(0, currentStep - 1));
-                  // Scroll to the top of the form content with smooth animation
-                  document.getElementById("form-content")?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                }}
-                disabled={currentStep === 0}
-              >
-                Previous
-              </Button>
-              <Button
-                onClick={() => {
-                  if (currentStep === steps.length - 1) {
-                    handleSubmit();
-                  } else {
-                    setCurrentStep(currentStep + 1);
-                    // Scroll to the top of the form content with smooth animation
-                    document.getElementById("form-content")?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
-                  }
-                }}
-              >
-                {currentStep === steps.length - 1 ? "Submit" : "Next"}
-              </Button>
-            </CardFooter>
-          </Card>
-          </div>
           </div>
         </div>
       </main>

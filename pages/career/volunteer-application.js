@@ -115,18 +115,38 @@ function VolunteerApplication() {
     }
   }
 
-  // Handle form submission (mock API call)
-  function handleSubmit(event) {
+  // Handle form submission
+  async function handleSubmit(event) {
     event.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API delay
-    setTimeout(() => {
-      console.log("Form Submitted:", form);
+    try {
+      const response = await fetch('http://localhost:4000/api/volunteer-applications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        console.log("Volunteer Application Submitted:", data);
+        setSubmitted(true);
+        setForm(INITIAL_FORM); // Clear form after submission
+        
+        // Scroll to top to show success message
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        alert('Failed to submit application: ' + (data.message || 'Unknown error'));
+      }
+    } catch (error) {
+      console.error('Error submitting volunteer application:', error);
+      alert('Error submitting application. Please try again.');
+    } finally {
       setIsSubmitting(false);
-      setSubmitted(true);
-      setForm(INITIAL_FORM); // Clear form after submission
-    }, 1500);
+    }
   }
 
   // --- COMPREHENSIVE STYLE BLOCK FOR ALL CUSTOM AESTHETICS ---

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Check, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -164,8 +165,16 @@ const OnboardingForm = () => {
   };
 
   const nextStep = () => {
+    if (!validateStep(currentStep)) {
+      return;
+    }
+    
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1);
+      toast.success("Step Completed", {
+        description: `Moving to ${steps[currentStep + 1].title}`,
+        duration: 2000,
+      });
     }
   };
 
@@ -175,23 +184,197 @@ const OnboardingForm = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // Final validation
+    if (!validateStep(currentStep)) {
+      return;
+    }
+    
     setIsSubmitting(true);
+    
+    const loadingToast = toast.loading("Submitting your application...", {
+      description: "Please wait while we process your application",
+    });
 
-    // Simulate API call
-    setTimeout(() => {
-      alert("Form submitted successfully!");
+    try {
+      const formDataToSend = new FormData();
+      
+      // Add basic fields
+      formDataToSend.append('firstName', formData.firstName);
+      formDataToSend.append('lastName', formData.lastName);
+      formDataToSend.append('gender', formData.gender);
+      formDataToSend.append('phone', formData.phone);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('address1', formData.addressLine1);
+      formDataToSend.append('address2', formData.addressLine2);
+      formDataToSend.append('city', formData.city);
+      formDataToSend.append('state', formData.state);
+      formDataToSend.append('zipCode', formData.zipCode);
+      
+      // Job information
+      formDataToSend.append('position', formData.position);
+      formDataToSend.append('hourlyPay', formData.desiredPay);
+      formDataToSend.append('startDate', formData.startDate);
+      formDataToSend.append('workAuth', formData.authorizedToWork.charAt(0).toUpperCase() + formData.authorizedToWork.slice(1));
+      formDataToSend.append('felony', formData.felonyConviction.charAt(0).toUpperCase() + formData.felonyConviction.slice(1));
+      
+      // Schools, work experience, and references as JSON
+      formDataToSend.append('schools', JSON.stringify(formData.education));
+      formDataToSend.append('workExperience', JSON.stringify(formData.workExperience));
+      formDataToSend.append('references', JSON.stringify(formData.references));
+      
+      // Files
+      if (formData.resume) {
+        formDataToSend.append('resume', formData.resume);
+      }
+      
+      const response = await fetch('http://localhost:4000/api/job-applications', {
+        method: 'POST',
+        body: formDataToSend,
+      });
+      
+      const data = await response.json();
+      
+      toast.dismiss(loadingToast);
+      
+      if (data.success) {
+        toast.success("Application Submitted Successfully!", {
+          description: "Thank you! We will review your application and contact you soon.",
+          duration: 5000,
+        });
+        
+        // Redirect after a short delay
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+      } else {
+        toast.error("Submission Failed", {
+          description: data.message || "Unable to submit application. Please try again.",
+          duration: 5000,
+        });
+      }
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      console.error("Error submitting application:", error);
+      toast.error("Network Error", {
+        description: "Unable to connect to the server. Please check your connection and try again.",
+        duration: 5000,
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
+  };
+
+  // Validate step and show toast for missing fields
+  const validateStep = (stepIndex: number): boolean => {
+    switch (stepIndex) {
+      case 0: // Personal Information
+        const missingPersonal = [];
+        if (!formData.firstName.trim()) missingPersonal.push("First Name");
+        if (!formData.lastName.trim()) missingPersonal.push("Last Name");
+        if (!formData.email.trim()) missingPersonal.push("Email");
+        if (!formData.phone.trim()) missingPersonal.push("Phone");
+        if (!formData.addressLine1.trim()) missingPersonal.push("Address");
+        if (!formData.city.trim()) missingPersonal.push("City");
+        if (!formData.state.trim()) missingPersonal.push("State");
+        if (!formData.zipCode.trim()) missingPersonal.push("Zip Code");
+        
+        if (missingPersonal.length > 0) {
+          toast.error("Missing Required Fields", {
+            description: `Please fill in: ${missingPersonal.join(", ")}`,
+            duration: 4000,
+          });
+          return false;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+          toast.error("Invalid Email", {
+            description: "Please enter a valid email address",
+            duration: 3000,
+          });
+          return false;
+        }
+        
+        // Phone validation (basic)
+        const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+        if (!phoneRegex.test(formData.phone)) {
+          toast.error("Invalid Phone Number", {
+            description: "Please enter a valid phone number",
+            duration: 3000,
+          });
+          return false;
+        }
+        
+        return true;
+        
+      case 1: // Position Details
+        const missingJob = [];
+        if (!formData.position.trim()) missingJob.push("Position");
+        if (!formData.authorizedToWork) missingJob.push("Work Authorization");
+        if (!formData.felonyConviction) missingJob.push("Felony Conviction Question");
+        
+        if (missingJob.length > 0) {
+          toast.error("Missing Required Fields", {
+            description: `Please fill in: ${missingJob.join(", ")}`,
+            duration: 4000,
+          });
+          return false;
+        }
+        return true;
+        
+      case 2: // Resume & Education
+        // Optional validation for education
+        if (formData.education.length > 0) {
+          const firstSchool = formData.education[0];
+          if (firstSchool.schoolName.trim() && !firstSchool.schoolType) {
+            toast.warning("Education Details Incomplete", {
+              description: "Please select school type or remove the entry",
+              duration: 3000,
+            });
+            return false;
+          }
+        }
+        return true;
+        
+      case 3: // Work Experience
+        return true; // Optional section
+        
+      case 4: // References
+        return true; // Optional section
+        
+      case 5: // Signature
+        if (!formData.signature.trim()) {
+          toast.error("Signature Required", {
+            description: "Please draw or type your signature",
+            duration: 3000,
+          });
+          return false;
+        }
+        return true;
+        
+      default:
+        return true;
+    }
   };
 
   // Check if step is valid for next button
   const isStepValid = () => {
     switch (currentStep) {
       case 0:
-        return formData.firstName.trim() !== "" && formData.lastName.trim() !== "" && formData.email.trim() !== "" && formData.phone.trim() !== "";
+        return formData.firstName.trim() !== "" && 
+               formData.lastName.trim() !== "" && 
+               formData.email.trim() !== "" && 
+               formData.phone.trim() !== "" &&
+               formData.addressLine1.trim() !== "" &&
+               formData.city.trim() !== "" &&
+               formData.state.trim() !== "" &&
+               formData.zipCode.trim() !== "";
       case 1:
-        return formData.position.trim() !== "";
+        return formData.position.trim() !== "" &&
+               formData.authorizedToWork !== "" &&
+               formData.felonyConviction !== "";
       case 2:
         return true;
       case 3:

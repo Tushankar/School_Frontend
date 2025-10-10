@@ -5,6 +5,7 @@ import { Send, GraduationCap, BookOpen, Users, Building, MessageSquare } from 'l
 import NavBarOnly from "../components/NavBarOnly";
 import Ticker from "../components/Ticker";
 import Footer from "../components/Footer";
+import { toast } from "sonner";
 
 export default function StudentSurveys() {
   const [formData, setFormData] = useState({
@@ -27,10 +28,50 @@ export default function StudentSurveys() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Survey submitted:', formData)
-    alert('Thank you for your feedback! Your survey has been submitted.')
+    
+    try {
+      const response = await fetch('http://localhost:4000/api/surveys/student', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success('Thank you for your feedback!', {
+          description: 'Your survey has been submitted successfully.',
+          duration: 4000,
+        });
+        setFormData({
+          name: '',
+          grade: '',
+          section: '',
+          teachingQuality: '',
+          academicSupport: '',
+          campusFacilities: '',
+          activities: '',
+          grievanceMechanisms: '',
+          learningEnvironment: '',
+          suggestions: ''
+        });
+      } else {
+        toast.error('Submission Failed', {
+          description: data.message || 'Unknown error occurred',
+          duration: 4000,
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting survey:', error);
+      toast.error('Error submitting survey', {
+        description: 'Please try again later.',
+        duration: 4000,
+      });
+    }
   }
 
   return (

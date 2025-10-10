@@ -30,6 +30,8 @@ import {
   Upload,
   Trash2,
   Edit,
+  Loader2,
+  Heart,
 } from "lucide-react";
 
 import { toast } from "sonner";
@@ -61,12 +63,37 @@ import {
   ReEnrollmentTable,
   ReEnrollmentDetailView,
 } from "./ReEnrollmentManagement";
+import {
+  ParentSurveyTable,
+  StaffSurveyTable,
+  StudentSurveyTable,
+  ParentSurveyDetailView,
+  StaffSurveyDetailView,
+  StudentSurveyDetailView,
+} from "./SurveyManagement";
 
 export const Dashboard = () => {
-  const [isDark, setIsDark] = useState(false);
+  // Function to get initial theme
+  const getInitialTheme = () => {
+    if (typeof window === "undefined") return false;
+    const savedTheme = localStorage.getItem("theme");
+    const systemPrefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    return savedTheme === "dark" || (!savedTheme && systemPrefersDark);
+  };
+
+  const [isDark, setIsDark] = useState(getInitialTheme);
   const [mounted, setMounted] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const [authorized, setAuthorized] = useState(null);
+
+  // Save theme to localStorage when it changes
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    }
+  }, [isDark, mounted]);
 
   // Auth guard: verify user on mount. If not authenticated, set authorized=false so parent can show sign-in.
   useEffect(() => {
@@ -359,9 +386,7 @@ const DropdownOption = ({
 
   const handleClick = () => {
     setIsOpen(!isOpen);
-    if (!isOpen) {
-      setSelected(title);
-    }
+    // Don't set selected when opening/closing dropdown
   };
 
   return (
@@ -514,6 +539,287 @@ const ToggleClose = ({ open, setOpen }) => {
 };
 
 const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
+  const [dashboardData, setDashboardData] = useState({
+    stats: {
+      totalEnrollments: 0,
+      totalReenrollments: 0,
+      totalJobApplications: 0,
+      totalVolunteerApplications: 0,
+      totalStaffSurveys: 0,
+      totalParentSurveys: 0,
+      totalStudentSurveys: 0,
+      totalContactForms: 0,
+      pendingEnrollments: 0,
+      pendingReenrollments: 0,
+      pendingJobApplications: 0,
+      pendingVolunteerApplications: 0,
+    },
+    recentActivities: [],
+    loading: true,
+  });
+
+  useEffect(() => {
+    if (selected === "Dashboard") {
+      fetchDashboardData();
+    }
+  }, [selected]);
+
+  const fetchDashboardData = async () => {
+    try {
+      setDashboardData((prev) => ({ ...prev, loading: true }));
+
+      // Fetch data from all APIs in parallel
+      const [
+        enrollmentsRes,
+        reenrollmentsRes,
+        jobAppsRes,
+        volunteerAppsRes,
+        staffSurveysRes,
+        parentSurveysRes,
+        studentSurveysRes,
+        contactFormsRes,
+      ] = await Promise.all([
+        fetch("http://localhost:4000/api/forms/student-registration").catch(
+          () => ({ ok: false, json: () => ({}) })
+        ),
+        fetch("http://localhost:4000/api/renroll/renroll-form").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
+        fetch("http://localhost:4000/api/job-applications/").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
+        fetch("http://localhost:4000/api/volunteer-applications/").catch(
+          () => ({ ok: false, json: () => ({}) })
+        ),
+        fetch("http://localhost:4000/api/surveys/staff").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
+        fetch("http://localhost:4000/api/surveys/parent").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
+        fetch("http://localhost:4000/api/surveys/student").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
+        fetch("http://localhost:4000/api/contact/").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
+      ]);
+
+      const [
+        enrollmentsData,
+        reenrollmentsData,
+        jobAppsData,
+        volunteerAppsData,
+        staffSurveysData,
+        parentSurveysData,
+        studentSurveysData,
+        contactFormsData,
+      ] = await Promise.all([
+        enrollmentsRes.ok ? enrollmentsRes.json() : { registrations: [] },
+        reenrollmentsRes.ok ? reenrollmentsRes.json() : { forms: [] },
+        jobAppsRes.ok ? jobAppsRes.json() : { applications: [] },
+        volunteerAppsRes.ok ? volunteerAppsRes.json() : { applications: [] },
+        staffSurveysRes.ok ? staffSurveysRes.json() : { surveys: [] },
+        parentSurveysRes.ok ? parentSurveysRes.json() : { surveys: [] },
+        studentSurveysRes.ok ? studentSurveysRes.json() : { surveys: [] },
+        contactFormsRes.ok ? contactFormsRes.json() : [],
+      ]);
+
+      // Calculate stats
+      const stats = {
+        totalEnrollments: enrollmentsData.registrations?.length || 0,
+        totalReenrollments: reenrollmentsData.forms?.length || 0,
+        totalJobApplications: Array.isArray(jobAppsData.applications)
+          ? jobAppsData.applications.length
+          : 0,
+        totalVolunteerApplications: Array.isArray(
+          volunteerAppsData.applications
+        )
+          ? volunteerAppsData.applications.length
+          : 0,
+        totalStaffSurveys: Array.isArray(staffSurveysData.surveys)
+          ? staffSurveysData.surveys.length
+          : 0,
+        totalParentSurveys: Array.isArray(parentSurveysData.surveys)
+          ? parentSurveysData.surveys.length
+          : 0,
+        totalStudentSurveys: Array.isArray(studentSurveysData.surveys)
+          ? studentSurveysData.surveys.length
+          : 0,
+        totalContactForms: Array.isArray(contactFormsData)
+          ? contactFormsData.length
+          : 0,
+        pendingEnrollments:
+          enrollmentsData.registrations?.filter(
+            (f) => f.status === "pending" || f.status === "Pending"
+          ).length || 0,
+        pendingReenrollments:
+          reenrollmentsData.forms?.filter(
+            (f) => f.currentStep === 0 || f.status === "Pending"
+          ).length || 0,
+        pendingJobApplications: Array.isArray(jobAppsData.applications)
+          ? jobAppsData.applications.filter(
+              (app) => app.status === "pending" || app.status === "Pending"
+            ).length
+          : 0,
+        pendingVolunteerApplications: Array.isArray(
+          volunteerAppsData.applications
+        )
+          ? volunteerAppsData.applications.filter(
+              (app) => app.status === "pending" || app.status === "Pending"
+            ).length
+          : 0,
+      };
+
+      // Generate recent activities from all data sources
+      const activities = [];
+
+      // Add enrollment activities
+      enrollmentsData.registrations?.slice(0, 3).forEach((form) => {
+        activities.push({
+          icon: Users,
+          title: "New enrollment application",
+          desc: `${form.childFirstName} ${form.childLastName} - ${form.gradeLevel}`,
+          time: new Date(form.submittedAt).toLocaleDateString(),
+          color: "blue",
+          type: "enrollment",
+          id: form._id,
+        });
+      });
+
+      // Add reenrollment activities
+      reenrollmentsData.forms?.slice(0, 3).forEach((form) => {
+        activities.push({
+          icon: Users,
+          title: "Re-enrollment application",
+          desc: `${form.childFirstName} ${form.childLastName} - ${form.gradeLevel}`,
+          time: new Date(form.submittedAt).toLocaleDateString(),
+          color: "green",
+          type: "reenrollment",
+          id: form._id,
+        });
+      });
+
+      // Add job application activities
+      if (Array.isArray(jobAppsData.applications)) {
+        jobAppsData.applications.slice(0, 2).forEach((app) => {
+          activities.push({
+            icon: FileText,
+            title: "Job application submitted",
+            desc: `${app.firstName} ${app.lastName} - ${app.position}`,
+            time: app.submittedAt
+              ? new Date(app.submittedAt).toLocaleDateString()
+              : "Recent",
+            color: "purple",
+            type: "job",
+            id: app._id,
+          });
+        });
+      }
+
+      // Add volunteer application activities
+      if (Array.isArray(volunteerAppsData.applications)) {
+        volunteerAppsData.applications.slice(0, 2).forEach((app) => {
+          activities.push({
+            icon: Heart,
+            title: "Volunteer application submitted",
+            desc: `${app.firstName} ${app.lastName} - ${app.position}`,
+            time: app.submittedAt
+              ? new Date(app.submittedAt).toLocaleDateString()
+              : "Recent",
+            color: "pink",
+            type: "volunteer",
+            id: app._id,
+          });
+        });
+      }
+
+      // Add survey activities
+      if (Array.isArray(staffSurveysData.surveys)) {
+        staffSurveysData.surveys.slice(0, 1).forEach((survey) => {
+          activities.push({
+            icon: BarChart3,
+            title: "Staff survey submitted",
+            desc: `Staff feedback received`,
+            time: survey.submittedAt
+              ? new Date(survey.submittedAt).toLocaleDateString()
+              : "Recent",
+            color: "indigo",
+            type: "staff-survey",
+            id: survey._id,
+          });
+        });
+      }
+
+      if (Array.isArray(parentSurveysData.surveys)) {
+        parentSurveysData.surveys.slice(0, 1).forEach((survey) => {
+          activities.push({
+            icon: BarChart3,
+            title: "Parent survey submitted",
+            desc: `Parent feedback received`,
+            time: survey.submittedAt
+              ? new Date(survey.submittedAt).toLocaleDateString()
+              : "Recent",
+            color: "teal",
+            type: "parent-survey",
+            id: survey._id,
+          });
+        });
+      }
+
+      if (Array.isArray(studentSurveysData.surveys)) {
+        studentSurveysData.surveys.slice(0, 1).forEach((survey) => {
+          activities.push({
+            icon: BarChart3,
+            title: "Student survey submitted",
+            desc: `Student feedback received`,
+            time: survey.submittedAt
+              ? new Date(survey.submittedAt).toLocaleDateString()
+              : "Recent",
+            color: "cyan",
+            type: "student-survey",
+            id: survey._id,
+          });
+        });
+      }
+
+      // Add contact form activities
+      if (Array.isArray(contactFormsData)) {
+        contactFormsData.slice(0, 2).forEach((form) => {
+          activities.push({
+            icon: MapPin,
+            title: "Contact form submitted",
+            desc: `${form.name} - ${form.subject}`,
+            time: form.createdAt
+              ? new Date(form.createdAt).toLocaleDateString()
+              : "Recent",
+            color: "orange",
+            type: "contact",
+            id: form._id,
+          });
+        });
+      }
+
+      // Sort activities by time (most recent first) and take top 8
+      activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+      const recentActivities = activities.slice(0, 8);
+
+      setDashboardData({
+        stats,
+        recentActivities,
+        loading: false,
+      });
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      setDashboardData((prev) => ({ ...prev, loading: false }));
+    }
+  };
   const getPageTitle = () => {
     if (selected === "New Enrollment") return "New Enrollment";
     if (selected === "Re-Enrollment") return "Re-Enrollment";
@@ -630,13 +936,13 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
               <VolunteerApplicationTable setSelected={setSelected} />
             )}
             {selected === "Staff Surveys" && (
-              <StaffSurveysTable setSelected={setSelected} />
+              <StaffSurveyTable setSelected={setSelected} />
             )}
             {selected === "Parent Surveys" && (
-              <ParentSurveysTable setSelected={setSelected} />
+              <ParentSurveyTable setSelected={setSelected} />
             )}
             {selected === "Student Surveys" && (
-              <StudentSurveysTable setSelected={setSelected} />
+              <StudentSurveyTable setSelected={setSelected} />
             )}
             {selected === "CMS Management" && (
               <CMSManagement setSelected={setSelected} />
@@ -658,31 +964,31 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
             )}
             {selected.startsWith("job-application-detail-") && (
               <JobApplicationDetailView
-                applicationId={selected.split("-")[2]}
+                applicationId={selected}
                 setSelected={setSelected}
               />
             )}
             {selected.startsWith("volunteer-application-detail-") && (
               <VolunteerApplicationDetailView
-                applicationId={selected.split("-")[2]}
+                applicationId={selected}
                 setSelected={setSelected}
               />
             )}
             {selected.startsWith("staff-survey-detail-") && (
               <StaffSurveyDetailView
-                surveyId={selected.split("-")[2]}
+                surveyId={selected}
                 setSelected={setSelected}
               />
             )}
             {selected.startsWith("parent-survey-detail-") && (
               <ParentSurveyDetailView
-                surveyId={selected.split("-")[2]}
+                surveyId={selected}
                 setSelected={setSelected}
               />
             )}
             {selected.startsWith("student-survey-detail-") && (
               <StudentSurveyDetailView
-                surveyId={selected.split("-")[2]}
+                surveyId={selected}
                 setSelected={setSelected}
               />
             )}
@@ -700,268 +1006,387 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
             )}
             {selected === "Dashboard" && (
               <div className="space-y-6">
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                        <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <TrendingUp className="h-4 w-4 text-green-500" />
-                    </div>
-                    <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">
-                      Total Sales
-                    </h3>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                      $24,567
-                    </p>
-                    <p className="text-sm text-green-600 dark:text-green-400 mt-1">
-                      +12% from last month
-                    </p>
+                {dashboardData.loading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-gray-600 dark:text-gray-400" />
+                    <span className="ml-2 text-gray-600 dark:text-gray-400">
+                      Loading dashboard data...
+                    </span>
                   </div>
-
-                  <div className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                        <Users className="h-5 w-5 text-green-600 dark:text-green-400" />
-                      </div>
-                      <TrendingUp className="h-4 w-4 text-green-500" />
-                    </div>
-                    <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">
-                      Active Users
-                    </h3>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                      1,234
-                    </p>
-                    <p className="text-sm text-green-600 dark:text-green-400 mt-1">
-                      +5% from last week
-                    </p>
-                  </div>
-
-                  <div className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                        <ShoppingCart className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                      </div>
-                      <TrendingUp className="h-4 w-4 text-green-500" />
-                    </div>
-                    <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">
-                      Orders
-                    </h3>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                      456
-                    </p>
-                    <p className="text-sm text-green-600 dark:text-green-400 mt-1">
-                      +8% from yesterday
-                    </p>
-                  </div>
-
-                  <div className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-                        <Package className="h-5 w-5 text-orange-600 dark:text-orange-400" />
-                      </div>
-                      <TrendingUp className="h-4 w-4 text-green-500" />
-                    </div>
-                    <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">
-                      Products
-                    </h3>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                      89
-                    </p>
-                    <p className="text-sm text-green-600 dark:text-green-400 mt-1">
-                      +3 new this week
-                    </p>
-                  </div>
-                </div>
-
-                {/* Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* Recent Activity */}
-                  <div className="lg:col-span-2">
-                    <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-                      <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                          Recent Activity
+                ) : (
+                  <>
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <button
+                        onClick={() => setSelected("New Enrollment")}
+                        className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-all hover:scale-105 cursor-pointer text-left"
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                            <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <TrendingUp className="h-4 w-4 text-green-500" />
+                        </div>
+                        <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">
+                          Total Enrollments
                         </h3>
-                        <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
-                          View all
-                        </button>
-                      </div>
-                      <div className="space-y-4">
-                        {[
-                          {
-                            icon: DollarSign,
-                            title: "New sale recorded",
-                            desc: "Order #1234 completed",
-                            time: "2 min ago",
-                            color: "green",
-                          },
-                          {
-                            icon: Users,
-                            title: "New user registered",
-                            desc: "john.doe@example.com joined",
-                            time: "5 min ago",
-                            color: "blue",
-                          },
-                          {
-                            icon: Package,
-                            title: "Product updated",
-                            desc: "iPhone 15 Pro stock updated",
-                            time: "10 min ago",
-                            color: "purple",
-                          },
-                          {
-                            icon: Activity,
-                            title: "System maintenance",
-                            desc: "Scheduled backup completed",
-                            time: "1 hour ago",
-                            color: "orange",
-                          },
-                          {
-                            icon: Bell,
-                            title: "New notification",
-                            desc: "Marketing campaign results",
-                            time: "2 hours ago",
-                            color: "red",
-                          },
-                        ].map((activity, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-                          >
-                            <div
-                              className={`p-2 rounded-lg ${
-                                activity.color === "green"
-                                  ? "bg-green-50 dark:bg-green-900/20"
-                                  : activity.color === "blue"
-                                  ? "bg-blue-50 dark:bg-blue-900/20"
-                                  : activity.color === "purple"
-                                  ? "bg-purple-50 dark:bg-purple-900/20"
-                                  : activity.color === "orange"
-                                  ? "bg-orange-50 dark:bg-orange-900/20"
-                                  : "bg-red-50 dark:bg-red-900/20"
-                              }`}
-                            >
-                              <activity.icon
-                                className={`h-4 w-4 ${
-                                  activity.color === "green"
-                                    ? "text-green-600 dark:text-green-400"
-                                    : activity.color === "blue"
-                                    ? "text-blue-600 dark:text-blue-400"
-                                    : activity.color === "purple"
-                                    ? "text-purple-600 dark:text-purple-400"
-                                    : activity.color === "orange"
-                                    ? "text-orange-600 dark:text-orange-400"
-                                    : "text-red-600 dark:text-red-400"
-                                }`}
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                                {activity.title}
-                              </p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                {activity.desc}
-                              </p>
-                            </div>
-                            <div className="text-xs text-gray-400 dark:text-gray-500">
-                              {activity.time}
-                            </div>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                          {dashboardData.stats.totalEnrollments}
+                        </p>
+                        <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">
+                          {dashboardData.stats.pendingEnrollments} pending
+                        </p>
+                      </button>
+
+                      <button
+                        onClick={() => setSelected("Re-Enrollment")}
+                        className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-all hover:scale-105 cursor-pointer text-left"
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                            <Users className="h-5 w-5 text-green-600 dark:text-green-400" />
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                          <TrendingUp className="h-4 w-4 text-green-500" />
+                        </div>
+                        <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">
+                          Re-Enrollments
+                        </h3>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                          {dashboardData.stats.totalReenrollments}
+                        </p>
+                        <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">
+                          {dashboardData.stats.pendingReenrollments} pending
+                        </p>
+                      </button>
 
-                  {/* Quick Stats */}
-                  <div className="space-y-6">
-                    <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                        Quick Stats
-                      </h3>
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
-                            Conversion Rate
-                          </span>
-                          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                            3.2%
-                          </span>
+                      <button
+                        onClick={() => setSelected("Job Application")}
+                        className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-all hover:scale-105 cursor-pointer text-left"
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                            <FileText className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                          </div>
+                          <TrendingUp className="h-4 w-4 text-green-500" />
                         </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                          <div
-                            className="bg-blue-500 h-2 rounded-full"
-                            style={{ width: "32%" }}
-                          ></div>
-                        </div>
+                        <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">
+                          Job Applications
+                        </h3>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                          {dashboardData.stats.totalJobApplications}
+                        </p>
+                        <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">
+                          {dashboardData.stats.pendingJobApplications} pending
+                        </p>
+                      </button>
 
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
-                            Bounce Rate
-                          </span>
-                          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                            45%
-                          </span>
+                      <button
+                        onClick={() => setSelected("Contact Forms")}
+                        className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-all hover:scale-105 cursor-pointer text-left"
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                            <MapPin className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                          </div>
+                          <TrendingUp className="h-4 w-4 text-green-500" />
                         </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                          <div
-                            className="bg-orange-500 h-2 rounded-full"
-                            style={{ width: "45%" }}
-                          ></div>
-                        </div>
-
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
-                            Page Views
-                          </span>
-                          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                            8.7k
-                          </span>
-                        </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                          <div
-                            className="bg-green-500 h-2 rounded-full"
-                            style={{ width: "87%" }}
-                          ></div>
-                        </div>
-                      </div>
+                        <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">
+                          Contact Forms
+                        </h3>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                          {dashboardData.stats.totalContactForms}
+                        </p>
+                        <p className="text-sm text-green-600 dark:text-green-400 mt-1">
+                          All inquiries
+                        </p>
+                      </button>
                     </div>
 
-                    <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                        Recent Gallery Uploads
-                      </h3>
-                      <div className="space-y-3">
-                        {[
-                          "School Event Photo",
-                          "Art Exhibition",
-                          "Science Fair",
-                          "Sports Day",
-                        ].map((item, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center justify-between py-2"
-                          >
-                            <span className="text-sm text-gray-600 dark:text-gray-400">
-                              {item}
-                            </span>
-                            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                              {
-                                [
-                                  "2 days ago",
-                                  "5 days ago",
-                                  "1 week ago",
-                                  "2 weeks ago",
-                                ][i]
+                    {/* Content Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                      {/* Recent Activity */}
+                      <div className="lg:col-span-2">
+                        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+                          <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                              Recent Activity
+                            </h3>
+                            <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
+                              View all
+                            </button>
+                          </div>
+                          <div className="space-y-4">
+                            {dashboardData.recentActivities.length > 0 ? (
+                              dashboardData.recentActivities.map(
+                                (activity, i) => {
+                                  const getNavigationTarget = (type, id) => {
+                                    if (id) {
+                                      switch (type) {
+                                        case "enrollment":
+                                          return `enrollment-detail-${id}`;
+                                        case "reenrollment":
+                                          return `re-enrollment-detail-${id}`;
+                                        case "job":
+                                          return `job-application-detail-${id}`;
+                                        case "volunteer":
+                                          return `volunteer-application-detail-${id}`;
+                                        case "staff-survey":
+                                          return `staff-survey-detail-${id}`;
+                                        case "parent-survey":
+                                          return `parent-survey-detail-${id}`;
+                                        case "student-survey":
+                                          return `student-survey-detail-${id}`;
+                                        case "contact":
+                                          return `contact-form-detail-${id}`;
+                                      }
+                                    }
+                                    switch (type) {
+                                      case "enrollment":
+                                        return "New Enrollment";
+                                      case "reenrollment":
+                                        return "Re-Enrollment";
+                                      case "job":
+                                        return "Job Application";
+                                      case "volunteer":
+                                        return "Volunteer Application";
+                                      case "staff-survey":
+                                        return "Staff Surveys";
+                                      case "parent-survey":
+                                        return "Parent Surveys";
+                                      case "student-survey":
+                                        return "Student Surveys";
+                                      case "contact":
+                                        return "Contact Forms";
+                                      default:
+                                        return "Dashboard";
+                                    }
+                                  };
+
+                                  return (
+                                    <div
+                                      key={i}
+                                      onClick={() =>
+                                        setSelected(
+                                          getNavigationTarget(
+                                            activity.type,
+                                            activity.id
+                                          )
+                                        )
+                                      }
+                                      className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                                    >
+                                      <div
+                                        className={`p-2 rounded-lg ${
+                                          activity.color === "green"
+                                            ? "bg-green-50 dark:bg-green-900/20"
+                                            : activity.color === "blue"
+                                            ? "bg-blue-50 dark:bg-blue-900/20"
+                                            : activity.color === "purple"
+                                            ? "bg-purple-50 dark:bg-purple-900/20"
+                                            : activity.color === "orange"
+                                            ? "bg-orange-50 dark:bg-orange-900/20"
+                                            : "bg-red-50 dark:bg-red-900/20"
+                                        }`}
+                                      >
+                                        <activity.icon
+                                          className={`h-4 w-4 ${
+                                            activity.color === "green"
+                                              ? "text-green-600 dark:text-green-400"
+                                              : activity.color === "blue"
+                                              ? "text-blue-600 dark:text-blue-400"
+                                              : activity.color === "purple"
+                                              ? "text-purple-600 dark:text-purple-400"
+                                              : activity.color === "orange"
+                                              ? "text-orange-600 dark:text-orange-400"
+                                              : "text-red-600 dark:text-red-400"
+                                          }`}
+                                        />
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                                          {activity.title}
+                                        </p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                          {activity.desc}
+                                        </p>
+                                      </div>
+                                      <div className="text-xs text-gray-400 dark:text-gray-500">
+                                        {activity.time}
+                                      </div>
+                                    </div>
+                                  );
+                                }
+                              )
+                            ) : (
+                              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                <p>No recent activity</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Quick Stats */}
+                      <div className="space-y-6">
+                        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                            Application Overview
+                          </h3>
+                          <div className="space-y-4">
+                            <button
+                              onClick={() =>
+                                setSelected("Volunteer Application")
                               }
-                            </span>
+                              className="w-full flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors cursor-pointer"
+                            >
+                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                Volunteer Apps
+                              </span>
+                              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {dashboardData.stats.totalVolunteerApplications}
+                              </span>
+                            </button>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div
+                                className="bg-green-500 h-2 rounded-full"
+                                style={{
+                                  width:
+                                    dashboardData.stats
+                                      .totalVolunteerApplications > 0
+                                      ? `${Math.min(
+                                          (dashboardData.stats
+                                            .pendingVolunteerApplications /
+                                            dashboardData.stats
+                                              .totalVolunteerApplications) *
+                                            100,
+                                          100
+                                        )}%`
+                                      : "0%",
+                                }}
+                              ></div>
+                            </div>
+
+                            <button
+                              onClick={() => setSelected("Staff Surveys")}
+                              className="w-full flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors cursor-pointer"
+                            >
+                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                Staff Surveys
+                              </span>
+                              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {dashboardData.stats.totalStaffSurveys}
+                              </span>
+                            </button>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div
+                                className="bg-blue-500 h-2 rounded-full"
+                                style={{ width: "75%" }}
+                              ></div>
+                            </div>
+
+                            <button
+                              onClick={() => setSelected("Parent Surveys")}
+                              className="w-full flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors cursor-pointer"
+                            >
+                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                Parent Surveys
+                              </span>
+                              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {dashboardData.stats.totalParentSurveys}
+                              </span>
+                            </button>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div
+                                className="bg-purple-500 h-2 rounded-full"
+                                style={{ width: "60%" }}
+                              ></div>
+                            </div>
+
+                            <button
+                              onClick={() => setSelected("Student Surveys")}
+                              className="w-full flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors cursor-pointer"
+                            >
+                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                Student Surveys
+                              </span>
+                              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {dashboardData.stats.totalStudentSurveys}
+                              </span>
+                            </button>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div
+                                className="bg-orange-500 h-2 rounded-full"
+                                style={{ width: "85%" }}
+                              ></div>
+                            </div>
                           </div>
-                        ))}
+                        </div>
+
+                        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                            System Status
+                          </h3>
+                          <div className="space-y-3">
+                            {[
+                              {
+                                label: "Enrollment System",
+                                status: "Active",
+                                color: "green",
+                              },
+                              {
+                                label: "Survey System",
+                                status: "Active",
+                                color: "green",
+                              },
+                              {
+                                label: "Contact Forms",
+                                status: "Active",
+                                color: "green",
+                              },
+                              {
+                                label: "Gallery",
+                                status: "Active",
+                                color: "green",
+                              },
+                              {
+                                label: "Calendar",
+                                status: "Active",
+                                color: "green",
+                              },
+                            ].map((item, i) => (
+                              <div
+                                key={i}
+                                className="flex items-center justify-between py-2"
+                              >
+                                <span className="text-sm text-gray-600 dark:text-gray-400">
+                                  {item.label}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                  <div
+                                    className={`w-2 h-2 rounded-full ${
+                                      item.color === "green"
+                                        ? "bg-green-500"
+                                        : "bg-red-500"
+                                    }`}
+                                  ></div>
+                                  <span
+                                    className={`text-sm font-medium ${
+                                      item.color === "green"
+                                        ? "text-green-600 dark:text-green-400"
+                                        : "text-red-600 dark:text-red-400"
+                                    }`}
+                                  >
+                                    {item.status}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </>
+                )}
               </div>
             )}
           </div>

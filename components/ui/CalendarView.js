@@ -1,44 +1,18 @@
 "use client";
-import React, { useState } from "react";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "./button";
 import { Input } from "./input";
 
+const API_URL = "http://localhost:4000/api/calendar";
+
 const CalendarView = ({ setSelected }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      date: "2024-01-01",
-      title: "Arabic Language Week",
-      type: "school-events",
-      color: "yellow-300",
-    },
-    {
-      id: 2,
-      date: "2024-01-05",
-      title: "Arabic Spelling Bee",
-      type: "school-events",
-      color: "yellow-300",
-    },
-    {
-      id: 3,
-      date: "2024-01-22",
-      title: "School Open - No Bus",
-      type: "no-busing",
-      color: "green-400",
-    },
-    {
-      id: 4,
-      date: "2024-01-24",
-      title: "Winter Break - No School",
-      type: "school-closed",
-      color: "blue-600",
-    },
-  ]);
+  const [events, setEvents] = useState([]);
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [newEvent, setNewEvent] = useState({
     title: "",
     type: "none",
@@ -47,6 +21,30 @@ const CalendarView = ({ setSelected }) => {
     startDate: "",
     endDate: "",
   });
+
+  // Fetch events from backend on mount
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/events`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setEvents(data.events.map(event => ({
+          ...event,
+          id: event._id
+        })));
+      }
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const eventTypes = [
     {
@@ -148,7 +146,7 @@ const CalendarView = ({ setSelected }) => {
     });
   };
 
-  const handleAddEvent = () => {
+  const handleAddEvent = async () => {
     if (!newEvent.title) return;
 
     const startDate =
@@ -158,24 +156,74 @@ const CalendarView = ({ setSelected }) => {
       ).padStart(2, "0")}-${String(selectedDate).padStart(2, "0")}`;
     const endDate = newEvent.endDate || startDate;
 
-    const event = {
-      id: Date.now(),
+    const eventData = {
+      title: newEvent.title,
       date: startDate,
       endDate: endDate,
-      ...newEvent,
+      type: newEvent.type,
+      color: newEvent.color,
+      customColor: newEvent.customColor,
     };
 
-    setEvents([...events, event]);
-    setNewEvent({
-      title: "",
-      type: "none",
-      color: "none",
-      customColor: "#3b82f6",
-      startDate: "",
-      endDate: "",
-    });
-    setShowAddEvent(false);
-    setSelectedDate(null);
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(eventData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Refresh events from backend
+        await fetchEvents();
+        setNewEvent({
+          title: "",
+          type: "none",
+          color: "none",
+          customColor: "#3b82f6",
+          startDate: "",
+          endDate: "",
+        });
+        setShowAddEvent(false);
+        setSelectedDate(null);
+      } else {
+        alert("Failed to add event: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error adding event:", error);
+      alert("Failed to add event. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteEvent = async (eventId) => {
+    if (!confirm("Are you sure you want to delete this event?")) return;
+
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/events/${eventId}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Refresh events from backend
+        await fetchEvents();
+      } else {
+        alert("Failed to delete event: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      alert("Failed to delete event. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const navigateMonth = (direction) => {
@@ -282,7 +330,7 @@ const CalendarView = ({ setSelected }) => {
                           {dayEvents.slice(0, 2).map((event) => (
                             <div
                               key={event.id}
-                              className={`text-xs p-2 rounded truncate ${
+                              className={`text-xs p-2 rounded group relative ${
                                 event.color === "none"
                                   ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   : event.color === "custom"
@@ -315,14 +363,26 @@ const CalendarView = ({ setSelected }) => {
                                   : {}
                               }
                             >
-                              <div className="truncate font-medium">
-                                {event.endDate && event.endDate !== event.date
-                                  ? `${event.title} (${new Date(
-                                      event.date
-                                    ).getDate()}-${new Date(
-                                      event.endDate
-                                    ).getDate()})`
-                                  : event.title}
+                              <div className="flex items-center justify-between gap-1">
+                                <div className="truncate font-medium flex-1">
+                                  {event.endDate && event.endDate !== event.date
+                                    ? `${event.title} (${new Date(
+                                        event.date
+                                      ).getDate()}-${new Date(
+                                        event.endDate
+                                      ).getDate()})`
+                                    : event.title}
+                                </div>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteEvent(event.id);
+                                  }}
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-red-500 rounded"
+                                  title="Delete event"
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </button>
                               </div>
                             </div>
                           ))}
@@ -476,9 +536,10 @@ const CalendarView = ({ setSelected }) => {
             <div className="flex gap-3 mt-6">
               <Button
                 onClick={handleAddEvent}
-                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                disabled={loading || !newEvent.title}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Add Event
+                {loading ? "Adding..." : "Add Event"}
               </Button>
               <Button
                 variant="outline"

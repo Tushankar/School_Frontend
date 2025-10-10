@@ -5,6 +5,7 @@ import { Send, Star, Users, BookOpen, MessageSquare } from 'lucide-react'
 import NavBarOnly from "../components/NavBarOnly";
 import Ticker from "../components/Ticker";
 import Footer from "../components/Footer";
+import { toast } from "sonner";
 
 export default function StaffSurveys() {
   const [formData, setFormData] = useState({
@@ -26,10 +27,49 @@ export default function StaffSurveys() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Survey submitted:', formData)
-    alert('Thank you for your feedback! Your survey has been submitted.')
+    
+    try {
+      const response = await fetch('http://localhost:4000/api/surveys/staff', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success('Thank you for your feedback!', {
+          description: 'Your survey has been submitted successfully.',
+          duration: 4000,
+        });
+        setFormData({
+          name: '',
+          role: '',
+          department: '',
+          workplaceEnvironment: '',
+          trainingOpportunities: '',
+          managementSupport: '',
+          teachingResources: '',
+          communication: '',
+          suggestions: ''
+        });
+      } else {
+        toast.error('Submission Failed', {
+          description: data.message || 'Unknown error occurred',
+          duration: 4000,
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting survey:', error);
+      toast.error('Error submitting survey', {
+        description: 'Please try again later.',
+        duration: 4000,
+      });
+    }
   }
 
   const surveyTopics = [
@@ -258,11 +298,11 @@ export default function StaffSurveys() {
                         required
                       >
                         <option value="">Select Rating</option>
-                        <option value="very-supportive">Very Supportive</option>
-                        <option value="supportive">Supportive</option>
-                        <option value="neutral">Neutral</option>
-                        <option value="unsupportive">Unsupportive</option>
-                        <option value="very-unsupportive">Very Unsupportive</option>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                        <option value="very-poor">Very Poor</option>
                       </select>
                     </div>
 
@@ -280,9 +320,9 @@ export default function StaffSurveys() {
                         <option value="">Select Rating</option>
                         <option value="excellent">Excellent</option>
                         <option value="good">Good</option>
-                        <option value="adequate">Adequate</option>
-                        <option value="inadequate">Inadequate</option>
-                        <option value="very-inadequate">Very Inadequate</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                        <option value="very-poor">Very Poor</option>
                       </select>
                     </div>
 
