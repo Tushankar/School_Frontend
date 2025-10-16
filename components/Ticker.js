@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const tickerStyle = `
 @keyframes ticker-scroll {
@@ -60,15 +61,59 @@ const tickerStyle = `
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
 }
+.highlight-phrase.clickable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.highlight-phrase.clickable:hover {
+  text-decoration-thickness: 3px;
+  color: #9A7B4A;
+}
 `;
 
 export default function Ticker() {
+  const router = useRouter();
   const scrollingRef = useRef(null);
   const bodyRef = useRef(null);
   const phraseRef = useRef(null);
   const pauseRef = useRef(null);
   const resumeRef = useRef(null);
   const [isUnderlined, setIsUnderlined] = useState(false);
+  const [tickerData, setTickerData] = useState({
+    label: "ARA News",
+    content: `Accreditation Al-Rasheed Academy is the 1st Accredited School In the Buffalo Area by the COGNIA Accreditation Organization! - Good News! "Unlock Your Future: " Limited Volunteer Spots Available – Shape Your Experience by Contributing to ARA School Community Today! 🌟`,
+    highlightText: "Limited Volunteer Spots Available",
+    highlightLink: "/career/volunteer-application",
+    enabled: true,
+    scrollSpeed: 20,
+  });
+
+  // Fetch ticker data from backend
+  useEffect(() => {
+    const fetchTickerData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:4000/api/auth/cms/ticker"
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setTickerData((prev) => ({ ...prev, ...data }));
+        }
+      } catch (err) {
+        console.error("Failed to fetch ticker data", err);
+        // Keep default data on error
+      }
+    };
+
+    fetchTickerData();
+  }, []);
+
+  // Handle highlight text click
+  const handleHighlightClick = () => {
+    if (tickerData.highlightLink) {
+      router.push(tickerData.highlightLink);
+    }
+  };
 
   useEffect(() => {
     const el = scrollingRef.current;
@@ -80,7 +125,7 @@ export default function Ticker() {
     let pos = 0;
     let textWidth = 0;
     let containerWidth = 0;
-    const duration = 20; // seconds for full travel (approx) — slowed a bit per request
+    const duration = tickerData.scrollSpeed || 20; // seconds for full travel from API
 
     function measure() {
       // prefer scrollWidth which often reports content width immediately
@@ -181,7 +226,14 @@ export default function Ticker() {
       pauseRef.current = null;
       resumeRef.current = null;
     };
-  }, []);
+  }, [tickerData.scrollSpeed, tickerData.content]);
+
+  // Don't render if ticker is disabled
+  if (!tickerData.enabled) {
+    return null;
+  }
+
+  const labelParts = tickerData.label.split(" ");
 
   return (
     <div style={{ backgroundColor: "transparent", padding: 0, margin: 0 }}>
@@ -198,8 +250,8 @@ export default function Ticker() {
         }}
       >
         <div className="ticker-label" aria-hidden>
-          <div className="line">ARA</div>
-          <div className="line">News</div>
+          <div className="line">{labelParts[0] || "ARA"}</div>
+          <div className="line">{labelParts[1] || "News"}</div>
         </div>
 
         <div
@@ -228,35 +280,49 @@ export default function Ticker() {
             className="scrolling-text font-bold text-lg"
             style={{ color: "#B8935A", fontFamily: "Georgia, serif" }}
           >
-            Accreditation Al-Rasheed Academy is the 1st Accredited School In the
-            Buffalo Area by the COGNIA Accreditation Organization! - Good News!
-            &quot;Unlock Your Future: &quot;
-            <span
-              ref={phraseRef}
-              className={`highlight-phrase ${isUnderlined ? "underlined" : ""}`}
-              onMouseEnter={() => {
-                if (pauseRef.current) pauseRef.current();
-                setIsUnderlined(true);
-              }}
-              onMouseLeave={() => {
-                setIsUnderlined(false);
-                if (resumeRef.current) resumeRef.current();
-              }}
-              onTouchStart={() => {
-                if (pauseRef.current) pauseRef.current();
-                setIsUnderlined(true);
-              }}
-              onTouchEnd={() => {
-                setIsUnderlined(false);
-                if (resumeRef.current) resumeRef.current();
-              }}
-            >
-              Limited Volunteer Spots Available
-            </span>
-            {
-              " – Shape Your Experience by Contributing to ARA School Community Today!"
-            }{" "}
-            🌟
+            {tickerData.highlightText &&
+            tickerData.content.includes(tickerData.highlightText)
+              ? // Render content with highlighted text
+                tickerData.content
+                  .split(tickerData.highlightText)
+                  .map((part, index, array) => (
+                    <span key={index}>
+                      {part}
+                      {index < array.length - 1 && (
+                        <span
+                          ref={index === 0 ? phraseRef : null}
+                          className={`highlight-phrase ${
+                            isUnderlined ? "underlined" : ""
+                          } ${tickerData.highlightLink ? "clickable" : ""}`}
+                          onClick={
+                            tickerData.highlightLink
+                              ? handleHighlightClick
+                              : undefined
+                          }
+                          onMouseEnter={() => {
+                            if (pauseRef.current) pauseRef.current();
+                            setIsUnderlined(true);
+                          }}
+                          onMouseLeave={() => {
+                            setIsUnderlined(false);
+                            if (resumeRef.current) resumeRef.current();
+                          }}
+                          onTouchStart={() => {
+                            if (pauseRef.current) pauseRef.current();
+                            setIsUnderlined(true);
+                          }}
+                          onTouchEnd={() => {
+                            setIsUnderlined(false);
+                            if (resumeRef.current) resumeRef.current();
+                          }}
+                        >
+                          {tickerData.highlightText}
+                        </span>
+                      )}
+                    </span>
+                  ))
+              : // Render plain content if no highlight text or text not found
+                tickerData.content}
           </div>
         </div>
       </div>

@@ -254,69 +254,102 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
           // Student details
           dateOfBirth: form.dateOfBirth
             ? new Date(form.dateOfBirth).toLocaleDateString()
-            : "",
-          gender: form.gender,
-          parentFirstName: form.fatherFirstName,
-          parentLastName: form.fatherLastName,
-          parentPhone: form.fatherPhone,
-          parentAddress1: form.address1,
-          parentAddress2: form.address2,
-          parentCity: form.city,
-          parentState: form.state,
-          parentZip: form.zipCode,
+            : "N/A",
+          gender: form.gender || "N/A",
+          ethnicity: form.ethnicity || "N/A",
 
-          // Academic info - not collected in reenrollment forms for existing students
-          currentGPA: "Available in student records",
-          attendanceRate: "Available in student records",
-          disciplinaryIncidents: "Available in student records",
-          academicAwards: "Available in student records",
-          extracurricularActivities: "Available in student records",
-          specialNeeds: "Available in student records",
-          learningStyle: "Available in student records",
+          // Student address
+          studentAddress1: form.address1 || "N/A",
+          studentAddress2: form.address2 || "",
+          studentCity: form.city || "N/A",
+          studentState: form.state || "N/A",
+          studentZip: form.zipCode || "N/A",
+          schoolDistrict: form.schoolDistrict || "N/A",
 
-          // Health info - map available fields
-          medicalConditions:
-            form.child1HealthChanges === "yes"
-              ? "Health changes reported"
-              : "No health changes reported",
-          allergies: "Not specified in reenrollment form",
-          medications: "Not specified in reenrollment form",
-          hospitalPreference: form.hospitalPreference || "Not specified",
+          // Additional children info
+          hasAdditionalChildren: form.hasAdditionalChildren || "no",
+          numberOfChildren: form.numberOfChildren || 1,
+
+          // Father's Information
+          fatherFirstName: form.fatherFirstName || "N/A",
+          fatherLastName: form.fatherLastName || "N/A",
+          fatherPhone: form.fatherPhone || "N/A",
+          fatherEmail: form.fatherEmail || "N/A",
+          fatherAddress1: form.fatherAddress1 || "N/A",
+          fatherAddress2: form.fatherAddress2 || "",
+          fatherCity: form.fatherCity || "N/A",
+          fatherState: form.fatherState || "N/A",
+          fatherZipCode: form.fatherZipCode || "N/A",
+          fatherOccupation: form.fatherOccupation || "N/A",
+          fatherEmployment: form.fatherEmployment || "N/A",
+
+          // Mother's Information
+          motherFirstName: form.motherFirstName || "N/A",
+          motherLastName: form.motherLastName || "N/A",
+          motherPhone: form.motherPhone || "N/A",
+          motherEmail: form.motherEmail || "N/A",
+          isMotherAddressSame: form.isMotherAddressSame || "yes",
+          motherAddress1: form.motherAddress1 || "N/A",
+          motherAddress2: form.motherAddress2 || "",
+          motherCity: form.motherCity || "N/A",
+          motherState: form.motherState || "N/A",
+          motherZipCode: form.motherZipCode || "N/A",
+          motherOccupation: form.motherOccupation || "N/A",
+          motherEmployment: form.motherEmployment || "N/A",
+
+          // Health Changes
+          child1HealthChanges: form.child1HealthChanges || "N/A",
+          child2HealthChanges: form.child2HealthChanges || "N/A",
+          child3HealthChanges: form.child3HealthChanges || "N/A",
+          child4HealthChanges: form.child4HealthChanges || "N/A",
+          child5HealthChanges: form.child5HealthChanges || "N/A",
 
           // Emergency contacts
-          emergencyContactName: form.emergency1Name,
-          emergencyContactPhone: form.emergency1Phone,
-          emergencyContactRelationship: form.emergency1Relationship,
+          emergency1Name: form.emergency1Name || "N/A",
+          emergency1Phone: form.emergency1Phone || "N/A",
+          emergency1Relationship: form.emergency1Relationship || "N/A",
+          emergency2Name: form.emergency2Name || "N/A",
+          emergency2Phone: form.emergency2Phone || "N/A",
+          emergency2Relationship: form.emergency2Relationship || "N/A",
+          emergency3Name: form.emergency3Name || "",
+          emergency3Phone: form.emergency3Phone || "",
+          emergency3Relationship: form.emergency3Relationship || "",
 
-          // Transportation - map available fields
-          transportationMethod: "To be determined",
-          busRoute: "To be assigned",
-          pickupPerson1: form.authorizedPerson1
-            ? `${form.authorizedPerson1} (${form.authorizedPerson1Relationship})`
-            : "",
-          pickupPerson2: form.authorizedPerson2
-            ? `${form.authorizedPerson2} (${form.authorizedPerson2Relationship})`
-            : "",
+          // Authorized Pickup Persons
+          authorizedPerson1: form.authorizedPerson1 || "N/A",
+          authorizedPerson1Phone: form.authorizedPerson1Phone || "N/A",
+          authorizedPerson1Relationship:
+            form.authorizedPerson1Relationship || "N/A",
+          authorizedPerson2: form.authorizedPerson2 || "",
+          authorizedPerson2Phone: form.authorizedPerson2Phone || "",
+          authorizedPerson2Relationship:
+            form.authorizedPerson2Relationship || "",
+          authorizedPerson3: form.authorizedPerson3 || "",
+          authorizedPerson3Phone: form.authorizedPerson3Phone || "",
+          authorizedPerson3Relationship:
+            form.authorizedPerson3Relationship || "",
 
-          // Tuition info - map available fields
-          tuitionPlan: form.paymentOption || "Not specified",
-          paymentMethod: "To be determined",
-          discountApplied: "To be determined",
-          totalAmount: "To be calculated",
-          paymentSchedule: "Based on selected plan",
-          tuitionAcknowledged: form.acknowledgeTuition === "yes" ? "Yes" : "No",
-          textbookFeeAcknowledged:
+          // Hospital Preference
+          hospitalPreference: form.hospitalPreference || "N/A",
+
+          // Tuition Contract
+          guardianName: form.guardianName || "N/A",
+          guardianName2: form.guardianName2 || "",
+          homePhone: form.homePhone || "N/A",
+          guardianEmail: form.guardianEmail || "N/A",
+          acknowledgeTuition: form.acknowledgeTuition === "yes" ? "Yes" : "No",
+          acknowledgeTextbookFee:
             form.acknowledgeTextbookFee === "yes" ? "Yes" : "No",
-
-          // Additional info - not collected in reenrollment forms
-          reasonForReenrollment: "Continuing enrollment",
-          expectations: "Continuing academic progress",
-          specialRequests: "None specified",
-          comments: "Re-enrollment completed",
+          paymentOption: form.paymentOption || "N/A",
 
           // Signatures
-          parentSignature: form.parentSignature || form.tuitionSignature,
-          dateSigned: new Date(form.submittedAt).toLocaleDateString(),
+          parentSignature: form.parentSignature || "N/A",
+          tuitionSignature: form.tuitionSignature || "N/A",
+          signature: form.signature || "N/A",
+
+          // Status
+          currentStep: form.currentStep,
+          isCompleted: form.isCompleted,
         };
 
         setReenrollmentData(transformedData);
@@ -389,8 +422,9 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Student Information */}
+        {/* Left Column */}
         <div className="space-y-6">
+          {/* Student Information */}
           <div className="border-b pb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Student Information
@@ -430,178 +464,67 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Current Grade
+                  Ethnicity
+                </label>
+                <p className="text-gray-900 dark:text-gray-100">
+                  {reenrollmentData.ethnicity}
+                </p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Grade Level (2025-2026)
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
                   {reenrollmentData.gradeLevel}
                 </p>
               </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Last Year Grade
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.lastYearGrade}
-                </p>
-              </div>
+            </div>
+            <div className="mt-4">
+              <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Student Address
+              </label>
+              <p className="text-gray-900 dark:text-gray-100">
+                {reenrollmentData.studentAddress1}
+                {reenrollmentData.studentAddress2 &&
+                  `, ${reenrollmentData.studentAddress2}`}
+                <br />
+                {reenrollmentData.studentCity}, {reenrollmentData.studentState}{" "}
+                {reenrollmentData.studentZip}
+              </p>
+            </div>
+            <div className="mt-4">
+              <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                School District
+              </label>
+              <p className="text-gray-900 dark:text-gray-100">
+                {reenrollmentData.schoolDistrict}
+              </p>
+            </div>
+            <div className="mt-4">
+              <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Additional Children Enrolled
+              </label>
+              <p className="text-gray-900 dark:text-gray-100">
+                {reenrollmentData.hasAdditionalChildren === "yes"
+                  ? `Yes (${reenrollmentData.numberOfChildren} total)`
+                  : "No"}
+              </p>
             </div>
           </div>
 
-          {/* Academic Performance */}
+          {/* Father's Information */}
           <div className="border-b pb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Academic Performance
+              Father's Information
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Current GPA
+                  Name
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.currentGPA}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Attendance Rate
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.attendanceRate}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Disciplinary Incidents
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.disciplinaryIncidents}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Special Needs
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.specialNeeds}
-                </p>
-              </div>
-            </div>
-            <div className="mt-4">
-              <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Academic Awards
-              </label>
-              <p className="text-gray-900 dark:text-gray-100">
-                {reenrollmentData.academicAwards}
-              </p>
-            </div>
-            <div className="mt-4">
-              <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Extracurricular Activities
-              </label>
-              <p className="text-gray-900 dark:text-gray-100">
-                {reenrollmentData.extracurricularActivities}
-              </p>
-            </div>
-            <div className="mt-4">
-              <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Learning Style
-              </label>
-              <p className="text-gray-900 dark:text-gray-100">
-                {reenrollmentData.learningStyle}
-              </p>
-            </div>
-          </div>
-
-          {/* Health Information */}
-          <div className="border-b pb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Health Information
-            </h3>
-            <div className="grid grid-cols-1 gap-4">
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Medical Conditions
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.medicalConditions}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Allergies
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.allergies}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Current Medications
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.medications}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Hospital Preference
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.hospitalPreference}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Emergency Contact */}
-          <div className="border-b pb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Emergency Contact
-            </h3>
-            <div className="grid grid-cols-1 gap-4">
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Contact Name
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.emergencyContactName}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Contact Phone
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.emergencyContactPhone}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Relationship
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.emergencyContactRelationship}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Parent & Administrative Info */}
-        <div className="space-y-6">
-          {/* Parent Information */}
-          <div className="border-b pb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Parent Information
-            </h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Parent Name
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.parentFirstName}{" "}
-                  {reenrollmentData.parentLastName}
+                  {reenrollmentData.fatherFirstName}{" "}
+                  {reenrollmentData.fatherLastName}
                 </p>
               </div>
               <div>
@@ -609,65 +532,372 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
                   Phone
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.parentPhone}
+                  {reenrollmentData.fatherPhone}
                 </p>
               </div>
-              <div>
+              <div className="col-span-2">
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                   Email
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.parentEmail}
+                  {reenrollmentData.fatherEmail}
                 </p>
               </div>
             </div>
             <div className="mt-4">
               <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Parent Address
+                Address
               </label>
               <p className="text-gray-900 dark:text-gray-100">
-                {reenrollmentData.parentAddress1},{" "}
-                {reenrollmentData.parentAddress2}
+                {reenrollmentData.fatherAddress1}
+                {reenrollmentData.fatherAddress2 &&
+                  `, ${reenrollmentData.fatherAddress2}`}
                 <br />
-                {reenrollmentData.parentCity}, {reenrollmentData.parentState}{" "}
-                {reenrollmentData.parentZip}
+                {reenrollmentData.fatherCity}, {reenrollmentData.fatherState}{" "}
+                {reenrollmentData.fatherZipCode}
               </p>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Occupation
+                </label>
+                <p className="text-gray-900 dark:text-gray-100">
+                  {reenrollmentData.fatherOccupation}
+                </p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Place of Employment
+                </label>
+                <p className="text-gray-900 dark:text-gray-100">
+                  {reenrollmentData.fatherEmployment}
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Transportation */}
+          {/* Mother's Information */}
           <div className="border-b pb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Transportation
+              Mother's Information
             </h3>
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Transportation Method
+                  Name
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.transportationMethod}
+                  {reenrollmentData.motherFirstName}{" "}
+                  {reenrollmentData.motherLastName}
                 </p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Bus Route
+                  Phone
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.busRoute}
+                  {reenrollmentData.motherPhone}
+                </p>
+              </div>
+              <div className="col-span-2">
+                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Email
+                </label>
+                <p className="text-gray-900 dark:text-gray-100">
+                  {reenrollmentData.motherEmail}
+                </p>
+              </div>
+            </div>
+            <div className="mt-4">
+              <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Address (Same as Father's?)
+              </label>
+              <p className="text-gray-900 dark:text-gray-100">
+                {reenrollmentData.isMotherAddressSame === "yes" ? (
+                  <span className="italic">Same as Father's address</span>
+                ) : (
+                  <>
+                    {reenrollmentData.motherAddress1}
+                    {reenrollmentData.motherAddress2 &&
+                      `, ${reenrollmentData.motherAddress2}`}
+                    <br />
+                    {reenrollmentData.motherCity},{" "}
+                    {reenrollmentData.motherState}{" "}
+                    {reenrollmentData.motherZipCode}
+                  </>
+                )}
+              </p>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Occupation
+                </label>
+                <p className="text-gray-900 dark:text-gray-100">
+                  {reenrollmentData.motherOccupation}
                 </p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Authorized Pickup Persons
+                  Place of Employment
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.pickupPerson1}
-                </p>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.pickupPerson2}
+                  {reenrollmentData.motherEmployment}
                 </p>
               </div>
+            </div>
+          </div>
+
+          {/* Health Changes */}
+          <div className="border-b pb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Health Changes
+            </h3>
+            <div className="space-y-2">
+              {[1, 2, 3, 4, 5]
+                .slice(0, reenrollmentData.numberOfChildren || 1)
+                .map((childNum) => {
+                  const healthChange =
+                    reenrollmentData[`child${childNum}HealthChanges`];
+                  if (!healthChange || healthChange === "N/A") return null;
+                  return (
+                    <div key={childNum}>
+                      <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                        Child {childNum}
+                      </label>
+                      <p className="text-gray-900 dark:text-gray-100">
+                        {healthChange === "yes"
+                          ? "Health changes reported"
+                          : "No health changes"}
+                      </p>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column */}
+        <div className="space-y-6">
+          {/* Emergency Contacts */}
+          <div className="border-b pb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Emergency Contacts
+            </h3>
+
+            {/* Emergency Contact 1 */}
+            <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded">
+              <h4 className="font-medium text-sm mb-2">Contact 1</h4>
+              <div className="space-y-2">
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Name
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.emergency1Name}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Phone
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.emergency1Phone}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Relationship
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.emergency1Relationship}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Emergency Contact 2 */}
+            <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded">
+              <h4 className="font-medium text-sm mb-2">Contact 2</h4>
+              <div className="space-y-2">
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Name
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.emergency2Name}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Phone
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.emergency2Phone}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Relationship
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.emergency2Relationship}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Emergency Contact 3 (if exists) */}
+            {reenrollmentData.emergency3Name && (
+              <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded">
+                <h4 className="font-medium text-sm mb-2">Contact 3</h4>
+                <div className="space-y-2">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      Name
+                    </label>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {reenrollmentData.emergency3Name}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      Phone
+                    </label>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {reenrollmentData.emergency3Phone}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      Relationship
+                    </label>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {reenrollmentData.emergency3Relationship}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Authorized Pickup Persons */}
+          <div className="border-b pb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Authorized Pickup Persons
+            </h3>
+
+            {/* Person 1 */}
+            <div className="mb-3 p-3 bg-gray-50 dark:bg-gray-800 rounded">
+              <h4 className="font-medium text-sm mb-2">Person 1</h4>
+              <div className="space-y-2">
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Name
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.authorizedPerson1}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Phone
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.authorizedPerson1Phone}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Relationship
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.authorizedPerson1Relationship}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Person 2 (if exists) */}
+            {reenrollmentData.authorizedPerson2 && (
+              <div className="mb-3 p-3 bg-gray-50 dark:bg-gray-800 rounded">
+                <h4 className="font-medium text-sm mb-2">Person 2</h4>
+                <div className="space-y-2">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      Name
+                    </label>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {reenrollmentData.authorizedPerson2}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      Phone
+                    </label>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {reenrollmentData.authorizedPerson2Phone}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      Relationship
+                    </label>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {reenrollmentData.authorizedPerson2Relationship}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Person 3 (if exists) */}
+            {reenrollmentData.authorizedPerson3 && (
+              <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded">
+                <h4 className="font-medium text-sm mb-2">Person 3</h4>
+                <div className="space-y-2">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      Name
+                    </label>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {reenrollmentData.authorizedPerson3}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      Phone
+                    </label>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {reenrollmentData.authorizedPerson3Phone}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      Relationship
+                    </label>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {reenrollmentData.authorizedPerson3Relationship}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Hospital Preference */}
+          <div className="border-b pb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Medical Information
+            </h3>
+            <div>
+              <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Hospital Preference
+              </label>
+              <p className="text-gray-900 dark:text-gray-100">
+                {reenrollmentData.hospitalPreference}
+              </p>
             </div>
           </div>
 
@@ -676,118 +906,84 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Tuition Contract
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Guardian Name
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.guardianName}
+                  </p>
+                  {reenrollmentData.guardianName2 && (
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {reenrollmentData.guardianName2}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Home Phone
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.homePhone}
+                  </p>
+                </div>
+              </div>
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Tuition Plan
+                  Guardian Email
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.tuitionPlan}
+                  {reenrollmentData.guardianEmail}
                 </p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Payment Method
+                  Payment Option
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.paymentMethod}
+                  {reenrollmentData.paymentOption}
                 </p>
               </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Discount Applied
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.discountApplied}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Total Amount
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.totalAmount}
-                </p>
-              </div>
-            </div>
-            <div className="mt-4">
-              <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Payment Schedule
-              </label>
-              <p className="text-gray-900 dark:text-gray-100">
-                {reenrollmentData.paymentSchedule}
-              </p>
-            </div>
-            <div className="mt-4 grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Tuition Acknowledged
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.tuitionAcknowledged}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Textbook Fee Acknowledged
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.textbookFeeAcknowledged}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Additional Information */}
-          <div className="border-b pb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Additional Information
-            </h3>
-            <div className="grid grid-cols-1 gap-4">
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Reason for Re-enrollment
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.reasonForReenrollment}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Expectations for Next Year
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.expectations}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Special Requests
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.specialRequests}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Additional Comments
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.comments}
-                </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Tuition Acknowledged
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.acknowledgeTuition}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Textbook Fee Acknowledged
+                  </label>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {reenrollmentData.acknowledgeTextbookFee}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Signatures */}
+          {/* Signatures & Submission */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Signatures & Submission
             </h3>
-            <div className="grid grid-cols-1 gap-4">
+            <div className="space-y-3">
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Parent Signature
+                  Parent Signature (Step 1)
+                </label>
+                <p className="text-gray-900 dark:text-gray-100">
+                  {reenrollmentData.signature}
+                </p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Emergency Contact Signature (Step 2)
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
                   {reenrollmentData.parentSignature}
@@ -795,10 +991,10 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Date Signed
+                  Tuition Signature (Step 3)
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
-                  {reenrollmentData.dateSigned}
+                  {reenrollmentData.tuitionSignature}
                 </p>
               </div>
               <div>
@@ -807,6 +1003,18 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
                   {reenrollmentData.submittedAt}
+                </p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Completion Status
+                </label>
+                <p className="text-gray-900 dark:text-gray-100">
+                  {reenrollmentData.isCompleted
+                    ? "✓ Completed"
+                    : `In Progress (Step ${
+                        reenrollmentData.currentStep + 1
+                      }/3)`}
                 </p>
               </div>
             </div>

@@ -17,9 +17,7 @@ import {
   Activity,
   Package,
   Bell,
-  Settings,
-  HelpCircle,
-  User,
+  LogOut,
   FileText,
   Plus,
   Clock,
@@ -199,6 +197,7 @@ export const Dashboard = () => {
 
 const Sidebar = ({ selected, setSelected }) => {
   const [open, setOpen] = useState(true);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [admissionOpen, setAdmissionOpen] = useState(false);
   const [careerOpen, setCareerOpen] = useState(false);
   const [accreditationOpen, setAccreditationOpen] = useState(false);
@@ -276,6 +275,13 @@ const Sidebar = ({ selected, setSelected }) => {
               { title: "Student Surveys", href: null },
             ]}
           />
+          <Option
+            Icon={TrendingUp}
+            title="Ticker CMS"
+            selected={selected}
+            setSelected={setSelected}
+            open={open}
+          />
           <DropdownOption
             Icon={MapPin}
             title="Contact"
@@ -296,20 +302,61 @@ const Sidebar = ({ selected, setSelected }) => {
             <div className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
               Account
             </div>
-            <Option
-              Icon={Settings}
-              title="Settings"
-              selected={selected}
-              setSelected={setSelected}
-              open={open}
-            />
-            <Option
-              Icon={HelpCircle}
-              title="Help & Support"
-              selected={selected}
-              setSelected={setSelected}
-              open={open}
-            />
+            <div className="px-3">
+              <button
+                onClick={() => setShowLogoutModal(true)}
+                className="w-full flex items-center gap-3 rounded-md p-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                <div className="grid h-6 w-6 place-content-center">
+                  <LogOut className="h-4 w-4" />
+                </div>
+                <span className="font-medium">Log out</span>
+              </button>
+            </div>
+            {/* Logout confirmation modal */}
+            {showLogoutModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center">
+                <div
+                  className="absolute inset-0 bg-black/50"
+                  onClick={() => setShowLogoutModal(false)}
+                ></div>
+                <div className="relative z-10 w-full max-w-md rounded-lg bg-white dark:bg-gray-900 p-6 shadow-lg">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                    Confirm log out
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Are you sure you want to log out?
+                  </p>
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => setShowLogoutModal(false)}
+                      className="px-4 py-2 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={async () => {
+                        try {
+                          await fetch("http://localhost:4000/api/auth/logout", {
+                            method: "POST",
+                            credentials: "include",
+                          });
+                        } catch (e) {
+                          // ignore
+                        }
+                        if (typeof window !== "undefined") {
+                          localStorage.removeItem("token");
+                          window.location.href = "/login";
+                        }
+                      }}
+                      className="px-4 py-2 rounded-md bg-red-600 text-white text-sm hover:bg-red-700"
+                    >
+                      Log out
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -492,19 +539,141 @@ const TitleSection = ({ open }) => {
 
 const Logo = () => {
   return (
-    <div className="grid size-10 shrink-0 place-content-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-sm">
-      <svg
-        width="20"
-        height="auto"
-        viewBox="0 0 50 39"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="fill-white"
-      >
-        <path d="M16.4992 2H37.5808L22.0816 24.9729H1L16.4992 2Z" />
-        <path d="M17.4224 27.102L11.4192 36H33.5008L49 13.0271H32.7024L23.2064 27.102H17.4224Z" />
-      </svg>
-    </div>
+    <Link href="/" className="flex items-center">
+      <div className="relative w-10 h-10 shrink-0">
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              @keyframes slideInFromLeft {
+                0% { opacity: 0; transform: translateX(-100%); }
+                100% { opacity: 1; transform: translateX(0); }
+              }
+              @keyframes slideInFromRight {
+                0% { opacity: 0; transform: translateX(100%); }
+                100% { opacity: 1; transform: translateX(0); }
+              }
+              @keyframes slideInFromTop {
+                0% { opacity: 0; transform: translateY(-100%); }
+                100% { opacity: 1; transform: translateY(0); }
+              }
+              @keyframes slideInFromBottom {
+                0% { opacity: 0; transform: translateY(100%); }
+                100% { opacity: 1; transform: translateY(0); }
+              }
+              .slide-left {
+                animation: slideInFromLeft 1500ms ease-in-out;
+                animation-fill-mode: both;
+              }
+              .slide-right {
+                animation: slideInFromRight 1500ms ease-in-out;
+                animation-fill-mode: both;
+              }
+              .slide-top {
+                animation: slideInFromTop 1500ms ease-in-out;
+                animation-fill-mode: both;
+              }
+              .slide-bottom {
+                animation: slideInFromBottom 1500ms ease-in-out;
+                animation-fill-mode: both;
+              }
+            `,
+          }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/Untitled-1.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-left"
+          style={{ animationDelay: "200ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/Untitled-2.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-left"
+          style={{ animationDelay: "400ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/qqdd.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-left"
+          style={{ animationDelay: "600ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/48999.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-left"
+          style={{
+            animationDelay: "800ms",
+            animationDuration: "1000ms",
+          }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/1333.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-right"
+          style={{ animationDelay: "300ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/Untitled-13.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-right"
+          style={{ animationDelay: "500ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/Untitled-12.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-right"
+          style={{ animationDelay: "700ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/Untitled-6.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-right"
+          style={{ animationDelay: "900ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/qqq.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-top"
+          style={{ animationDelay: "400ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/Untitled-9.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-top"
+          style={{ animationDelay: "600ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/7788.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-top"
+          style={{ animationDelay: "800ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/Untitled-11.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-bottom"
+          style={{ animationDelay: "500ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/Untitled-10.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-bottom"
+          style={{ animationDelay: "700ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/Untitled-1qwe.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-bottom"
+          style={{ animationDelay: "900ms" }}
+        />
+        <img
+          src="https://www.alrasheedacademy.org/images/qw.png"
+          alt=""
+          className="absolute w-full h-full object-contain slide-bottom"
+          style={{ animationDelay: "1100ms" }}
+        />
+      </div>
+    </Link>
   );
 };
 
@@ -558,11 +727,267 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
     loading: true,
   });
 
+  const [notifications, setNotifications] = useState({
+    count: 0,
+    items: [],
+    showDropdown: false,
+    lastCheck: Date.now(),
+  });
+
   useEffect(() => {
     if (selected === "Dashboard") {
       fetchDashboardData();
     }
   }, [selected]);
+
+  // Close notification dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notifications.showDropdown &&
+        !event.target.closest(".notification-dropdown-container")
+      ) {
+        setNotifications((prev) => ({ ...prev, showDropdown: false }));
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [notifications.showDropdown]);
+
+  // Check for new notifications every 30 seconds
+  useEffect(() => {
+    const checkNotifications = async () => {
+      try {
+        const lastCheck = notifications.lastCheck;
+        const currentTime = Date.now();
+
+        // Fetch data from all APIs to check for new submissions
+        const [
+          enrollmentsRes,
+          reenrollmentsRes,
+          jobAppsRes,
+          volunteerAppsRes,
+          staffSurveysRes,
+          parentSurveysRes,
+          studentSurveysRes,
+          contactFormsRes,
+        ] = await Promise.all([
+          fetch("http://localhost:4000/api/forms/student-registration").catch(
+            () => ({ ok: false })
+          ),
+          fetch("http://localhost:4000/api/renroll/renroll-form").catch(() => ({
+            ok: false,
+          })),
+          fetch("http://localhost:4000/api/job-applications/").catch(() => ({
+            ok: false,
+          })),
+          fetch("http://localhost:4000/api/volunteer-applications/").catch(
+            () => ({ ok: false })
+          ),
+          fetch("http://localhost:4000/api/surveys/staff").catch(() => ({
+            ok: false,
+          })),
+          fetch("http://localhost:4000/api/surveys/parent").catch(() => ({
+            ok: false,
+          })),
+          fetch("http://localhost:4000/api/surveys/student").catch(() => ({
+            ok: false,
+          })),
+          fetch("http://localhost:4000/api/contact/").catch(() => ({
+            ok: false,
+          })),
+        ]);
+
+        const newNotifications = [];
+
+        if (enrollmentsRes.ok) {
+          const data = await enrollmentsRes.json();
+          const recent =
+            data.registrations?.filter(
+              (item) =>
+                new Date(item.submittedAt || item.createdAt).getTime() >
+                lastCheck
+            ) || [];
+          recent.forEach((item) =>
+            newNotifications.push({
+              id: `enroll-${item._id}`,
+              type: "enrollment",
+              title: "New Enrollment Application",
+              description: `${item.childFirstName} ${item.childLastName} - ${item.gradeLevel}`,
+              time: new Date(item.submittedAt || item.createdAt).getTime(),
+              actionId: item._id,
+            })
+          );
+        }
+
+        if (reenrollmentsRes.ok) {
+          const data = await reenrollmentsRes.json();
+          const recent =
+            data.forms?.filter(
+              (item) =>
+                new Date(item.submittedAt || item.createdAt).getTime() >
+                lastCheck
+            ) || [];
+          recent.forEach((item) =>
+            newNotifications.push({
+              id: `reenroll-${item._id}`,
+              type: "re-enrollment",
+              title: "New Re-Enrollment Application",
+              description: `${item.childFirstName} ${item.childLastName} - ${item.gradeLevel}`,
+              time: new Date(item.submittedAt || item.createdAt).getTime(),
+              actionId: item._id,
+            })
+          );
+        }
+
+        if (jobAppsRes.ok) {
+          const data = await jobAppsRes.json();
+          const recent =
+            data.applications?.filter(
+              (item) =>
+                new Date(item.submittedAt || item.createdAt).getTime() >
+                lastCheck
+            ) || [];
+          recent.forEach((item) =>
+            newNotifications.push({
+              id: `job-${item._id}`,
+              type: "job-application",
+              title: "New Job Application",
+              description: `${item.firstName} ${item.lastName} - ${item.position}`,
+              time: new Date(item.submittedAt || item.createdAt).getTime(),
+              actionId: item._id,
+            })
+          );
+        }
+
+        if (volunteerAppsRes.ok) {
+          const data = await volunteerAppsRes.json();
+          const recent =
+            data.applications?.filter(
+              (item) =>
+                new Date(item.submittedAt || item.createdAt).getTime() >
+                lastCheck
+            ) || [];
+          recent.forEach((item) =>
+            newNotifications.push({
+              id: `volunteer-${item._id}`,
+              type: "volunteer-application",
+              title: "New Volunteer Application",
+              description: `${item.firstName} ${item.lastName} - ${item.position}`,
+              time: new Date(item.submittedAt || item.createdAt).getTime(),
+              actionId: item._id,
+            })
+          );
+        }
+
+        if (staffSurveysRes.ok) {
+          const data = await staffSurveysRes.json();
+          const recent =
+            data.surveys?.filter(
+              (item) =>
+                new Date(item.submittedAt || item.createdAt).getTime() >
+                lastCheck
+            ) || [];
+          recent.forEach((item) =>
+            newNotifications.push({
+              id: `staff-survey-${item._id}`,
+              type: "staff-survey",
+              title: "New Staff Survey",
+              description: "Staff feedback submitted",
+              time: new Date(item.submittedAt || item.createdAt).getTime(),
+              actionId: item._id,
+            })
+          );
+        }
+
+        if (parentSurveysRes.ok) {
+          const data = await parentSurveysRes.json();
+          const recent =
+            data.surveys?.filter(
+              (item) =>
+                new Date(item.submittedAt || item.createdAt).getTime() >
+                lastCheck
+            ) || [];
+          recent.forEach((item) =>
+            newNotifications.push({
+              id: `parent-survey-${item._id}`,
+              type: "parent-survey",
+              title: "New Parent Survey",
+              description: "Parent feedback submitted",
+              time: new Date(item.submittedAt || item.createdAt).getTime(),
+              actionId: item._id,
+            })
+          );
+        }
+
+        if (studentSurveysRes.ok) {
+          const data = await studentSurveysRes.json();
+          const recent =
+            data.surveys?.filter(
+              (item) =>
+                new Date(item.submittedAt || item.createdAt).getTime() >
+                lastCheck
+            ) || [];
+          recent.forEach((item) =>
+            newNotifications.push({
+              id: `student-survey-${item._id}`,
+              type: "student-survey",
+              title: "New Student Survey",
+              description: "Student feedback submitted",
+              time: new Date(item.submittedAt || item.createdAt).getTime(),
+              actionId: item._id,
+            })
+          );
+        }
+
+        if (contactFormsRes.ok) {
+          const data = await contactFormsRes.json();
+          const recent = (Array.isArray(data) ? data : []).filter(
+            (item) => new Date(item.createdAt).getTime() > lastCheck
+          );
+          recent.forEach((item) =>
+            newNotifications.push({
+              id: `contact-${item._id}`,
+              type: "contact-form",
+              title: "New Contact Form",
+              description: `${item.name} - ${item.subject}`,
+              time: new Date(item.createdAt).getTime(),
+              actionId: item._id,
+            })
+          );
+        }
+
+        // Sort by time (newest first)
+        newNotifications.sort((a, b) => b.time - a.time);
+
+        // Update notifications state
+        if (newNotifications.length > 0) {
+          setNotifications((prev) => ({
+            ...prev,
+            count: prev.count + newNotifications.length,
+            items: [...newNotifications, ...prev.items].slice(0, 50), // Keep only 50 most recent
+            lastCheck: currentTime,
+          }));
+        } else {
+          setNotifications((prev) => ({
+            ...prev,
+            lastCheck: currentTime,
+          }));
+        }
+      } catch (error) {
+        console.error("Error checking notifications:", error);
+      }
+    };
+
+    // Initial check
+    checkNotifications();
+
+    // Set up polling every 30 seconds
+    const interval = setInterval(checkNotifications, 30000);
+
+    return () => clearInterval(interval);
+  }, [notifications.lastCheck]);
 
   const fetchDashboardData = async () => {
     try {
@@ -829,6 +1254,7 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
     if (selected === "Parent Surveys") return "Parent Surveys";
     if (selected === "Student Surveys") return "Student Surveys";
     if (selected === "CMS Management") return "Contact Page CMS";
+    if (selected === "Ticker CMS") return "Ticker Management";
     if (selected === "Contact Forms") return "Contact Form Submissions";
     if (selected === "Calendar") return "School Calendar";
     if (selected === "Gallery") return "Gallery Management";
@@ -866,6 +1292,8 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
       return "View and manage student survey responses";
     if (selected === "CMS Management")
       return "Edit contact page content and information";
+    if (selected === "Ticker CMS")
+      return "Edit ticker news content and settings";
     if (selected === "Contact Forms")
       return "View and manage contact form submissions";
     if (selected === "Calendar") return "Manage school events and schedule";
@@ -899,10 +1327,142 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <button className="relative p-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
-                <Bell className="h-4 w-4" />
-                <span className="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-              </button>
+              <div className="relative notification-dropdown-container">
+                <button
+                  onClick={() =>
+                    setNotifications((prev) => ({
+                      ...prev,
+                      showDropdown: !prev.showDropdown,
+                    }))
+                  }
+                  className="relative p-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                >
+                  <Bell className="h-4 w-4" />
+                  {notifications.count > 0 && (
+                    <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                      {notifications.count > 99 ? "99+" : notifications.count}
+                    </span>
+                  )}
+                </button>
+
+                {/* Notifications Dropdown */}
+                {notifications.showDropdown && (
+                  <div className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-800 z-50">
+                    <div className="p-4 border-b border-gray-200 dark:border-gray-800">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                          Notifications
+                        </h3>
+                        {notifications.count > 0 && (
+                          <button
+                            onClick={() =>
+                              setNotifications((prev) => ({
+                                ...prev,
+                                count: 0,
+                                items: [],
+                              }))
+                            }
+                            className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                          >
+                            Clear all
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="max-h-96 overflow-y-auto">
+                      {notifications.items.length === 0 ? (
+                        <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+                          <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                          <p className="text-sm">No new notifications</p>
+                        </div>
+                      ) : (
+                        notifications.items.map((notification) => (
+                          <div
+                            key={notification.id}
+                            onClick={() => {
+                              // Navigate to the appropriate section based on notification type
+                              const navigationMap = {
+                                enrollment: `enrollment-detail-${notification.actionId}`,
+                                "re-enrollment": `re-enrollment-detail-${notification.actionId}`,
+                                "job-application": `job-application-detail-${notification.actionId}`,
+                                "volunteer-application": `volunteer-application-detail-${notification.actionId}`,
+                                "staff-survey": `staff-survey-detail-${notification.actionId}`,
+                                "parent-survey": `parent-survey-detail-${notification.actionId}`,
+                                "student-survey": `student-survey-detail-${notification.actionId}`,
+                                "contact-form": `contact-form-detail-${notification.actionId}`,
+                              };
+                              const target =
+                                navigationMap[notification.type] || "Dashboard";
+                              setSelected(target);
+                              setNotifications((prev) => ({
+                                ...prev,
+                                showDropdown: false,
+                              }));
+                            }}
+                            className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                          >
+                            <div className="flex items-start gap-3">
+                              <div
+                                className={`p-2 rounded-lg flex-shrink-0 ${
+                                  notification.type === "enrollment"
+                                    ? "bg-blue-50 dark:bg-blue-900/20"
+                                    : notification.type === "re-enrollment"
+                                    ? "bg-green-50 dark:bg-green-900/20"
+                                    : notification.type === "job-application"
+                                    ? "bg-purple-50 dark:bg-purple-900/20"
+                                    : notification.type ===
+                                      "volunteer-application"
+                                    ? "bg-pink-50 dark:bg-pink-900/20"
+                                    : notification.type.includes("survey")
+                                    ? "bg-indigo-50 dark:bg-indigo-900/20"
+                                    : "bg-orange-50 dark:bg-orange-900/20"
+                                }`}
+                              >
+                                {notification.type === "enrollment" ||
+                                notification.type === "re-enrollment" ? (
+                                  <Users
+                                    className={`h-4 w-4 ${
+                                      notification.type === "enrollment"
+                                        ? "text-blue-600 dark:text-blue-400"
+                                        : "text-green-600 dark:text-green-400"
+                                    }`}
+                                  />
+                                ) : notification.type.includes(
+                                    "application"
+                                  ) ? (
+                                  <FileText
+                                    className={`h-4 w-4 ${
+                                      notification.type === "job-application"
+                                        ? "text-purple-600 dark:text-purple-400"
+                                        : "text-pink-600 dark:text-pink-400"
+                                    }`}
+                                  />
+                                ) : notification.type.includes("survey") ? (
+                                  <BarChart3 className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                                ) : (
+                                  <MapPin className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                                  {notification.title}
+                                </p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                  {notification.description}
+                                </p>
+                                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                                  {new Date(notification.time).toLocaleString()}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={() => setIsDark(!isDark)}
                 className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
@@ -913,9 +1473,7 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
                   <Moon className="h-4 w-4" />
                 )}
               </button>
-              <button className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
-                <User className="h-4 w-4" />
-              </button>
+              {/* Profile removed per UI change - replaced by Log out in sidebar */}
             </div>
           </div>
         </header>
@@ -946,6 +1504,9 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
             )}
             {selected === "CMS Management" && (
               <CMSManagement setSelected={setSelected} />
+            )}
+            {selected === "Ticker CMS" && (
+              <TickerCMS setSelected={setSelected} />
             )}
             {selected === "Contact Forms" && (
               <ContactFormsTable setSelected={setSelected} />
@@ -1634,6 +2195,208 @@ const CMSManagement = ({ setSelected }) => {
               ))}
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TickerCMS = ({ setSelected }) => {
+  const [tickerData, setTickerData] = useState({
+    label: "ARA News",
+    content: `Accreditation Al-Rasheed Academy is the 1st Accredited School In the Buffalo Area by the COGNIA Accreditation Organization! - Good News! "Unlock Your Future: " Limited Volunteer Spots Available – Shape Your Experience by Contributing to ARA School Community Today! 🌟`,
+    highlightText: "Limited Volunteer Spots Available",
+    highlightLink: "/career/volunteer-application",
+    enabled: true,
+    scrollSpeed: 20,
+  });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchTickerData();
+  }, []);
+
+  const fetchTickerData = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:4000/api/auth/cms/ticker",
+        {
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setTickerData({ ...tickerData, ...data });
+      }
+    } catch (err) {
+      console.error("Failed to fetch ticker data", err);
+      toast.error("Failed to fetch ticker data");
+    }
+  };
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        "http://localhost:4000/api/auth/cms/ticker",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ content: tickerData }),
+        }
+      );
+      if (response.ok) {
+        toast.success("Ticker updated successfully!");
+      } else {
+        toast.error("Failed to update ticker");
+      }
+    } catch (err) {
+      toast.error("Error updating ticker");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (field, value) => {
+    setTickerData({ ...tickerData, [field]: value });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+            Ticker Management
+          </h2>
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <input
+                type="checkbox"
+                checked={tickerData.enabled}
+                onChange={(e) => handleChange("enabled", e.target.checked)}
+                className="rounded border-gray-300 dark:border-gray-600"
+              />
+              Enable Ticker
+            </label>
+            <Button
+              onClick={handleSave}
+              disabled={loading}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              {loading ? "Saving..." : "Save Changes"}
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Ticker Label
+            </label>
+            <Input
+              value={tickerData.label}
+              onChange={(e) => handleChange("label", e.target.value)}
+              placeholder="ARA News"
+              className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              The label displayed in the red box (e.g., "ARA News")
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Ticker Content
+            </label>
+            <textarea
+              value={tickerData.content}
+              onChange={(e) => handleChange("content", e.target.value)}
+              placeholder="Enter your news ticker content..."
+              rows="6"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              The scrolling text content. Use quotes to highlight special
+              phrases.
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Highlight Text (Optional)
+            </label>
+            <Input
+              value={tickerData.highlightText}
+              onChange={(e) => handleChange("highlightText", e.target.value)}
+              placeholder="Text to highlight with underline"
+              className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              This text will be underlined and highlighted in the ticker
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Highlight Link URL (Optional)
+            </label>
+            <Input
+              value={tickerData.highlightLink}
+              onChange={(e) => handleChange("highlightLink", e.target.value)}
+              placeholder="/career/volunteer-application"
+              className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              URL to navigate to when highlighted text is clicked (e.g.,
+              /career/volunteer-application)
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Scroll Speed (seconds)
+            </label>
+            <Input
+              type="number"
+              min="10"
+              max="60"
+              value={tickerData.scrollSpeed}
+              onChange={(e) =>
+                handleChange("scrollSpeed", parseInt(e.target.value) || 20)
+              }
+              className="w-32 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Duration for complete scroll (10-60 seconds)
+            </p>
+          </div>
+        </div>
+
+        {/* Preview */}
+        <div className="mt-8 border-t border-gray-200 dark:border-gray-800 pt-6">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+            Preview
+          </h3>
+          <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+            <div className="flex">
+              <div className="bg-gradient-to-b from-red-500 to-red-600 text-white w-20 min-w-[80px] h-16 flex flex-col items-center justify-center font-bold text-xs text-center">
+                <div>{tickerData.label.split(" ")[0]}</div>
+                <div>{tickerData.label.split(" ")[1] || ""}</div>
+              </div>
+              <div className="flex-1 bg-gray-50 dark:bg-gray-800 h-16 flex items-center px-4 overflow-hidden">
+                <div className="text-sm text-gray-700 dark:text-gray-300 font-medium truncate">
+                  {tickerData.content}
+                </div>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            This is a static preview. The actual ticker will scroll
+            continuously.
+          </p>
         </div>
       </div>
     </div>
