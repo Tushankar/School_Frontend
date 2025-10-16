@@ -25,7 +25,7 @@ export default function PrincipalMessage() {
       <Ticker />
 
       {/* Banner Section */}
-      <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
+      <div className="relative w-full h-48 sm:h-64 flex items-center justify-center overflow-hidden">
         <motion.div
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -38,12 +38,12 @@ export default function PrincipalMessage() {
           }}
         />
         <div className="absolute inset-0 bg-black/50"></div>
-        <div className="relative z-10 text-center text-white">
+        <div className="relative z-10 text-center text-white px-4">
           <motion.h1
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="text-5xl font-light tracking-wide"
+            className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-wide"
           >
             Principal&apos;s Message
           </motion.h1>
@@ -58,7 +58,7 @@ export default function PrincipalMessage() {
         </div>
       </div>
 
-      <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-4 py-16">
+      <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-4 py-8 sm:py-16">
         <div className="max-w-6xl mx-auto">
           {/* Header Section */}
           <motion.div
@@ -66,9 +66,9 @@ export default function PrincipalMessage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.3 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4">
               <span className="text-black">Principal&apos;s</span>{" "}
               <span className="text-[#E99544]">Message</span>
             </h1>
@@ -81,9 +81,9 @@ export default function PrincipalMessage() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
-            className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-t-3xl p-8 flex items-center justify-center"
+            className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-t-3xl p-6 sm:p-8 flex items-center justify-center"
           >
-            <div className="relative w-48 h-48">
+            <div className="relative w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48">
               <style
                 dangerouslySetInnerHTML={{
                   __html: `
@@ -217,26 +217,26 @@ export default function PrincipalMessage() {
 
           {/* Main Content */}
           <motion.div
-            initial={{ opacity: 0, x: 200 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
             className="bg-white/80 backdrop-blur-sm rounded-b-3xl shadow-2xl border border-white/20"
           >
-            <div className="p-8 lg:p-12">
+            <div className="p-6 sm:p-8 lg:p-12">
               <div className="prose prose-lg max-w-none">
-                <p className="text-2xl font-serif text-blue-900 mb-8 font-medium">
+                <p className="text-xl sm:text-2xl font-serif text-blue-900 mb-6 sm:mb-8 font-medium">
                   Dear ARA Community,
                 </p>
 
-                <p className="text-gray-700 leading-8 mb-6 font-light text-lg">
+                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
                   I am delighted to extend my warmest greetings to each member
                   of our esteemed school community and it is with great pleasure
                   that I introduce myself as the School Principal and one of the
                   founders of our beloved institution.
                 </p>
 
-                <p className="text-gray-700 leading-8 mb-6 font-light text-lg">
+                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
                   With over 25 years of dedicated service in the field of
                   education and management, I bring a wealth of experience and a
                   steadfast commitment to fostering an environment that nurtures
@@ -244,7 +244,7 @@ export default function PrincipalMessage() {
                   learning.
                 </p>
 
-                <p className="text-gray-700 leading-8 mb-6 font-light text-lg">
+                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
                   Having played a pivotal role as the founding president of our
                   school, I have been intricately involved in shaping its vision
                   and mission from the outset. Our journey, marked by milestones
@@ -253,7 +253,7 @@ export default function PrincipalMessage() {
                   talented students.
                 </p>
 
-                <p className="text-gray-700 leading-8 mb-6 font-light text-lg">
+                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
                   My passion for education stems from a belief in its
                   transformative power and the profound impact it has on
                   individuals and society at large. As we move forward, I am
@@ -262,7 +262,7 @@ export default function PrincipalMessage() {
                   innovation, and a relentless pursuit of excellence.
                 </p>
 
-                <p className="text-gray-700 leading-8 mb-6 font-light text-lg">
+                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
                   I am eager to work collaboratively with our esteemed faculty,
                   dedicated staff, involved parents, and, of course, our bright
                   and enthusiastic students. Together, we will continue to build
@@ -270,7 +270,7 @@ export default function PrincipalMessage() {
                   this school.
                 </p>
 
-                <p className="text-gray-700 leading-8 mb-6 font-light text-lg">
+                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
                   I invite each of you to join hands as we embark on another
                   exciting chapter in the history of our school. Your support,
                   engagement, and commitment are invaluable, and together, we
@@ -278,17 +278,17 @@ export default function PrincipalMessage() {
                   learn, and achieve their fullest potential.
                 </p>
 
-                <p className="text-gray-700 leading-8 mb-8 font-light text-lg">
+                <p className="text-gray-700 leading-7 sm:leading-8 mb-6 sm:mb-8 font-light text-base sm:text-lg">
                   Thank you for entrusting me with the responsibility of leading
                   our school. I am honored to serve in this capacity and look
                   forward to a year filled with growth, learning, and success.
                 </p>
 
-                <div className="mt-12 text-right border-t border-gray-200 pt-8">
-                  <p className="text-blue-900 font-serif text-xl font-semibold mb-2">
+                <div className="mt-8 sm:mt-12 text-right border-t border-gray-200 pt-6 sm:pt-8">
+                  <p className="text-blue-900 font-serif text-lg sm:text-xl font-semibold mb-2">
                     Best regards,
                   </p>
-                  <p className="text-gray-800 font-serif text-lg">
+                  <p className="text-gray-800 font-serif text-base sm:text-lg">
                     School Principal
                   </p>
                   <p className="text-gray-600 text-sm mt-2">

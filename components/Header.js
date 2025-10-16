@@ -81,6 +81,7 @@ const IslamicCenterPage = () => {
   ];
 
   const [currentImage, setCurrentImage] = useState(1);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -109,10 +110,10 @@ const IslamicCenterPage = () => {
       {/* Content */}
       <div className="relative z-10">
         {/* Navigation Header */}
-        <nav className="flex items-center justify-between px-6 lg:px-12 py-8">
+        <nav className="flex items-center justify-between px-4 sm:px-6 lg:px-12 py-4 sm:py-6 lg:py-8">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="relative w-32 h-32">
+            <div className="relative w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32">
               <style
                 dangerouslySetInnerHTML={{
                   __html: `
@@ -273,11 +274,26 @@ const IslamicCenterPage = () => {
           {/* Navigation Menu */}
           <div className="hidden lg:flex items-center space-x-8 text-lg font-serif relative">
             <NavBar items={navItems} />
-          </div>{" "}
+          </div>
+          
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden text-yellow-500 p-2"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {mobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+          
           {/* CTA Button */}
-          <Link href="/contact">
+          <Link href="/contact" className="hidden lg:block">
             <button
-              className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif slide-bottom"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-4 py-1.5 sm:px-6 sm:py-2 lg:px-8 lg:py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-xs sm:text-sm font-serif slide-bottom"
               style={{ animationDelay: "1400ms" }}
             >
               Contact
@@ -285,12 +301,39 @@ const IslamicCenterPage = () => {
           </Link>
         </nav>
 
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-black/95 backdrop-blur-sm px-4 py-6 space-y-4">
+            {navItems.map((item, index) => (
+              <div key={index}>
+                <Link href={item.url} className="block text-white hover:text-yellow-500 py-2 font-serif">
+                  {item.name}
+                </Link>
+                {item.dropdown && (
+                  <div className="pl-4 space-y-2 mt-2">
+                    {item.dropdown.map((subItem, subIndex) => (
+                      <Link key={subIndex} href={subItem.url} className="block text-gray-300 hover:text-yellow-500 py-1 text-sm">
+                        {subItem.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+            <Link href="/contact">
+              <button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 py-2 rounded-full font-bold mt-4">
+                Contact
+              </button>
+            </Link>
+          </div>
+        )}
+
         {/* Main Content */}
-        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-120px)] text-center px-6">
+        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] sm:min-h-[calc(100vh-100px)] lg:min-h-[calc(100vh-120px)] text-center px-4 sm:px-6">
           {/* Arabic Text */}
           <div className="mb-2">
             <h2
-              className="text-white text-xl lg:text-2xl mb-6 opacity-90 slide-top"
+              className="text-white text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4 lg:mb-6 opacity-90 slide-top"
               style={{
                 fontFamily: "serif",
                 letterSpacing: "0.1em",
@@ -303,15 +346,15 @@ const IslamicCenterPage = () => {
           </div>
 
           {/* Main Heading */}
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <h3
-              className="text-white text-lg lg:text-xl font-light mb-2 tracking-wider opacity-90 slide-left"
+              className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-light mb-2 tracking-wider opacity-90 slide-left"
               style={{ animationDelay: "1800ms" }}
             >
               Excellence in Islamic Education
             </h3>
             <h1
-              className="text-2xl lg:text-4xl xl:text-5xl font-serif font-bold leading-tight tracking-wide slide-right"
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-serif font-bold leading-tight tracking-wide slide-right"
               style={{ animationDelay: "2000ms" }}
             >
               <span className="text-yellow-600">Recognized by</span>
@@ -324,14 +367,14 @@ const IslamicCenterPage = () => {
 
           {/* Social Media Icons */}
           <div
-            className="flex space-x-6 slide-bottom"
+            className="flex space-x-4 sm:space-x-6 slide-bottom"
             style={{ animationDelay: "2200ms" }}
           >
             <a
               href="#"
               className="text-yellow-500 hover:text-yellow-400 transition-colors"
             >
-              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
               </svg>
             </a>
@@ -339,7 +382,7 @@ const IslamicCenterPage = () => {
               href="#"
               className="text-yellow-500 hover:text-yellow-400 transition-colors"
             >
-              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
               </svg>
             </a>
@@ -347,7 +390,7 @@ const IslamicCenterPage = () => {
               href="#"
               className="text-yellow-500 hover:text-yellow-400 transition-colors"
             >
-              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
               </svg>
             </a>
@@ -358,9 +401,9 @@ const IslamicCenterPage = () => {
       {/* Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         {/* Subtle geometric patterns */}
-        <div className="absolute top-20 left-10 w-32 h-32 border border-yellow-400 opacity-10 rotate-45"></div>
-        <div className="absolute bottom-20 right-10 w-24 h-24 border border-yellow-400 opacity-10 rotate-12"></div>
-        <div className="absolute top-1/2 left-5 w-16 h-16 border border-yellow-400 opacity-10 rounded-full"></div>
+        <div className="hidden sm:block absolute top-20 left-10 w-32 h-32 border border-yellow-400 opacity-10 rotate-45"></div>
+        <div className="hidden sm:block absolute bottom-20 right-10 w-24 h-24 border border-yellow-400 opacity-10 rotate-12"></div>
+        <div className="hidden sm:block absolute top-1/2 left-5 w-16 h-16 border border-yellow-400 opacity-10 rounded-full"></div>
       </div>
     </div>
   );

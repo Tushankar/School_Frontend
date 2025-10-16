@@ -188,9 +188,12 @@ function ProgressBar({ currentStep }) {
       <div className="flex flex-col space-y-4">
         <div className="flex justify-between">
           {steps.map((step, index) => (
-            <div key={step.id} className="flex flex-col items-center gap-2">
+            <div
+              key={step.id}
+              className="flex flex-col items-center gap-1 md:gap-2"
+            >
               <div
-                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transform transition-all duration-300 ease-in-out bg-background
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center transform transition-all duration-300 ease-in-out bg-background
                   ${
                     index <= currentStep
                       ? "border-primary bg-primary text-primary-foreground scale-110 shadow-lg"
@@ -200,7 +203,7 @@ function ProgressBar({ currentStep }) {
                 {index + 1}
               </div>
               <span
-                className={`text-sm font-medium transition-colors duration-300 ease-in-out ${
+                className={`text-xs md:text-sm font-medium transition-colors duration-300 ease-in-out text-center leading-tight ${
                   index <= currentStep
                     ? "text-primary"
                     : "text-muted-foreground"
@@ -429,7 +432,7 @@ function StudentInfo({ formData, setFormData }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor={`child${childNum}Gender`}>Gender *</Label>
                   <RadioGroup
@@ -539,7 +542,7 @@ function StudentInfo({ formData, setFormData }) {
           />
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input
             id="city"
             placeholder="City"
@@ -651,7 +654,7 @@ function StudentInfo({ formData, setFormData }) {
           />
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input
             id="fatherCity"
             placeholder="City"
@@ -810,7 +813,7 @@ function StudentInfo({ formData, setFormData }) {
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Input
                 id="motherCity"
                 placeholder="City"
@@ -2000,14 +2003,11 @@ function App() {
   return (
     <FormProvider>
       <Toaster position="top-right" richColors />
-      <main className="flex h-screen bg-white">
-        <div className="w-[25%]">
+      <main className="flex flex-col md:flex-row h-screen bg-white">
+        <div className="h-48 md:h-full md:w-[25%]">
           <ImageCarousel />
         </div>
-        <div
-          className="w-[75%] p-4 h-full bg-gray-50 border-l-[12px] border-white overflow-y-auto hide-scrollbar"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
+        <div className="flex-1 p-4 h-full bg-gray-50 md:border-l-[12px] border-white overflow-y-auto hide-scrollbar">
           <div className="w-full h-full">
             <MiniProgressBar progress={progress} isVisible={showMiniProgress} />
             <div className="w-full space-y-8">
@@ -2197,7 +2197,7 @@ function App() {
                   </div>
                 </CardContent>
                 <Separator />
-                <CardFooter className="flex justify-between p-6 mb-32">
+                <CardFooter className="flex flex-col sm:flex-row justify-between gap-4 p-6 mb-32">
                   <Button
                     variant="outline"
                     onClick={() => {

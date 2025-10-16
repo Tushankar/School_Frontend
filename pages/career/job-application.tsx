@@ -71,7 +71,7 @@ const Sidebar = () => {
       </div>
 
       {/* Footer social links */}
-      <div className="absolute top-6 left-6 z-20 space-y-3">
+      <div className="absolute top-6 left-6 z-20 space-y-3 hidden md:block">
         <a href="#" className="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-colors">
           <Facebook className="w-5 h-5" fill="currentColor" />
           <span className="font-medium">@UntitledUI</span>
@@ -362,11 +362,11 @@ export default function JobApplication() {
         </div>
       </div>
 
-      <main className="flex h-screen bg-white">
-        <div className="w-[25%]">
+      <main className="flex flex-col md:flex-row h-screen bg-white">
+        <div className="h-48 md:h-full md:w-[25%]">
           <Sidebar />
         </div>
-        <div className="w-[75%] p-4 h-full bg-gray-50 border-l-[12px] border-white overflow-y-auto hide-scrollbar" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+        <div className="flex-1 p-4 h-full bg-gray-50 md:border-l-[12px] border-white overflow-y-auto hide-scrollbar" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
           <div className="w-full h-full">
             <div className="mb-6">
               <div className="flex items-center">
@@ -470,7 +470,7 @@ export default function JobApplication() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <Label htmlFor="gender">Gender*</Label>
                     <select className="w-full p-2 border rounded" id="gender" name="gender" required>
@@ -494,7 +494,7 @@ export default function JobApplication() {
                   <Label>Address*</Label>
                   <Input name="address1" placeholder="Address Line 1" required />
                   <Input name="address2" placeholder="Address Line 2" />
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Input name="city" placeholder="City" required />
                     <Input name="state" placeholder="State" required />
                     <Input name="zipCode" placeholder="Zip Code" required />
@@ -654,14 +654,14 @@ export default function JobApplication() {
                       <Input name={`location_${index}`} placeholder="Location/City" />
                       <Input name={`schoolAddress1_${index}`} placeholder="Address Line 1" />
                       <Input name={`schoolAddress2_${index}`} placeholder="Address Line 2" />
-                      <div className="grid grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <Input name={`schoolCity_${index}`} placeholder="City" />
                         <Input name={`schoolState_${index}`} placeholder="State" />
                         <Input name={`schoolZip_${index}`} placeholder="Zip Code" />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <Label htmlFor={`degree_${index}`}>Degree Received</Label>
                         <Input id={`degree_${index}`} name={`degree_${index}`} />
@@ -709,7 +709,7 @@ export default function JobApplication() {
                     <Label>Address</Label>
                     <Input name="workAddress1" placeholder="Address Line 1" />
                     <Input name="workAddress2" placeholder="Address Line 2" />
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <Input name="workCity" placeholder="City" />
                       <Input name="workState" placeholder="State" />
                       <Input name="workZip" placeholder="Zip Code" />

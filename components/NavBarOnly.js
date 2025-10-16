@@ -22,6 +22,8 @@ const NavBar = dynamic(
 );
 
 const NavBarOnly = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
   const navItems = [
     { name: "Home", url: "/", icon: Home },
     {
@@ -106,10 +108,10 @@ const NavBarOnly = () => {
 
       {/* Navigation */}
       <div className="relative z-[9999]">
-        <nav className="flex items-center justify-between px-6 lg:px-12 py-4">
+        <nav className="flex items-center justify-between px-4 sm:px-6 lg:px-12 py-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="relative w-20 h-20">
+          <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
+            <div className="relative w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20">
               <style
                 dangerouslySetInnerHTML={{
                   __html: `
@@ -262,9 +264,9 @@ const NavBarOnly = () => {
                 style={{ animationDelay: "1100ms" }}
               />
             </div>
-            <div>
+            <div className="hidden sm:block">
               <h1
-                className="text-white font-bold text-xl tracking-wide font-montserrat slide-bottom"
+                className="text-white font-bold text-sm sm:text-base lg:text-xl tracking-wide font-montserrat slide-bottom"
                 style={{ animationDelay: "1200ms" }}
               >
                 K-12 Schools
@@ -283,13 +285,65 @@ const NavBarOnly = () => {
             <NavBar items={navItems} />
           </div>
 
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden text-yellow-500 p-2 z-[9999]"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {mobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+
           {/* CTA Button */}
-          <Link href="/contact">
+          <Link href="/contact" className="hidden lg:block">
             <button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold transition-all duration-300 shadow-lg text-sm font-serif slide-bottom delay-1000">
               Contact
             </button>
           </Link>
         </nav>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-gradient-to-r from-[#381607] to-black backdrop-blur-sm px-4 py-6 space-y-4 relative z-[9998]">
+            {navItems.map((item, index) => (
+              <div key={index}>
+                <Link href={item.url} className="block text-white hover:text-yellow-500 py-2 font-serif">
+                  {item.name}
+                </Link>
+                {item.dropdown && (
+                  <div className="pl-4 space-y-2 mt-2">
+                    {item.dropdown.map((subItem, subIndex) => (
+                      <div key={subIndex}>
+                        <Link href={subItem.url} className="block text-gray-300 hover:text-yellow-500 py-1 text-sm">
+                          {subItem.name}
+                        </Link>
+                        {subItem.dropdown && (
+                          <div className="pl-4 space-y-1 mt-1">
+                            {subItem.dropdown.map((nestedItem, nestedIndex) => (
+                              <Link key={nestedIndex} href={nestedItem.url} className="block text-gray-400 hover:text-yellow-500 py-1 text-xs">
+                                {nestedItem.name}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+            <Link href="/contact">
+              <button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 py-2 rounded-full font-bold mt-4">
+                Contact
+              </button>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -8,9 +8,9 @@ export default function SportsVisionPage() {
       <Ticker />
       
       {/* Banner Section */}
-      <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
+      <div className="relative w-full h-48 sm:h-64 flex items-center justify-center overflow-hidden">
         <motion.div
-          initial={{ x: -100, opacity: 0 }}
+          initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 1, ease: "easeOut" }}
           className="absolute inset-0"
@@ -21,18 +21,18 @@ export default function SportsVisionPage() {
           }}
         />
         <div className="absolute inset-0 bg-black/50"></div>
-        <div className="relative z-10 text-center text-white">
+        <div className="relative z-10 text-center text-white px-4">
           <motion.h1
-            initial={{ y: -50, opacity: 0 }}
+            initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="text-5xl font-light tracking-wide"
+            className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-wide"
           >
             About Us
           </motion.h1>
           <motion.p
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
             className="mt-4 text-sm"
           >
@@ -41,19 +41,19 @@ export default function SportsVisionPage() {
         </div>
       </div>
       
-      <div className="px-6 pb-12">
-      <div className="max-w-5xl mx-auto space-y-16">
+      <div className="px-4 sm:px-6 pb-12">
+      <div className="max-w-5xl mx-auto space-y-12 sm:space-y-16">
         {/* Vision Section */}
         <motion.section
-          initial={{ opacity: 0, y: -100 }}
+          initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center space-y-6"
         >
           <div className="relative py-4">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300"></div>
-            <h2 className="text-7xl font-extralight tracking-wider">
+            <h2 className="text-4xl sm:text-5xl lg:text-7xl font-extralight tracking-wider">
               <span className="text-gray-900">Our</span>{" "}
               <span style={{ color: "#E99544" }}>vision</span>
             </h2>
@@ -99,7 +99,7 @@ export default function SportsVisionPage() {
           </div>
 
           <div className="max-w-2xl mx-auto pt-4">
-            <p className="text-lg text-gray-800 leading-relaxed font-semibold">
+            <p className="text-base sm:text-lg text-gray-800 leading-relaxed font-semibold">
               Al-Rasheed Academy will provide each student with a Safe, Healthy,
               Nurturing, and Islamic learning environment facilitated by
               skilled, creative, and highly motivated professionals who promote
@@ -110,15 +110,15 @@ export default function SportsVisionPage() {
 
         {/* Missions Section */}
         <motion.section
-          initial={{ opacity: 0, x: -200 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          initial={{ opacity: 0, y: -30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-center space-y-8"
         >
           <div className="relative py-4">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300"></div>
-            <h2 className="text-7xl font-extralight tracking-wider">
+            <h2 className="text-4xl sm:text-5xl lg:text-7xl font-extralight tracking-wider">
               <span className="text-gray-900">Our</span>{" "}
               <span style={{ color: "#E99544" }}>missions</span>
             </h2>
@@ -164,8 +164,8 @@ export default function SportsVisionPage() {
           </div>
 
           <div className="space-y-6 pt-2">
-            <div className="text-sm text-gray-800 max-w-xl mx-auto space-y-1 font-semibold">
-              <div className="text-sm text-gray-800 max-w-2xl mx-auto space-y-1 font-semibold text-center">
+            <div className="text-sm sm:text-base text-gray-800 max-w-xl mx-auto space-y-1 font-semibold">
+              <div className="text-sm sm:text-base text-gray-800 max-w-2xl mx-auto space-y-1 font-semibold text-center">
                 <p className="leading-relaxed">
                   Al-Rasheed Academy supports the total development of each
                   student. As each student develops, he / she will become an
@@ -176,14 +176,14 @@ export default function SportsVisionPage() {
             </div>
 
             {/* Three Circles */}
-            <div className="flex flex-wrap justify-center items-center gap-0 pt-6">
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 sm:gap-0 pt-6">
               {/* Circle 1 */}
               <motion.div
-                initial={{ opacity: 0, x: -150 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
-                transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
-                className="w-56 h-56 rounded-full bg-white/60 backdrop-blur-sm border border-gray-300 flex items-center justify-center p-8 -mr-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+                className="w-48 h-48 sm:w-56 sm:h-56 rounded-full bg-white/60 backdrop-blur-sm border border-gray-300 flex items-center justify-center p-6 sm:p-8 sm:-mr-6"
               >
                 <p className="text-gray-700 text-sm text-center leading-relaxed">
                   Provide a
@@ -198,11 +198,11 @@ export default function SportsVisionPage() {
 
               {/* Circle 2 */}
               <motion.div
-                initial={{ opacity: 0, y: 100 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
-                transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.4 }}
-                className="w-56 h-56 rounded-full bg-white/60 backdrop-blur-sm border border-gray-300 flex items-center justify-center p-8 -mr-6 z-10"
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+                className="w-48 h-48 sm:w-56 sm:h-56 rounded-full bg-white/60 backdrop-blur-sm border border-gray-300 flex items-center justify-center p-6 sm:p-8 sm:-mr-6 z-10"
               >
                 <p className="text-gray-700 text-sm text-center leading-relaxed">
                   Skilled, Creative &amp;
@@ -215,11 +215,11 @@ export default function SportsVisionPage() {
 
               {/* Circle 3 - Blue */}
               <motion.div
-                initial={{ opacity: 0, x: 150 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
-                transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.6 }}
-                className="w-56 h-56 rounded-full flex items-center justify-center p-8 shadow-xl z-20"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
+                className="w-48 h-48 sm:w-56 sm:h-56 rounded-full flex items-center justify-center p-6 sm:p-8 shadow-xl z-20"
                 style={{ backgroundColor: "#E99544" }}
               >
                 <p className="text-white text-sm text-center leading-relaxed">
@@ -235,9 +235,9 @@ export default function SportsVisionPage() {
 
           {/* Philosophy Section */}
           <motion.section
-            initial={{ opacity: 0, y: 100 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="mt-8"
           >
@@ -253,10 +253,10 @@ export default function SportsVisionPage() {
             >
               <div className="bg-white/10 p-6 md:p-12">
                 <div className="max-w-4xl mx-auto text-center">
-                  <h3 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-4">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-4">
                     Philosophy Statement
                   </h3>
-                  <p className="text-gray-800 leading-relaxed">
+                  <p className="text-sm sm:text-base text-gray-800 leading-relaxed">
                     The education of the students at Al-Rasheed Academy is the
                     responsibility of the entire community. We believe that the
                     children of the community are the most important resource
@@ -264,7 +264,7 @@ export default function SportsVisionPage() {
                     students to develop good Islamic characteristics,
                     citizenship, high moral standards, and positive self-esteem.
                   </p>
-                  <p className="text-gray-800 leading-relaxed mt-4">
+                  <p className="text-sm sm:text-base text-gray-800 leading-relaxed mt-4">
                     We recognize that we exist in a worldwide community and that
                     our educational program must reflect global needs. Our goal
                     is to provide a positive Islamic learning environment that

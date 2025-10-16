@@ -643,8 +643,8 @@ const EnrollmentForm = () => {
   };
 
   return (
-    <main className="flex h-screen bg-white">
-      <div className="w-[25%]">
+    <main className="flex flex-col lg:flex-row h-screen bg-white">
+      <div className="hidden lg:block lg:w-[25%]">
         <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden h-full">
           <div className="relative h-full">
             <img
@@ -863,21 +863,21 @@ const EnrollmentForm = () => {
         </div>
       </div>
       <div
-        className="w-[75%] p-4 h-full bg-gray-50 border-l-[12px] border-white overflow-y-auto hide-scrollbar"
+        className="w-full lg:w-[75%] p-2 sm:p-4 h-full bg-gray-50 lg:border-l-[12px] border-white overflow-y-auto hide-scrollbar"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <div className="w-full h-full">
           <motion.div
-            className="max-w-5xl mx-auto py-8 px-4 lg:px-8"
+            className="max-w-5xl mx-auto py-4 sm:py-6 lg:py-8 px-2 sm:px-4 lg:px-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
               <form onSubmit={handleSubmit}>
-                <div className="p-6 lg:p-8 pb-6 border-b bg-gradient-to-r from-gray-50 to-slate-50">
-                  <div className="flex items-center gap-4 lg:gap-6 mb-6">
-                    <div className="w-16 h-16 lg:w-24 lg:h-24 flex-shrink-0">
+                <div className="p-4 sm:p-6 lg:p-8 pb-4 sm:pb-6 border-b bg-gradient-to-r from-gray-50 to-slate-50">
+                  <div className="flex items-center gap-2 sm:gap-4 lg:gap-6 mb-4 sm:mb-6">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-24 lg:h-24 flex-shrink-0">
                       <div className="relative w-full h-full">
                         <style
                           dangerouslySetInnerHTML={{
@@ -1013,10 +1013,10 @@ const EnrollmentForm = () => {
                       </div>
                     </div>
                     <div>
-                      <h1 className="text-xl lg:text-2xl xl:text-3xl font-bold text-gray-800 mb-2">
+                      <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">
                         ARA 2025 - 2026 New Student Enrollment Form
                       </h1>
-                      <p className="text-sm lg:text-base text-gray-600">
+                      <p className="text-xs sm:text-sm lg:text-base text-gray-600">
                         Al-Rasheed Academy
                       </p>
                     </div>
@@ -1027,16 +1027,16 @@ const EnrollmentForm = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <div className="flex justify-between mb-2">
+                    <div className="flex justify-between mb-2 gap-1">
                       {steps.map((step, index) => (
                         <motion.div
                           key={index}
-                          className="flex flex-col items-center"
+                          className="flex flex-col items-center flex-1"
                           whileHover={{ scale: 1.1 }}
                         >
                           <motion.div
                             className={cn(
-                              "w-4 h-4 lg:w-5 lg:h-5 rounded-full cursor-pointer transition-colors duration-300",
+                              "w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full cursor-pointer transition-colors duration-300",
                               index < currentPage
                                 ? "bg-slate-600"
                                 : index === currentPage
@@ -1048,7 +1048,7 @@ const EnrollmentForm = () => {
                           />
                           <motion.span
                             className={cn(
-                              "text-xs mt-1.5 hidden sm:block",
+                              "text-[10px] sm:text-xs mt-1 sm:mt-1.5 hidden md:block text-center",
                               index === currentPage
                                 ? "text-[#201f1a] font-bold"
                                 : "text-gray-600 font-medium"
@@ -1080,7 +1080,7 @@ const EnrollmentForm = () => {
                     exit="exit"
                     variants={contentVariants}
                   >
-                    <div className="p-6 lg:p-8">
+                    <div className="p-4 sm:p-6 lg:p-8">
                       {currentPage === 0 && (
                         <StudentRegistrationForm
                           formData={formData}
@@ -1129,20 +1129,20 @@ const EnrollmentForm = () => {
                   </motion.div>
                 </AnimatePresence>
 
-                <div className="flex justify-between px-6 lg:px-8 pb-6 lg:pb-8 pt-6 border-t bg-gray-50">
+                <div className="flex justify-between px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8 pt-4 sm:pt-6 border-t bg-gray-50">
                   <motion.button
                     type="button"
                     onClick={prevPage}
                     disabled={currentPage === 0}
                     whileHover={{ scale: currentPage === 0 ? 1 : 1.05 }}
                     whileTap={{ scale: currentPage === 0 ? 1 : 0.95 }}
-                    className={`flex items-center gap-2 px-4 lg:px-6 py-2 lg:py-3 rounded-xl font-semibold transition-all text-sm lg:text-base ${
+                    className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 lg:px-6 py-2 lg:py-3 rounded-xl font-semibold transition-all text-xs sm:text-sm lg:text-base ${
                       currentPage === 0
                         ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                         : "bg-white border-2 border-orange-500 text-orange-500 hover:bg-orange-50 shadow-md"
                     }`}
                   >
-                    <ChevronLeft className="h-4 w-4" /> Back
+                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" /> <span className="hidden sm:inline">Back</span><span className="sm:hidden">←</span>
                   </motion.button>
 
                   {currentPage < 5 ? (
@@ -1151,9 +1151,9 @@ const EnrollmentForm = () => {
                       onClick={nextPage}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 px-4 lg:px-6 py-2 lg:py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all shadow-md text-sm lg:text-base"
+                      className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 lg:px-6 py-2 lg:py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all shadow-md text-xs sm:text-sm lg:text-base"
                     >
-                      Next <ChevronRight className="h-4 w-4" />
+                      <span className="hidden sm:inline">Next</span><span className="sm:hidden">→</span> <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
                     </motion.button>
                   ) : (
                     <motion.button
@@ -1161,14 +1161,15 @@ const EnrollmentForm = () => {
                       disabled={isSubmitting}
                       whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
                       whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
-                      className={`flex items-center gap-2 px-4 lg:px-6 py-2 lg:py-3 rounded-xl font-semibold transition-all shadow-md text-sm lg:text-base ${
+                      className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 lg:px-6 py-2 lg:py-3 rounded-xl font-semibold transition-all shadow-md text-xs sm:text-sm lg:text-base ${
                         isSubmitting
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white"
                       }`}
                     >
-                      {isSubmitting ? "Submitting..." : "Submit Enrollment"}{" "}
-                      <Check className="h-4 w-4" />
+                      <span className="hidden sm:inline">{isSubmitting ? "Submitting..." : "Submit Enrollment"}</span>
+                      <span className="sm:hidden">{isSubmitting ? "..." : "Submit"}</span>{" "}
+                      <Check className="h-3 w-3 sm:h-4 sm:w-4" />
                     </motion.button>
                   )}
                 </div>
@@ -1176,7 +1177,7 @@ const EnrollmentForm = () => {
             </div>
 
             <motion.div
-              className="mt-4 text-center text-sm text-gray-600"
+              className="mt-3 sm:mt-4 text-center text-xs sm:text-sm text-gray-600"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}

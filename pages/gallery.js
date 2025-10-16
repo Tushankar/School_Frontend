@@ -189,7 +189,7 @@ export default function ArcGalleryHeroDemo() {
           `}</style>
         </section>
 
-        <MasonryImageGallery images={galleryImages} />
+        <MasonryImageGallery images={galleryImages} loading={loading} />
       </div>
       <Footer />
     </>
@@ -222,6 +222,7 @@ function AnimatedImage({ alt, src, ratio, placeholder }) {
   }, []);
 
   const handleError = () => {
+    console.error("Image failed to load:", src);
     if (placeholder) {
       setImgSrc(placeholder);
     }
@@ -233,9 +234,14 @@ function AnimatedImage({ alt, src, ratio, placeholder }) {
       className="bg-gray-100 relative w-full rounded-lg border border-gray-200 overflow-hidden"
       style={{ aspectRatio: ratio }}
     >
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        </div>
+      )}
       <img
         alt={alt}
-        src={imgSrc}
+        src={isInView ? imgSrc : placeholder}
         className={`w-full h-full rounded-lg object-cover transition-opacity duration-1000 ease-in-out ${
           isInView && !isLoading ? "opacity-100" : "opacity-0"
         }`}
@@ -248,7 +254,18 @@ function AnimatedImage({ alt, src, ratio, placeholder }) {
 }
 
 // Masonry Image Gallery Component
-function MasonryImageGallery({ images }) {
+function MasonryImageGallery({ images, loading }) {
+  if (loading) {
+    return (
+      <div className="relative flex w-full flex-col items-center justify-center py-20 px-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="text-gray-500 mt-4">Loading gallery images...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!images || images.length === 0) {
     return (
       <div className="relative flex w-full flex-col items-center justify-center py-10 px-4">
@@ -265,13 +282,15 @@ function MasonryImageGallery({ images }) {
         {images.map((image, index) => {
           const isPortrait = Math.random() > 0.5;
           const ratio = isPortrait ? 9 / 16 : 16 / 9;
+          const imageUrl = `https://alrasheedacademyserver.onrender.com${image.imageUrl}`;
+          console.log("Gallery Image URL:", imageUrl, "| Title:", image.title);
           return (
             <AnimatedImage
               key={image._id || index}
-              alt={image.title}
-              src={`https://alrasheedacademyserver.onrender.com${image.imageUrl}`}
+              alt={image.title || "Gallery Image"}
+              src={imageUrl}
               ratio={ratio}
-              placeholder={`https://placehold.co/400x400/EEE/999?text=${image.title}`}
+              placeholder={`https://placehold.co/400x400/EEE/999?text=${encodeURIComponent(image.title || "Image")}`}
             />
           );
         })}
