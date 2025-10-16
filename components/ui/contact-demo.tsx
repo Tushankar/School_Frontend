@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import Spinner from './spinner-1';
 
@@ -11,6 +11,13 @@ export default function Contact() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Prevent double submission
+        if (sending) {
+            console.log('Already sending, ignoring duplicate submission');
+            return;
+        }
+
         const name = nameRef.current?.value;
         const email = emailRef.current?.value;
         const message = messageRef.current?.value;
@@ -20,18 +27,37 @@ export default function Contact() {
             return;
         }
 
+        console.log('Setting sending to true');
         setSending(true);
+        console.log('Starting form submission...');
+        
         try {
+            console.log('Sending request to backend...');
+            
             const response = await fetch('https://alrasheedacademyserver.onrender.com/api/contact/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ name, email, message }),
+            }).catch(fetchError => {
+                console.error('Fetch error:', fetchError);
+                throw fetchError;
             });
 
-            if (response.ok) {
-                const data = await response.json();
+            console.log('Response received:', response.status, response.ok);
+            
+            let data;
+            try {
+                data = await response.json();
+                console.log('Response data:', data);
+            } catch (jsonError) {
+                console.error('JSON parsing error:', jsonError);
+                throw new Error('Invalid response from server');
+            }
+
+            if (response.ok || data.success) {
+                console.log('Success! Clearing form...');
                 toast.success('Message sent successfully!', {
                     description: 'We will get back to you soon!'
                 });
@@ -39,18 +65,20 @@ export default function Contact() {
                 if (emailRef.current) emailRef.current.value = '';
                 if (messageRef.current) messageRef.current.value = '';
             } else {
-                const errorData = await response.json().catch(() => ({}));
+                console.log('Failed response');
                 toast.error('Failed to send message', {
-                    description: errorData.message || 'Please try again later'
+                    description: data.message || data.error || 'Please try again later'
                 });
             }
         } catch (error) {
             console.error('Error sending message:', error);
             toast.error('Error sending message', {
-                description: 'Please check your connection and try again'
+                description: error.message || 'Please check your connection and try again'
             });
         } finally {
+            console.log('FINALLY BLOCK - Setting sending to false');
             setSending(false);
+            console.log('Sending state should now be:', false);
         }
     };
 
