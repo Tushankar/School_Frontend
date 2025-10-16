@@ -290,7 +290,9 @@ function MasonryImageGallery({ images, loading }) {
               alt={image.title || "Gallery Image"}
               src={imageUrl}
               ratio={ratio}
-              placeholder={`https://placehold.co/400x400/EEE/999?text=${encodeURIComponent(image.title || "Image")}`}
+              placeholder={`https://placehold.co/400x400/EEE/999?text=${encodeURIComponent(
+                image.title || "Image"
+              )}`}
             />
           );
         })}

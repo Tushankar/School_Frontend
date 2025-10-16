@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Image, Upload, Edit, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "./button";
 import { Input } from "./input";
@@ -17,9 +18,14 @@ const GalleryManagement = ({ setSelected }) => {
     url: "",
     previewUrl: "",
   });
+
+  
   const [selectedCategory, setSelectedCategory] = useState("All");
 
+
   const categories = ["All", "Art", "Events", "Science Fair"];
+
+
 
   // Fetch images from backend
   const fetchImages = async () => {
@@ -56,7 +62,13 @@ const GalleryManagement = ({ setSelected }) => {
   };
 
   const handleAddImage = async () => {
-    if (!newImage.title || (!newImage.file && !newImage.url)) return;
+    if (!newImage.title || (!newImage.file && !newImage.url)) {
+      toast.error("Missing Information", {
+        description:
+          "Please provide a title and either select a file or enter an image URL.",
+      });
+      return;
+    }
 
     setUploading(true);
     try {
@@ -68,12 +80,58 @@ const GalleryManagement = ({ setSelected }) => {
         formData.append("image", newImage.file);
       } else if (newImage.url) {
         // For URL uploads, we'll need to fetch the image and upload as file
-        const response = await fetch(newImage.url);
-        const blob = await response.blob();
-        const file = new File([blob], `image-${Date.now()}.jpg`, {
-          type: blob.type,
-        });
-        formData.append("image", file);
+        try {
+          // Validate URL format
+          const url = new URL(newImage.url);
+
+          // Fetch image with timeout and proper error handling
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+          const imageResponse = await fetch(newImage.url, {
+            signal: controller.signal,
+            mode: "cors",
+            cache: "no-cache",
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!imageResponse.ok) {
+            throw new Error(
+              `Failed to fetch image: ${imageResponse.status} ${imageResponse.statusText}`
+            );
+          }
+
+          const blob = await imageResponse.blob();
+
+          // Check if it's actually an image
+          if (!blob.type.startsWith("image/")) {
+            throw new Error("The URL does not point to a valid image file");
+          }
+
+          const file = new File([blob], `image-${Date.now()}.jpg`, {
+            type: blob.type,
+          });
+          formData.append("image", file);
+        } catch (urlError) {
+          if (urlError.name === "AbortError") {
+            toast.error("Request Timeout", {
+              description:
+                "Image fetch timed out. Please try a different URL or upload the file directly.",
+            });
+          } else if (urlError.message.includes("Failed to fetch")) {
+            toast.error("CORS Restriction", {
+              description:
+                "Cannot access the image URL. This may be due to CORS restrictions. Please download the image and upload it directly instead.",
+            });
+          } else {
+            toast.error("URL Fetch Error", {
+              description: `Error fetching image from URL: ${urlError.message}`,
+            });
+          }
+          setUploading(false);
+          return;
+        }
       }
 
       const response = await fetch(
@@ -95,11 +153,20 @@ const GalleryManagement = ({ setSelected }) => {
           previewUrl: "",
         });
         setShowUploadModal(false);
+        toast.success("Success!", {
+          description: "Image uploaded successfully!",
+        });
       } else {
-        console.error("Upload failed");
+        const errorData = await response.json().catch(() => ({}));
+        toast.error("Upload Failed", {
+          description: errorData.message || response.statusText,
+        });
       }
     } catch (error) {
       console.error("Error uploading image:", error);
+      toast.error("Upload Error", {
+        description: error.message,
+      });
     } finally {
       setUploading(false);
     }
@@ -116,11 +183,20 @@ const GalleryManagement = ({ setSelected }) => {
 
       if (response.ok) {
         setImages(images.filter((img) => img._id !== id));
+        toast.success("Deleted", {
+          description: "Image deleted successfully!",
+        });
       } else {
-        console.error("Delete failed");
+        const errorData = await response.json().catch(() => ({}));
+        toast.error("Delete Failed", {
+          description: errorData.message || "Failed to delete image",
+        });
       }
     } catch (error) {
       console.error("Error deleting image:", error);
+      toast.error("Delete Error", {
+        description: "An error occurred while deleting the image",
+      });
     }
   };
 
@@ -311,6 +387,11 @@ const GalleryManagement = ({ setSelected }) => {
                   placeholder="https://example.com/image.jpg"
                   className="w-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100"
                 />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Note: Some URLs may not work due to CORS restrictions. If URL
+                  upload fails, please download the image and upload the file
+                  directly.
+                </p>
               </div>
 
               {newImage.previewUrl && (
