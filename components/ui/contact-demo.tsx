@@ -7,20 +7,21 @@ export default function Contact() {
     const nameRef = useRef<HTMLInputElement>(null);
     const emailRef = useRef<HTMLInputElement>(null);
     const messageRef = useRef<HTMLTextAreaElement>(null);
+    const [sending, setSending] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const name = nameRef.current.value;
-        const email = emailRef.current.value;
-        const message = messageRef.current.value;
+        const name = nameRef.current?.value;
+        const email = emailRef.current?.value;
+        const message = messageRef.current?.value;
 
         if (!name || !email || !message) {
             toast.error('Please fill in all fields');
             return;
         }
 
+        setSending(true);
         try {
-            setSending(true);
             const response = await fetch('https://alrasheedacademyserver.onrender.com/api/contact/submit', {
                 method: 'POST',
                 headers: {
@@ -30,21 +31,28 @@ export default function Contact() {
             });
 
             if (response.ok) {
-                toast.success('Message sent successfully!');
-                nameRef.current.value = '';
-                emailRef.current.value = '';
-                messageRef.current.value = '';
+                const data = await response.json();
+                toast.success('Message sent successfully!', {
+                    description: 'We will get back to you soon!'
+                });
+                if (nameRef.current) nameRef.current.value = '';
+                if (emailRef.current) emailRef.current.value = '';
+                if (messageRef.current) messageRef.current.value = '';
             } else {
-                toast.error('Failed to send message');
+                const errorData = await response.json().catch(() => ({}));
+                toast.error('Failed to send message', {
+                    description: errorData.message || 'Please try again later'
+                });
             }
         } catch (error) {
-            toast.error('Error sending message');
-        }
-        finally {
+            console.error('Error sending message:', error);
+            toast.error('Error sending message', {
+                description: 'Please check your connection and try again'
+            });
+        } finally {
             setSending(false);
         }
     };
-    const [sending, setSending] = useState(false);
 
     const contactMethods = [
         {
