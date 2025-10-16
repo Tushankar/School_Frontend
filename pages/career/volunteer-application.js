@@ -121,13 +121,16 @@ function VolunteerApplication() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:4000/api/volunteer-applications', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
-      });
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/volunteer-applications",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
 
       const data = await response.json();
 
@@ -135,15 +138,17 @@ function VolunteerApplication() {
         console.log("Volunteer Application Submitted:", data);
         setSubmitted(true);
         setForm(INITIAL_FORM); // Clear form after submission
-        
+
         // Scroll to top to show success message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
-        alert('Failed to submit application: ' + (data.message || 'Unknown error'));
+        alert(
+          "Failed to submit application: " + (data.message || "Unknown error")
+        );
       }
     } catch (error) {
-      console.error('Error submitting volunteer application:', error);
-      alert('Error submitting application. Please try again.');
+      console.error("Error submitting volunteer application:", error);
+      alert("Error submitting application. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -303,7 +308,7 @@ function VolunteerApplication() {
           style={{
             backgroundImage: "url('/assets/hall.jpg')",
             backgroundSize: "cover",
-            backgroundPosition: "center"
+            backgroundPosition: "center",
           }}
         />
         <div className="absolute inset-0 bg-black/50"></div>
@@ -448,11 +453,12 @@ function VolunteerApplication() {
                 </p>
                 <h2
                   className="text-3xl sm:text-4xl font-semibold m-0"
-                  style={{ 
-                    background: "linear-gradient(135deg, #cc8a33, #f3c875, #cc8a33)",
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #cc8a33, #f3c875, #cc8a33)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
-                    backgroundClip: "text"
+                    backgroundClip: "text",
                   }}
                 >
                   Sign-Up Form

@@ -25,14 +25,16 @@ const JobApplicationTable = ({ setSelected }) => {
   const fetchJobApplications = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:4000/api/job-applications');
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/job-applications"
+      );
       const data = await response.json();
-      
+
       console.log("Fetched applications data:", data);
-      
+
       if (data.success && data.applications) {
         // Transform backend data to match table format
-        const transformedData = data.applications.map(app => {
+        const transformedData = data.applications.map((app) => {
           console.log("Mapping application:", app._id, app);
           return {
             id: app._id,
@@ -123,13 +125,19 @@ const JobApplicationTable = ({ setSelected }) => {
         <TableBody>
           {loading ? (
             <TableRow>
-              <TableCell colSpan={8} className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <TableCell
+                colSpan={8}
+                className="text-center py-8 text-gray-500 dark:text-gray-400"
+              >
                 Loading applications...
               </TableCell>
             </TableRow>
           ) : filteredApplications.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={8} className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <TableCell
+                colSpan={8}
+                className="text-center py-8 text-gray-500 dark:text-gray-400"
+              >
                 No applications found
               </TableCell>
             </TableRow>
@@ -185,7 +193,10 @@ const JobApplicationTable = ({ setSelected }) => {
                     onClick={() => {
                       console.log("Clicked application:", app);
                       console.log("App ID:", app.id);
-                      console.log("Setting selected to:", `job-application-detail-${app.id}`);
+                      console.log(
+                        "Setting selected to:",
+                        `job-application-detail-${app.id}`
+                      );
                       setSelected(`job-application-detail-${app.id}`);
                     }}
                     title="View Details"
@@ -214,24 +225,26 @@ const VolunteerApplicationTable = ({ setSelected }) => {
   const fetchVolunteerApplications = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:4000/api/volunteer-applications');
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/volunteer-applications"
+      );
       const data = await response.json();
-      
+
       if (data.success) {
         // Transform data to match the table format
-        const transformedData = data.applications.map(app => ({
+        const transformedData = data.applications.map((app) => ({
           id: app._id,
           name: `${app.firstName} ${app.lastName}`,
-          position: app.position || 'Not specified',
+          position: app.position || "Not specified",
           status: app.status,
           submittedAt: new Date(app.submittedAt).toLocaleDateString(),
         }));
         setVolunteerApplications(transformedData);
-        console.log('Volunteer Applications loaded:', transformedData);
+        console.log("Volunteer Applications loaded:", transformedData);
       }
     } catch (error) {
-      console.error('Error fetching volunteer applications:', error);
-      toast.error('Failed to load volunteer applications');
+      console.error("Error fetching volunteer applications:", error);
+      toast.error("Failed to load volunteer applications");
     } finally {
       setLoading(false);
     }
@@ -293,14 +306,22 @@ const VolunteerApplicationTable = ({ setSelected }) => {
         <TableBody>
           {loading ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <TableCell
+                colSpan={5}
+                className="text-center py-8 text-gray-500 dark:text-gray-400"
+              >
                 Loading volunteer applications...
               </TableCell>
             </TableRow>
           ) : filteredApplications.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-8 text-gray-500 dark:text-gray-400">
-                {searchTerm ? 'No applications found matching your search' : 'No volunteer applications yet'}
+              <TableCell
+                colSpan={5}
+                className="text-center py-8 text-gray-500 dark:text-gray-400"
+              >
+                {searchTerm
+                  ? "No applications found matching your search"
+                  : "No volunteer applications yet"}
               </TableCell>
             </TableRow>
           ) : (
@@ -361,8 +382,8 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [emailData, setEmailData] = useState({
-    subject: '',
-    message: '',
+    subject: "",
+    message: "",
   });
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailHistory, setEmailHistory] = useState([]);
@@ -377,26 +398,31 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
   const fetchApplicationDetail = async () => {
     try {
       setLoading(true);
-      const id = applicationId.replace('job-application-detail-', '');
-      
+      const id = applicationId.replace("job-application-detail-", "");
+
       console.log("Fetching application with ID:", id);
       console.log("Full applicationId:", applicationId);
-      
-      if (!id || id === 'detail' || id === applicationId) {
+
+      if (!id || id === "detail" || id === applicationId) {
         console.error("Invalid application ID:", applicationId);
         alert("Invalid application ID. Please try again.");
         setSelected("Job Application");
         return;
       }
-      
-      const response = await fetch(`http://localhost:4000/api/job-applications/${id}`);
+
+      const response = await fetch(
+        `https://alrasheedacademyserver.onrender.com/api/job-applications/${id}`
+      );
       const data = await response.json();
-      
+
       if (data.success) {
         setJobApplicationData(data.application);
       } else {
         console.error("Failed to fetch application:", data);
-        alert("Failed to load application details: " + (data.message || "Unknown error"));
+        alert(
+          "Failed to load application details: " +
+            (data.message || "Unknown error")
+        );
       }
     } catch (error) {
       console.error("Error fetching application details:", error);
@@ -408,12 +434,14 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
 
   const fetchEmailHistory = async () => {
     try {
-      const id = applicationId.replace('job-application-detail-', '');
-      if (!id || id === 'detail' || id === applicationId) return;
-      
-      const response = await fetch(`http://localhost:4000/api/job-applications/${id}/emails`);
+      const id = applicationId.replace("job-application-detail-", "");
+      if (!id || id === "detail" || id === applicationId) return;
+
+      const response = await fetch(
+        `https://alrasheedacademyserver.onrender.com/api/job-applications/${id}/emails`
+      );
       const data = await response.json();
-      
+
       if (data.success) {
         setEmailHistory(data.emails || []);
       }
@@ -423,36 +451,42 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
   };
 
   const downloadFile = (fileType) => {
-    const id = applicationId.replace('job-application-detail-', '');
-    window.open(`http://localhost:4000/api/job-applications/${id}/download/${fileType}`, '_blank');
+    const id = applicationId.replace("job-application-detail-", "");
+    window.open(
+      `https://alrasheedacademyserver.onrender.com/api/job-applications/${id}/download/${fileType}`,
+      "_blank"
+    );
   };
 
   const updateStatus = async (newStatus) => {
     try {
       setUpdatingStatus(true);
-      const id = applicationId.replace('job-application-detail-', '');
-      const response = await fetch(`http://localhost:4000/api/job-applications/${id}/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      
+      const id = applicationId.replace("job-application-detail-", "");
+      const response = await fetch(
+        `https://alrasheedacademyserver.onrender.com/api/job-applications/${id}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+
       const data = await response.json();
-      
+
       if (data.success) {
-        setJobApplicationData(prev => ({
+        setJobApplicationData((prev) => ({
           ...prev,
           status: newStatus,
         }));
         alert(`Status updated to: ${newStatus}`);
       } else {
-        alert('Failed to update status');
+        alert("Failed to update status");
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      alert('Error updating status');
+      alert("Error updating status");
     } finally {
       setUpdatingStatus(false);
     }
@@ -460,8 +494,8 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
 
   const handleSendEmail = async () => {
     if (!emailData.subject.trim() || !emailData.message.trim()) {
-      toast.error('Missing Required Fields', {
-        description: 'Please fill in both subject and message',
+      toast.error("Missing Required Fields", {
+        description: "Please fill in both subject and message",
         duration: 3000,
       });
       return;
@@ -469,42 +503,45 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
 
     try {
       setSendingEmail(true);
-      const id = applicationId.replace('job-application-detail-', '');
-      
-      const response = await fetch(`http://localhost:4000/api/job-applications/${id}/send-email`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          to: jobApplicationData.email,
-          subject: emailData.subject,
-          message: emailData.message,
-          applicantName: `${jobApplicationData.firstName} ${jobApplicationData.lastName}`,
-        }),
-      });
-      
+      const id = applicationId.replace("job-application-detail-", "");
+
+      const response = await fetch(
+        `https://alrasheedacademyserver.onrender.com/api/job-applications/${id}/send-email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to: jobApplicationData.email,
+            subject: emailData.subject,
+            message: emailData.message,
+            applicantName: `${jobApplicationData.firstName} ${jobApplicationData.lastName}`,
+          }),
+        }
+      );
+
       const data = await response.json();
-      
+
       if (data.success) {
-        toast.success('📧 Email Sent Successfully!', {
+        toast.success("📧 Email Sent Successfully!", {
           description: `Message sent to ${jobApplicationData.email}`,
           duration: 5000,
         });
         setShowEmailModal(false);
-        setEmailData({ subject: '', message: '' });
+        setEmailData({ subject: "", message: "" });
         // Refresh email history
         fetchEmailHistory();
       } else {
-        toast.error('Failed to Send Email', {
-          description: data.message || 'Unknown error occurred',
+        toast.error("Failed to Send Email", {
+          description: data.message || "Unknown error occurred",
           duration: 4000,
         });
       }
     } catch (error) {
       console.error("Error sending email:", error);
-      toast.error('Network Error', {
-        description: 'Unable to send email. Please try again.',
+      toast.error("Network Error", {
+        description: "Unable to send email. Please try again.",
         duration: 4000,
       });
     } finally {
@@ -515,7 +552,9 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
   if (loading) {
     return (
       <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
-        <p className="text-center text-gray-600 dark:text-gray-400">Loading...</p>
+        <p className="text-center text-gray-600 dark:text-gray-400">
+          Loading...
+        </p>
       </div>
     );
   }
@@ -523,7 +562,9 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
   if (!jobApplicationData) {
     return (
       <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
-        <p className="text-center text-gray-600 dark:text-gray-400">Application not found</p>
+        <p className="text-center text-gray-600 dark:text-gray-400">
+          Application not found
+        </p>
       </div>
     );
   }
@@ -569,32 +610,43 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
       {/* Summary Stats */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-          <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">Education</p>
+          <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">
+            Education
+          </p>
           <p className="text-2xl font-bold text-blue-700 dark:text-blue-200">
             {jobApplicationData.schools?.length || 0}
           </p>
           <p className="text-xs text-blue-600 dark:text-blue-300">Schools</p>
         </div>
         <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-          <p className="text-xs text-green-600 dark:text-green-300 font-medium">Experience</p>
+          <p className="text-xs text-green-600 dark:text-green-300 font-medium">
+            Experience
+          </p>
           <p className="text-2xl font-bold text-green-700 dark:text-green-200">
             {jobApplicationData.workExperience?.length || 0}
           </p>
           <p className="text-xs text-green-600 dark:text-green-300">Jobs</p>
         </div>
         <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
-          <p className="text-xs text-purple-600 dark:text-purple-300 font-medium">References</p>
+          <p className="text-xs text-purple-600 dark:text-purple-300 font-medium">
+            References
+          </p>
           <p className="text-2xl font-bold text-purple-700 dark:text-purple-200">
             {jobApplicationData.references?.length || 0}
           </p>
           <p className="text-xs text-purple-600 dark:text-purple-300">People</p>
         </div>
         <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
-          <p className="text-xs text-orange-600 dark:text-orange-300 font-medium">Files</p>
-          <p className="text-2xl font-bold text-orange-700 dark:text-orange-200">
-            {(jobApplicationData.resume ? 1 : 0) + (jobApplicationData.signature ? 1 : 0)}
+          <p className="text-xs text-orange-600 dark:text-orange-300 font-medium">
+            Files
           </p>
-          <p className="text-xs text-orange-600 dark:text-orange-300">Uploaded</p>
+          <p className="text-2xl font-bold text-orange-700 dark:text-orange-200">
+            {(jobApplicationData.resume ? 1 : 0) +
+              (jobApplicationData.signature ? 1 : 0)}
+          </p>
+          <p className="text-xs text-orange-600 dark:text-orange-300">
+            Uploaded
+          </p>
         </div>
       </div>
 
@@ -714,7 +766,8 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Education
             </h3>
-            {jobApplicationData.schools && jobApplicationData.schools.length > 0 ? (
+            {jobApplicationData.schools &&
+            jobApplicationData.schools.length > 0 ? (
               jobApplicationData.schools.map((school, index) => (
                 <div
                   key={index}
@@ -745,7 +798,7 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                         Degree
                       </label>
                       <p className="text-gray-900 dark:text-gray-100">
-                        {school.degree || 'N/A'}
+                        {school.degree || "N/A"}
                       </p>
                     </div>
                     <div>
@@ -753,7 +806,7 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                         Major
                       </label>
                       <p className="text-gray-900 dark:text-gray-100">
-                        {school.major || 'N/A'}
+                        {school.major || "N/A"}
                       </p>
                     </div>
                     <div>
@@ -761,7 +814,7 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                         Years Completed
                       </label>
                       <p className="text-gray-900 dark:text-gray-100">
-                        {school.yearsCompleted || 'N/A'}
+                        {school.yearsCompleted || "N/A"}
                       </p>
                     </div>
                   </div>
@@ -772,7 +825,8 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                       </label>
                       <p className="text-gray-900 dark:text-gray-100">
                         {school.addressLine1 || school.address1}
-                        {(school.addressLine2 || school.address2) && `, ${school.addressLine2 || school.address2}`}
+                        {(school.addressLine2 || school.address2) &&
+                          `, ${school.addressLine2 || school.address2}`}
                         <br />
                         {school.city}, {school.state} {school.zipCode}
                       </p>
@@ -791,7 +845,9 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                 </div>
               ))
             ) : (
-              <p className="text-sm text-gray-500 dark:text-gray-400">No education information provided</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                No education information provided
+              </p>
             )}
           </div>
         </div>
@@ -802,19 +858,90 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Work Experience
             </h3>
-            {jobApplicationData.workExperience && jobApplicationData.workExperience.length > 0 ? (
-              jobApplicationData.workExperience.map((work, index) => (
-                <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded mb-3">
-                  <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">
-                    Experience {index + 1}
-                  </h4>
-                  <div className="grid grid-cols-2 gap-4">
+            {jobApplicationData.workExperience &&
+            jobApplicationData.workExperience.length > 0
+              ? jobApplicationData.workExperience.map((work, index) => (
+                  <div
+                    key={index}
+                    className="p-3 bg-gray-50 dark:bg-gray-800 rounded mb-3"
+                  >
+                    <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">
+                      Experience {index + 1}
+                    </h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                          Company Name
+                        </label>
+                        <p className="text-gray-900 dark:text-gray-100">
+                          {work.company}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                          Company Phone
+                        </label>
+                        <p className="text-gray-900 dark:text-gray-100">
+                          {work.phone}
+                        </p>
+                      </div>
+                      <div className="col-span-2">
+                        <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                          Position & Responsibilities
+                        </label>
+                        <p className="text-gray-900 dark:text-gray-100">
+                          {work.position} - {work.responsibilities}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                          Duration
+                        </label>
+                        <p className="text-gray-900 dark:text-gray-100">
+                          {work.duration}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                          Reason for Leaving
+                        </label>
+                        <p className="text-gray-900 dark:text-gray-100">
+                          {work.reasonForLeaving}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                          May Contact for Reference
+                        </label>
+                        <p className="text-gray-900 dark:text-gray-100">
+                          {work.contactForRef}
+                        </p>
+                      </div>
+                      {work.addressLine1 && (
+                        <div className="col-span-2">
+                          <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                            Address
+                          </label>
+                          <p className="text-gray-900 dark:text-gray-100">
+                            {work.addressLine1}
+                            {work.addressLine2 ? `, ${work.addressLine2}` : ""}
+                            <br />
+                            {work.city}, {work.state} {work.zipCode}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))
+              : // Fallback to legacy single work experience
+                jobApplicationData.companyName && (
+                  <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                         Company Name
                       </label>
                       <p className="text-gray-900 dark:text-gray-100">
-                        {work.company}
+                        {jobApplicationData.companyName}
                       </p>
                     </div>
                     <div>
@@ -822,15 +949,15 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                         Company Phone
                       </label>
                       <p className="text-gray-900 dark:text-gray-100">
-                        {work.phone}
+                        {jobApplicationData.companyPhone}
                       </p>
                     </div>
-                    <div className="col-span-2">
+                    <div>
                       <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                         Position & Responsibilities
                       </label>
                       <p className="text-gray-900 dark:text-gray-100">
-                        {work.position} - {work.responsibilities}
+                        {jobApplicationData.workPosition}
                       </p>
                     </div>
                     <div>
@@ -838,7 +965,7 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                         Duration
                       </label>
                       <p className="text-gray-900 dark:text-gray-100">
-                        {work.duration}
+                        {jobApplicationData.workDuration}
                       </p>
                     </div>
                     <div>
@@ -846,7 +973,7 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                         Reason for Leaving
                       </label>
                       <p className="text-gray-900 dark:text-gray-100">
-                        {work.reasonForLeaving}
+                        {jobApplicationData.reasonLeaving}
                       </p>
                     </div>
                     <div>
@@ -854,79 +981,11 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                         May Contact for Reference
                       </label>
                       <p className="text-gray-900 dark:text-gray-100">
-                        {work.contactForRef}
+                        {jobApplicationData.contactRef}
                       </p>
                     </div>
-                    {work.addressLine1 && (
-                      <div className="col-span-2">
-                        <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                          Address
-                        </label>
-                        <p className="text-gray-900 dark:text-gray-100">
-                          {work.addressLine1}{work.addressLine2 ? `, ${work.addressLine2}` : ''}
-                          <br />
-                          {work.city}, {work.state} {work.zipCode}
-                        </p>
-                      </div>
-                    )}
                   </div>
-                </div>
-              ))
-            ) : (
-              // Fallback to legacy single work experience
-              jobApplicationData.companyName && (
-                <div className="grid grid-cols-1 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      Company Name
-                    </label>
-                    <p className="text-gray-900 dark:text-gray-100">
-                      {jobApplicationData.companyName}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      Company Phone
-                    </label>
-                    <p className="text-gray-900 dark:text-gray-100">
-                      {jobApplicationData.companyPhone}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      Position & Responsibilities
-                    </label>
-                    <p className="text-gray-900 dark:text-gray-100">
-                      {jobApplicationData.workPosition}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      Duration
-                    </label>
-                    <p className="text-gray-900 dark:text-gray-100">
-                      {jobApplicationData.workDuration}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      Reason for Leaving
-                    </label>
-                    <p className="text-gray-900 dark:text-gray-100">
-                      {jobApplicationData.reasonLeaving}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      May Contact for Reference
-                    </label>
-                    <p className="text-gray-900 dark:text-gray-100">
-                      {jobApplicationData.contactRef}
-                    </p>
-                  </div>
-                </div>
-              )
-            )}
+                )}
           </div>
 
           {/* References */}
@@ -1007,13 +1066,14 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                         {jobApplicationData.resume.originalName}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {jobApplicationData.resume.mimetype} • {(jobApplicationData.resume.size / 1024).toFixed(2)} KB
+                        {jobApplicationData.resume.mimetype} •{" "}
+                        {(jobApplicationData.resume.size / 1024).toFixed(2)} KB
                       </p>
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => downloadFile('resume')}
+                      onClick={() => downloadFile("resume")}
                       className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
                     >
                       ⬇ Download
@@ -1022,10 +1082,13 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                 </div>
               ) : (
                 <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">📄 No resume uploaded</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    📄 No resume uploaded
+                  </p>
                 </div>
               )}
-              {jobApplicationData.signature && jobApplicationData.signature.filename ? (
+              {jobApplicationData.signature &&
+              jobApplicationData.signature.filename ? (
                 <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                   <label className="text-sm font-medium text-green-700 dark:text-green-300 flex items-center gap-2">
                     ✍️ Signature File
@@ -1036,13 +1099,15 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                         {jobApplicationData.signature.originalName}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {jobApplicationData.signature.mimetype} • {(jobApplicationData.signature.size / 1024).toFixed(2)} KB
+                        {jobApplicationData.signature.mimetype} •{" "}
+                        {(jobApplicationData.signature.size / 1024).toFixed(2)}{" "}
+                        KB
                       </p>
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => downloadFile('signature')}
+                      onClick={() => downloadFile("signature")}
                       className="bg-green-600 hover:bg-green-700 text-white border-green-600"
                     >
                       ⬇ Download
@@ -1051,7 +1116,9 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                 </div>
               ) : (
                 <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">✍️ No signature uploaded</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    ✍️ No signature uploaded
+                  </p>
                 </div>
               )}
             </div>
@@ -1067,16 +1134,21 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400 block mb-2">
                   Current Status
                 </label>
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                  jobApplicationData.status === 'Pending' ? 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300' :
-                  jobApplicationData.status === 'Under Review' ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300' :
-                  jobApplicationData.status === 'Approved' ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300' :
-                  'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300'
-                }`}>
-                  {jobApplicationData.status === 'Pending' && '🟡 '}
-                  {jobApplicationData.status === 'Under Review' && '🔵 '}
-                  {jobApplicationData.status === 'Approved' && '🟢 '}
-                  {jobApplicationData.status === 'Rejected' && '🔴 '}
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    jobApplicationData.status === "Pending"
+                      ? "bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300"
+                      : jobApplicationData.status === "Under Review"
+                      ? "bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300"
+                      : jobApplicationData.status === "Approved"
+                      ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300"
+                      : "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300"
+                  }`}
+                >
+                  {jobApplicationData.status === "Pending" && "🟡 "}
+                  {jobApplicationData.status === "Under Review" && "🔵 "}
+                  {jobApplicationData.status === "Approved" && "🟢 "}
+                  {jobApplicationData.status === "Rejected" && "🔴 "}
                   {jobApplicationData.status}
                 </span>
               </div>
@@ -1098,13 +1170,14 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                 📬 Email History
               </h3>
               <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">
-                {emailHistory.length} {emailHistory.length === 1 ? 'Email' : 'Emails'} Sent
+                {emailHistory.length}{" "}
+                {emailHistory.length === 1 ? "Email" : "Emails"} Sent
               </span>
             </div>
             {emailHistory.length > 0 ? (
               <div className="space-y-3">
                 {emailHistory.map((email, index) => (
-                  <div 
+                  <div
                     key={index}
                     className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 transition-colors cursor-pointer"
                     onClick={() => setSelectedEmail(email)}
@@ -1172,14 +1245,14 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
 
       {/* Email Modal */}
       {showEmailModal && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn" 
-          style={{ zIndex: 9999, animation: 'fadeIn 0.2s ease-out' }}
+        <div
+          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+          style={{ zIndex: 9999, animation: "fadeIn 0.2s ease-out" }}
           onClick={() => setShowEmailModal(false)}
         >
-          <div 
+          <div
             className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all border-2 border-gray-200 dark:border-gray-700"
-            style={{ animation: 'slideUp 0.3s ease-out' }}
+            style={{ animation: "slideUp 0.3s ease-out" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6">
@@ -1200,10 +1273,16 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                 {/* Recipient Info */}
                 <div className="p-4 bg-blue-100 dark:bg-blue-900/40 rounded-lg border border-blue-200 dark:border-blue-800">
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                    <strong className="text-blue-700 dark:text-blue-300">To:</strong> {jobApplicationData.firstName} {jobApplicationData.lastName}
+                    <strong className="text-blue-700 dark:text-blue-300">
+                      To:
+                    </strong>{" "}
+                    {jobApplicationData.firstName} {jobApplicationData.lastName}
                   </p>
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    <strong className="text-blue-700 dark:text-blue-300">Email:</strong> {jobApplicationData.email}
+                    <strong className="text-blue-700 dark:text-blue-300">
+                      Email:
+                    </strong>{" "}
+                    {jobApplicationData.email}
                   </p>
                 </div>
 
@@ -1215,7 +1294,9 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                   <Input
                     type="text"
                     value={emailData.subject}
-                    onChange={(e) => setEmailData({ ...emailData, subject: e.target.value })}
+                    onChange={(e) =>
+                      setEmailData({ ...emailData, subject: e.target.value })
+                    }
                     placeholder="e.g., Regarding Your Application for [Position]"
                     className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
                   />
@@ -1228,7 +1309,9 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
                   </label>
                   <textarea
                     value={emailData.message}
-                    onChange={(e) => setEmailData({ ...emailData, message: e.target.value })}
+                    onChange={(e) =>
+                      setEmailData({ ...emailData, message: e.target.value })
+                    }
                     placeholder="Dear [Applicant Name],
 
 Thank you for your application...
@@ -1251,9 +1334,10 @@ Al-Rasheed Academy"
                       variant="outline"
                       size="sm"
                       className="bg-green-50 hover:bg-green-100 dark:bg-green-900/20 dark:hover:bg-green-900/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700 font-medium"
-                      onClick={() => setEmailData({
-                        subject: `Application Update - ${jobApplicationData.position}`,
-                        message: `Dear ${jobApplicationData.firstName} ${jobApplicationData.lastName},
+                      onClick={() =>
+                        setEmailData({
+                          subject: `Application Update - ${jobApplicationData.position}`,
+                          message: `Dear ${jobApplicationData.firstName} ${jobApplicationData.lastName},
 
 Thank you for your application for the ${jobApplicationData.position} position at Al-Rasheed Academy.
 
@@ -1262,8 +1346,9 @@ We have reviewed your application and would like to inform you that we will be m
 We will be in touch soon with further details.
 
 Best regards,
-Al-Rasheed Academy HR Team`
-                      })}
+Al-Rasheed Academy HR Team`,
+                        })
+                      }
                     >
                       🎤 Interview Invitation
                     </Button>
@@ -1272,9 +1357,10 @@ Al-Rasheed Academy HR Team`
                       variant="outline"
                       size="sm"
                       className="bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700 font-medium"
-                      onClick={() => setEmailData({
-                        subject: `Thank you for your application`,
-                        message: `Dear ${jobApplicationData.firstName} ${jobApplicationData.lastName},
+                      onClick={() =>
+                        setEmailData({
+                          subject: `Thank you for your application`,
+                          message: `Dear ${jobApplicationData.firstName} ${jobApplicationData.lastName},
 
 Thank you for your interest in the ${jobApplicationData.position} position at Al-Rasheed Academy.
 
@@ -1283,8 +1369,9 @@ We have received your application and will review it carefully. We will contact 
 We appreciate your interest in joining our team.
 
 Best regards,
-Al-Rasheed Academy HR Team`
-                      })}
+Al-Rasheed Academy HR Team`,
+                        })
+                      }
                     >
                       ✅ Acknowledgment
                     </Button>
@@ -1293,9 +1380,10 @@ Al-Rasheed Academy HR Team`
                       variant="outline"
                       size="sm"
                       className="bg-orange-50 hover:bg-orange-100 dark:bg-orange-900/20 dark:hover:bg-orange-900/30 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-700 font-medium"
-                      onClick={() => setEmailData({
-                        subject: `Request for Additional Information`,
-                        message: `Dear ${jobApplicationData.firstName} ${jobApplicationData.lastName},
+                      onClick={() =>
+                        setEmailData({
+                          subject: `Request for Additional Information`,
+                          message: `Dear ${jobApplicationData.firstName} ${jobApplicationData.lastName},
 
 Thank you for your application for the ${jobApplicationData.position} position.
 
@@ -1306,8 +1394,9 @@ We would like to request some additional information to complete your applicatio
 Please provide this information at your earliest convenience.
 
 Best regards,
-Al-Rasheed Academy HR Team`
-                      })}
+Al-Rasheed Academy HR Team`,
+                        })
+                      }
                     >
                       📋 Request Info
                     </Button>
@@ -1347,12 +1436,12 @@ Al-Rasheed Academy HR Team`
 
       {/* View Email Modal */}
       {selectedEmail && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4" 
+        <div
+          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4"
           style={{ zIndex: 9999 }}
           onClick={() => setSelectedEmail(null)}
         >
-          <div 
+          <div
             className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border-2 border-gray-200 dark:border-gray-700"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1432,13 +1521,14 @@ Al-Rasheed Academy HR Team`
 };
 
 const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
-  const [volunteerApplicationData, setVolunteerApplicationData] = useState(null);
+  const [volunteerApplicationData, setVolunteerApplicationData] =
+    useState(null);
   const [loading, setLoading] = useState(true);
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [emailData, setEmailData] = useState({
-    subject: '',
-    message: '',
+    subject: "",
+    message: "",
   });
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailHistory, setEmailHistory] = useState([]);
@@ -1452,20 +1542,22 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
   const fetchApplicationDetail = async () => {
     try {
       setLoading(true);
-      const id = applicationId.replace('volunteer-application-detail-', '');
-      
-      if (!id || id === 'detail' || id === applicationId) {
+      const id = applicationId.replace("volunteer-application-detail-", "");
+
+      if (!id || id === "detail" || id === applicationId) {
         console.error("Invalid application ID:", applicationId);
         toast.error("Invalid application ID");
         setSelected("Volunteer Application");
         return;
       }
-      
-      const response = await fetch(`http://localhost:4000/api/volunteer-applications/${id}`);
+
+      const response = await fetch(
+        `https://alrasheedacademyserver.onrender.com/api/volunteer-applications/${id}`
+      );
       const data = await response.json();
-      
+
       if (data.success) {
-        console.log('Volunteer Application Data:', data.application);
+        console.log("Volunteer Application Data:", data.application);
         setVolunteerApplicationData(data.application);
       } else {
         console.error("Failed to fetch application:", data);
@@ -1481,12 +1573,14 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
 
   const fetchEmailHistory = async () => {
     try {
-      const id = applicationId.replace('volunteer-application-detail-', '');
-      if (!id || id === 'detail' || id === applicationId) return;
-      
-      const response = await fetch(`http://localhost:4000/api/volunteer-applications/${id}/emails`);
+      const id = applicationId.replace("volunteer-application-detail-", "");
+      if (!id || id === "detail" || id === applicationId) return;
+
+      const response = await fetch(
+        `https://alrasheedacademyserver.onrender.com/api/volunteer-applications/${id}/emails`
+      );
       const data = await response.json();
-      
+
       if (data.success) {
         setEmailHistory(data.emails || []);
       }
@@ -1498,29 +1592,32 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
   const updateStatus = async (newStatus) => {
     try {
       setUpdatingStatus(true);
-      const id = applicationId.replace('volunteer-application-detail-', '');
-      const response = await fetch(`http://localhost:4000/api/volunteer-applications/${id}/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      
+      const id = applicationId.replace("volunteer-application-detail-", "");
+      const response = await fetch(
+        `https://alrasheedacademyserver.onrender.com/api/volunteer-applications/${id}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+
       const data = await response.json();
-      
+
       if (data.success) {
-        setVolunteerApplicationData(prev => ({
+        setVolunteerApplicationData((prev) => ({
           ...prev,
           status: newStatus,
         }));
         toast.success(`Status updated to: ${newStatus}`);
       } else {
-        toast.error('Failed to update status');
+        toast.error("Failed to update status");
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      toast.error('Error updating status');
+      toast.error("Error updating status");
     } finally {
       setUpdatingStatus(false);
     }
@@ -1528,8 +1625,8 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
 
   const handleSendEmail = async () => {
     if (!emailData.subject.trim() || !emailData.message.trim()) {
-      toast.error('Missing Required Fields', {
-        description: 'Please fill in both subject and message',
+      toast.error("Missing Required Fields", {
+        description: "Please fill in both subject and message",
         duration: 3000,
       });
       return;
@@ -1537,41 +1634,44 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
 
     try {
       setSendingEmail(true);
-      const id = applicationId.replace('volunteer-application-detail-', '');
-      
-      const response = await fetch(`http://localhost:4000/api/volunteer-applications/${id}/send-email`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          to: volunteerApplicationData.email,
-          subject: emailData.subject,
-          message: emailData.message,
-          applicantName: `${volunteerApplicationData.firstName} ${volunteerApplicationData.lastName}`,
-        }),
-      });
-      
+      const id = applicationId.replace("volunteer-application-detail-", "");
+
+      const response = await fetch(
+        `https://alrasheedacademyserver.onrender.com/api/volunteer-applications/${id}/send-email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to: volunteerApplicationData.email,
+            subject: emailData.subject,
+            message: emailData.message,
+            applicantName: `${volunteerApplicationData.firstName} ${volunteerApplicationData.lastName}`,
+          }),
+        }
+      );
+
       const data = await response.json();
-      
+
       if (data.success) {
-        toast.success('📧 Email Sent Successfully!', {
+        toast.success("📧 Email Sent Successfully!", {
           description: `Message sent to ${volunteerApplicationData.email}`,
           duration: 5000,
         });
         setShowEmailModal(false);
-        setEmailData({ subject: '', message: '' });
+        setEmailData({ subject: "", message: "" });
         fetchEmailHistory();
       } else {
-        toast.error('Failed to Send Email', {
-          description: data.message || 'Unknown error occurred',
+        toast.error("Failed to Send Email", {
+          description: data.message || "Unknown error occurred",
           duration: 4000,
         });
       }
     } catch (error) {
       console.error("Error sending email:", error);
-      toast.error('Network Error', {
-        description: 'Unable to send email. Please try again.',
+      toast.error("Network Error", {
+        description: "Unable to send email. Please try again.",
         duration: 4000,
       });
     } finally {
@@ -1582,7 +1682,9 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
   if (loading) {
     return (
       <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
-        <p className="text-center text-gray-600 dark:text-gray-400">Loading...</p>
+        <p className="text-center text-gray-600 dark:text-gray-400">
+          Loading...
+        </p>
       </div>
     );
   }
@@ -1590,7 +1692,9 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
   if (!volunteerApplicationData) {
     return (
       <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
-        <p className="text-center text-gray-600 dark:text-gray-400">Application not found</p>
+        <p className="text-center text-gray-600 dark:text-gray-400">
+          Application not found
+        </p>
       </div>
     );
   }
@@ -1648,7 +1752,7 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                     First Name
                   </label>
                   <p className="text-gray-900 dark:text-gray-100 font-medium">
-                    {volunteerApplicationData.firstName || 'N/A'}
+                    {volunteerApplicationData.firstName || "N/A"}
                   </p>
                 </div>
                 <div>
@@ -1656,7 +1760,7 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                     Last Name
                   </label>
                   <p className="text-gray-900 dark:text-gray-100 font-medium">
-                    {volunteerApplicationData.lastName || 'N/A'}
+                    {volunteerApplicationData.lastName || "N/A"}
                   </p>
                 </div>
                 <div>
@@ -1664,7 +1768,7 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                     Phone
                   </label>
                   <p className="text-gray-900 dark:text-gray-100 font-medium">
-                    {volunteerApplicationData.phone || 'N/A'}
+                    {volunteerApplicationData.phone || "N/A"}
                   </p>
                 </div>
                 <div>
@@ -1672,12 +1776,12 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                     Email
                   </label>
                   <p className="text-gray-900 dark:text-gray-100 font-medium">
-                    {volunteerApplicationData.email || 'N/A'}
+                    {volunteerApplicationData.email || "N/A"}
                   </p>
                 </div>
               </div>
             </div>
-            
+
             {/* Right Column - Address */}
             <div className="space-y-3">
               <h4 className="text-md font-semibold text-gray-900 dark:text-gray-100">
@@ -1689,7 +1793,7 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                     Address Line 1
                   </label>
                   <p className="text-gray-900 dark:text-gray-100 font-medium">
-                    {volunteerApplicationData.address1 || 'Not provided'}
+                    {volunteerApplicationData.address1 || "Not provided"}
                   </p>
                 </div>
                 {volunteerApplicationData.address2 && (
@@ -1708,7 +1812,7 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                       City
                     </label>
                     <p className="text-gray-900 dark:text-gray-100 font-medium">
-                      {volunteerApplicationData.city || 'N/A'}
+                      {volunteerApplicationData.city || "N/A"}
                     </p>
                   </div>
                   <div>
@@ -1716,7 +1820,7 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                       State
                     </label>
                     <p className="text-gray-900 dark:text-gray-100 font-medium">
-                      {volunteerApplicationData.state || 'N/A'}
+                      {volunteerApplicationData.state || "N/A"}
                     </p>
                   </div>
                   <div>
@@ -1724,7 +1828,7 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                       ZIP Code
                     </label>
                     <p className="text-gray-900 dark:text-gray-100 font-medium">
-                      {volunteerApplicationData.zip || 'N/A'}
+                      {volunteerApplicationData.zip || "N/A"}
                     </p>
                   </div>
                 </div>
@@ -1746,7 +1850,8 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
               </label>
               <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
-                  {volunteerApplicationData.position || 'No position/notes specified'}
+                  {volunteerApplicationData.position ||
+                    "No position/notes specified"}
                 </p>
               </div>
             </div>
@@ -1762,16 +1867,21 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400 block mb-2">
                   Current Status
                 </label>
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                  volunteerApplicationData.status === 'Pending' ? 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300' :
-                  volunteerApplicationData.status === 'Under Review' ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300' :
-                  volunteerApplicationData.status === 'Approved' ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300' :
-                  'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300'
-                }`}>
-                  {volunteerApplicationData.status === 'Pending' && '🟡 '}
-                  {volunteerApplicationData.status === 'Under Review' && '🔵 '}
-                  {volunteerApplicationData.status === 'Approved' && '🟢 '}
-                  {volunteerApplicationData.status === 'Rejected' && '🔴 '}
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    volunteerApplicationData.status === "Pending"
+                      ? "bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300"
+                      : volunteerApplicationData.status === "Under Review"
+                      ? "bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300"
+                      : volunteerApplicationData.status === "Approved"
+                      ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300"
+                      : "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300"
+                  }`}
+                >
+                  {volunteerApplicationData.status === "Pending" && "🟡 "}
+                  {volunteerApplicationData.status === "Under Review" && "🔵 "}
+                  {volunteerApplicationData.status === "Approved" && "🟢 "}
+                  {volunteerApplicationData.status === "Rejected" && "🔴 "}
                   {volunteerApplicationData.status}
                 </span>
               </div>
@@ -1780,7 +1890,10 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                   Submitted Date
                 </label>
                 <p className="text-gray-900 dark:text-gray-100 font-medium">
-                  📅 {new Date(volunteerApplicationData.submittedAt).toLocaleString()}
+                  📅{" "}
+                  {new Date(
+                    volunteerApplicationData.submittedAt
+                  ).toLocaleString()}
                 </p>
               </div>
             </div>
@@ -1795,13 +1908,14 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                 📬 Email History
               </h3>
               <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">
-                {emailHistory.length} {emailHistory.length === 1 ? 'Email' : 'Emails'} Sent
+                {emailHistory.length}{" "}
+                {emailHistory.length === 1 ? "Email" : "Emails"} Sent
               </span>
             </div>
             {emailHistory.length > 0 ? (
               <div className="space-y-3">
                 {emailHistory.map((email, index) => (
-                  <div 
+                  <div
                     key={index}
                     className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 transition-colors cursor-pointer"
                     onClick={() => setSelectedEmail(email)}
@@ -1869,14 +1983,14 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
 
       {/* Email Compose Modal */}
       {showEmailModal && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4" 
-          style={{ zIndex: 9999, animation: 'fadeIn 0.2s ease-out' }}
+        <div
+          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4"
+          style={{ zIndex: 9999, animation: "fadeIn 0.2s ease-out" }}
           onClick={() => setShowEmailModal(false)}
         >
-          <div 
+          <div
             className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all border-2 border-gray-200 dark:border-gray-700"
-            style={{ animation: 'slideUp 0.3s ease-out' }}
+            style={{ animation: "slideUp 0.3s ease-out" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6">
@@ -1896,10 +2010,17 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
               <div className="space-y-4">
                 <div className="p-4 bg-blue-100 dark:bg-blue-900/40 rounded-lg border border-blue-200 dark:border-blue-800">
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                    <strong className="text-blue-700 dark:text-blue-300">To:</strong> {volunteerApplicationData.firstName} {volunteerApplicationData.lastName}
+                    <strong className="text-blue-700 dark:text-blue-300">
+                      To:
+                    </strong>{" "}
+                    {volunteerApplicationData.firstName}{" "}
+                    {volunteerApplicationData.lastName}
                   </p>
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    <strong className="text-blue-700 dark:text-blue-300">Email:</strong> {volunteerApplicationData.email}
+                    <strong className="text-blue-700 dark:text-blue-300">
+                      Email:
+                    </strong>{" "}
+                    {volunteerApplicationData.email}
                   </p>
                 </div>
 
@@ -1910,7 +2031,9 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                   <Input
                     type="text"
                     value={emailData.subject}
-                    onChange={(e) => setEmailData({ ...emailData, subject: e.target.value })}
+                    onChange={(e) =>
+                      setEmailData({ ...emailData, subject: e.target.value })
+                    }
                     placeholder="e.g., Volunteer Position Update"
                     className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
                   />
@@ -1922,7 +2045,9 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
                   </label>
                   <textarea
                     value={emailData.message}
-                    onChange={(e) => setEmailData({ ...emailData, message: e.target.value })}
+                    onChange={(e) =>
+                      setEmailData({ ...emailData, message: e.target.value })
+                    }
                     placeholder="Dear Volunteer,
 
 Thank you for your interest...
@@ -1966,12 +2091,12 @@ Al-Rasheed Academy"
 
       {/* View Email Modal */}
       {selectedEmail && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4" 
+        <div
+          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4"
           style={{ zIndex: 9999 }}
           onClick={() => setSelectedEmail(null)}
         >
-          <div 
+          <div
             className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border-2 border-gray-200 dark:border-gray-700"
             onClick={(e) => e.stopPropagation()}
           >

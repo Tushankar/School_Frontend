@@ -38,15 +38,18 @@ export default function ParentSurveys() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-      const response = await fetch('http://localhost:4000/api/surveys/parent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/surveys/parent",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
 
@@ -68,15 +71,15 @@ export default function ParentSurveys() {
           suggestions: "",
         });
       } else {
-        toast.error('Submission Failed', {
-          description: data.message || 'Unknown error occurred',
+        toast.error("Submission Failed", {
+          description: data.message || "Unknown error occurred",
           duration: 4000,
         });
       }
     } catch (error) {
-      console.error('Error submitting survey:', error);
-      toast.error('Error submitting survey', {
-        description: 'Please try again later.',
+      console.error("Error submitting survey:", error);
+      toast.error("Error submitting survey", {
+        description: "Please try again later.",
         duration: 4000,
       });
     }
@@ -103,7 +106,7 @@ export default function ParentSurveys() {
 
       <main className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50">
         {/* Header Section */}
-        <motion.div 
+        <motion.div
           className="relative text-center py-16 overflow-hidden"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -118,7 +121,7 @@ export default function ParentSurveys() {
           ></div>
           <div className="absolute inset-0 bg-gradient-to-r from-purple-900/30 to-pink-900/30"></div>
           <div className="relative z-10">
-            <motion.h1 
+            <motion.h1
               className="text-5xl md:text-6xl font-serif font-bold mb-4"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -127,13 +130,13 @@ export default function ParentSurveys() {
               <span className="text-black">Parent</span>{" "}
               <span className="text-black">Surveys</span>
             </motion.h1>
-            <motion.div 
+            <motion.div
               className="w-24 h-1 bg-gradient-to-r from-purple-400 to-pink-500 mx-auto rounded-full"
               initial={{ width: 0 }}
               animate={{ width: 96 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             />
-            <motion.p 
+            <motion.p
               className="text-xl text-gray-700 mt-6 max-w-3xl mx-auto font-medium"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

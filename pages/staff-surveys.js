@@ -1,7 +1,7 @@
 import Head from "next/head";
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Send, Star, Users, BookOpen, MessageSquare } from 'lucide-react'
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Send, Star, Users, BookOpen, MessageSquare } from "lucide-react";
 import NavBarOnly from "../components/NavBarOnly";
 import Ticker from "../components/Ticker";
 import Footer from "../components/Footer";
@@ -9,91 +9,95 @@ import { toast } from "sonner";
 
 export default function StaffSurveys() {
   const [formData, setFormData] = useState({
-    name: '',
-    role: '',
-    department: '',
-    workplaceEnvironment: '',
-    trainingOpportunities: '',
-    managementSupport: '',
-    teachingResources: '',
-    communication: '',
-    suggestions: ''
-  })
+    name: "",
+    role: "",
+    department: "",
+    workplaceEnvironment: "",
+    trainingOpportunities: "",
+    managementSupport: "",
+    teachingResources: "",
+    communication: "",
+    suggestions: "",
+  });
 
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     try {
-      const response = await fetch('http://localhost:4000/api/surveys/staff', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/surveys/staff",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
 
       if (data.success) {
-        toast.success('Thank you for your feedback!', {
-          description: 'Your survey has been submitted successfully.',
+        toast.success("Thank you for your feedback!", {
+          description: "Your survey has been submitted successfully.",
           duration: 4000,
         });
         setFormData({
-          name: '',
-          role: '',
-          department: '',
-          workplaceEnvironment: '',
-          trainingOpportunities: '',
-          managementSupport: '',
-          teachingResources: '',
-          communication: '',
-          suggestions: ''
+          name: "",
+          role: "",
+          department: "",
+          workplaceEnvironment: "",
+          trainingOpportunities: "",
+          managementSupport: "",
+          teachingResources: "",
+          communication: "",
+          suggestions: "",
         });
       } else {
-        toast.error('Submission Failed', {
-          description: data.message || 'Unknown error occurred',
+        toast.error("Submission Failed", {
+          description: data.message || "Unknown error occurred",
           duration: 4000,
         });
       }
     } catch (error) {
-      console.error('Error submitting survey:', error);
-      toast.error('Error submitting survey', {
-        description: 'Please try again later.',
+      console.error("Error submitting survey:", error);
+      toast.error("Error submitting survey", {
+        description: "Please try again later.",
         duration: 4000,
       });
     }
-  }
+  };
 
   const surveyTopics = [
     {
       icon: Users,
-      title: 'Workplace Environment',
-      description: 'Share your thoughts on the overall work atmosphere and culture'
+      title: "Workplace Environment",
+      description:
+        "Share your thoughts on the overall work atmosphere and culture",
     },
     {
       icon: BookOpen,
-      title: 'Training & Development',
-      description: 'Evaluate professional development opportunities available'
+      title: "Training & Development",
+      description: "Evaluate professional development opportunities available",
     },
     {
       icon: Star,
-      title: 'Management Support',
-      description: 'Rate the support and guidance from leadership'
+      title: "Management Support",
+      description: "Rate the support and guidance from leadership",
     },
     {
       icon: MessageSquare,
-      title: 'Communication',
-      description: 'Assess inter-departmental communication and collaboration'
-    }
-  ]
+      title: "Communication",
+      description: "Assess inter-departmental communication and collaboration",
+    },
+  ];
 
   return (
     <>
@@ -116,16 +120,19 @@ export default function StaffSurveys() {
 
       <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         {/* Header Section */}
-        <motion.div 
+        <motion.div
           className="relative text-center py-16 overflow-hidden"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: "url('/assets/hall.jpg')" }}></div>
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-20"
+            style={{ backgroundImage: "url('/assets/hall.jpg')" }}
+          ></div>
           <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-blue-900/30"></div>
           <div className="relative z-10">
-            <motion.h1 
+            <motion.h1
               className="text-5xl md:text-6xl font-serif font-bold mb-4"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -134,28 +141,30 @@ export default function StaffSurveys() {
               <span className="text-black">Staff</span>{" "}
               <span className="text-black">Surveys</span>
             </motion.h1>
-            <motion.div 
+            <motion.div
               className="w-24 h-1 bg-gradient-to-r from-yellow-400 to-amber-500 mx-auto rounded-full"
               initial={{ width: 0 }}
               animate={{ width: 96 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             />
-            <motion.p 
+            <motion.p
               className="text-xl text-gray-700 mt-6 max-w-3xl mx-auto font-medium"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.6 }}
             >
-              Your voice matters. Help us improve our workplace environment and educational excellence.
+              Your voice matters. Help us improve our workplace environment and
+              educational excellence.
             </motion.p>
           </div>
         </motion.div>
 
-
-
         {/* Survey Form */}
         <div className="relative py-16 bg-gray-50">
-          <div className="absolute inset-0 bg-cover bg-center opacity-40" style={{ backgroundImage: "url('/assets/science.jpeg')" }}></div>
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-40"
+            style={{ backgroundImage: "url('/assets/science.jpeg')" }}
+          ></div>
 
           <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <form onSubmit={handleSubmit} className="space-y-8">
@@ -172,7 +181,9 @@ export default function StaffSurveys() {
                       <div className="p-2 bg-blue-100 rounded-lg">
                         <Users className="h-5 w-5 text-blue-600" />
                       </div>
-                      <h3 className="text-xl font-semibold">Personal Information</h3>
+                      <h3 className="text-xl font-semibold">
+                        Personal Information
+                      </h3>
                     </div>
                   </div>
                   <div className="p-6">
@@ -242,13 +253,16 @@ export default function StaffSurveys() {
                       <div className="p-2 bg-green-100 rounded-lg">
                         <MessageSquare className="h-5 w-5 text-green-600" />
                       </div>
-                      <h3 className="text-xl font-semibold">Survey Questions</h3>
+                      <h3 className="text-xl font-semibold">
+                        Survey Questions
+                      </h3>
                     </div>
                   </div>
                   <div className="p-6 space-y-6">
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        1. How satisfied are you with the workplace environment? <span className="text-red-500">*</span>
+                        1. How satisfied are you with the workplace environment?{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="workplaceEnvironment"
@@ -268,7 +282,9 @@ export default function StaffSurveys() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        2. How would you rate the training & professional development opportunities? <span className="text-red-500">*</span>
+                        2. How would you rate the training & professional
+                        development opportunities?{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="trainingOpportunities"
@@ -288,7 +304,8 @@ export default function StaffSurveys() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        3. How supportive is the management/leadership team? <span className="text-red-500">*</span>
+                        3. How supportive is the management/leadership team?{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="managementSupport"
@@ -308,7 +325,8 @@ export default function StaffSurveys() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        4. How adequate are the teaching resources & infrastructure? <span className="text-red-500">*</span>
+                        4. How adequate are the teaching resources &
+                        infrastructure? <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="teachingResources"
@@ -328,7 +346,8 @@ export default function StaffSurveys() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        5. How effective is communication & collaboration among departments? <span className="text-red-500">*</span>
+                        5. How effective is communication & collaboration among
+                        departments? <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="communication"
@@ -381,5 +400,5 @@ export default function StaffSurveys() {
 
       <Footer />
     </>
-  )
+  );
 }

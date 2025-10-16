@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
 import { Button } from "./button";
 import { Input } from "./input";
 
-const API_URL = "http://localhost:4000/api/calendar";
+const API_URL = "https://alrasheedacademyserver.onrender.com/api/calendar";
 
 const CalendarView = ({ setSelected }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -32,12 +32,14 @@ const CalendarView = ({ setSelected }) => {
       setLoading(true);
       const response = await fetch(`${API_URL}/events`);
       const data = await response.json();
-      
+
       if (data.success) {
-        setEvents(data.events.map(event => ({
-          ...event,
-          id: event._id
-        })));
+        setEvents(
+          data.events.map((event) => ({
+            ...event,
+            id: event._id,
+          }))
+        );
       }
     } catch (error) {
       console.error("Error fetching events:", error);

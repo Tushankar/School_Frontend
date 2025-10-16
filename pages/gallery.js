@@ -43,7 +43,7 @@ export default function ArcGalleryHeroDemo() {
     const fetchGalleryImages = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/gallery?category=${selectedCategory}`
+          `https://alrasheedacademyserver.onrender.com/api/gallery?category=${selectedCategory}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -269,7 +269,7 @@ function MasonryImageGallery({ images }) {
             <AnimatedImage
               key={image._id || index}
               alt={image.title}
-              src={`http://localhost:4000${image.imageUrl}`}
+              src={`https://alrasheedacademyserver.onrender.com${image.imageUrl}`}
               ratio={ratio}
               placeholder={`https://placehold.co/400x400/EEE/999?text=${image.title}`}
             />
