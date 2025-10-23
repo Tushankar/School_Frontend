@@ -5087,55 +5087,55 @@ const CurricularCMS = ({ setSelected }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
             Curricular CMS
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
             Manage curriculum page sections and content
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <Button
             onClick={addSection}
             variant="outline"
-            className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 w-full sm:w-auto"
           >
             Add Section
           </Button>
           <Button
             onClick={handleSave}
             disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
           >
             {loading ? "Saving..." : "Save Changes"}
           </Button>
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {sections.map((section, index) => (
           <div
             key={index}
-            className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm"
+            className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-sm"
           >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
+              <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Section {index + 1}: {section.title}
               </h3>
               <Button
                 onClick={() => removeSection(index)}
                 variant="outline"
                 size="sm"
-                className="text-red-600 border-red-300 hover:bg-red-50 dark:text-red-400 dark:border-red-600 dark:hover:bg-red-900/20"
+                className="text-red-600 border-red-300 hover:bg-red-50 dark:text-red-400 dark:border-red-600 dark:hover:bg-red-900/20 w-full sm:w-auto"
               >
                 Remove Section
               </Button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 md:space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -5204,8 +5204,8 @@ const CurricularCMS = ({ setSelected }) => {
                     updateSection(index, "content", e.target.value)
                   }
                   placeholder="Section content goes here"
-                  rows="4"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows="3"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
                 />
               </div>
 
