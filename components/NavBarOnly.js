@@ -29,7 +29,9 @@ const NavBarOnly = () => {
   useEffect(() => {
     const fetchNavItems = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/navbar");
+        const response = await fetch(
+          "https://alrasheedacademyserver.onrender.com/api/navbar"
+        );
         if (response.ok) {
           const data = await response.json();
           // Filter active items and map icon strings to components

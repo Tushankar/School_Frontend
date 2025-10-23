@@ -30,7 +30,7 @@ import { Separator } from "@/components/ui/separator"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Input } from "@/components/ui/input"
 
-const API_URL = "http://localhost:4000/api/calendar"
+const API_URL = "https://alrasheedacademyserver.onrender.com/api/calendar"
 
 interface CalendarEvent {
   _id: string

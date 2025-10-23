@@ -14,7 +14,7 @@ export default function AdministrationSection() {
                 const headers = storedToken
                     ? { Authorization: `Bearer ${storedToken}` }
                     : {}
-                const res = await fetch('http://localhost:4000/api/auth/cms/administration', {
+                const res = await fetch('https://alrasheedacademyserver.onrender.com/api/auth/cms/administration', {
                     credentials: 'include',
                     headers
                 })

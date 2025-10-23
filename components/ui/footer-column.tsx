@@ -30,7 +30,7 @@ export default function Footer4Col() {
   useEffect(() => {
     const fetchFooterData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/auth/cms/footer');
+        const response = await fetch('https://alrasheedacademyserver.onrender.com/api/auth/cms/footer');
         if (response.ok) {
           const data = await response.json();
           setFooterData(data);

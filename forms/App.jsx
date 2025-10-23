@@ -400,173 +400,193 @@ const EnrollmentForm = () => {
       // Submit all forms to backend with enrollmentId
       const responses = await Promise.all([
         // 1. Student Registration
-        fetch("http://localhost:4000/api/forms/student-registration", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            enrollmentId, // Link forms together
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            gender: formData.gender,
-            dateOfBirth: formData.dateOfBirth,
-            gradeLevel: formData.gradeLevel,
-            houseNumber: formData.houseNumber,
-            addressLine1: formData.addressLine1,
-            addressLine2: formData.addressLine2,
-            city: formData.city,
-            state: formData.state,
-            zipCode: formData.zipCode,
-            citizenship: formData.citizenship,
-            ethnicity: formData.ethnicity,
-            fatherFirstName: formData.fatherFirstName,
-            fatherLastName: formData.fatherLastName,
-            fatherAddress1: formData.fatherAddress1,
-            fatherAddress2: formData.fatherAddress2,
-            fatherCity: formData.fatherCity,
-            fatherState: formData.fatherState,
-            fatherZip: formData.fatherZip,
-            fatherPhone: formData.fatherPhone,
-            fatherEmail: formData.fatherEmail,
-            fatherOccupation: formData.fatherOccupation,
-            fatherEmployment: formData.fatherEmployment,
-            fatherWorkPhone: formData.fatherWorkPhone,
-            motherFirstName: formData.motherFirstName,
-            motherLastName: formData.motherLastName,
-            motherAddress1: formData.motherAddress1,
-            motherAddress2: formData.motherAddress2,
-            motherCity: formData.motherCity,
-            motherState: formData.motherState,
-            motherZip: formData.motherZip,
-            motherPhone: formData.motherPhone,
-            motherEmail: formData.motherEmail,
-            motherOccupation: formData.motherOccupation,
-            motherEmployment: formData.motherEmployment,
-            publicSchoolName: formData.publicSchoolName,
-            publicDistrict: formData.publicDistrict,
-            previousSchoolName: formData.previousSchoolName,
-            previousSchoolPhone: formData.previousSchoolPhone,
-            previousSchoolAddress: formData.previousSchoolAddress,
-            reasonForLeaving: formData.reasonForLeaving,
-            repeatedGrade: formData.repeatedGrade,
-            disciplinaryAction: formData.disciplinaryAction,
-            subjectsExcel: formData.subjectsExcel,
-            subjectsStruggle: formData.subjectsStruggle,
-            extracurricularActivities: formData.extracurricularActivities,
-            siblings: formData.siblings,
-            printName: formData.printName,
-          }),
-        }),
+        fetch(
+          "https://alrasheedacademyserver.onrender.com/api/forms/student-registration",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              enrollmentId, // Link forms together
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              gender: formData.gender,
+              dateOfBirth: formData.dateOfBirth,
+              gradeLevel: formData.gradeLevel,
+              houseNumber: formData.houseNumber,
+              addressLine1: formData.addressLine1,
+              addressLine2: formData.addressLine2,
+              city: formData.city,
+              state: formData.state,
+              zipCode: formData.zipCode,
+              citizenship: formData.citizenship,
+              ethnicity: formData.ethnicity,
+              fatherFirstName: formData.fatherFirstName,
+              fatherLastName: formData.fatherLastName,
+              fatherAddress1: formData.fatherAddress1,
+              fatherAddress2: formData.fatherAddress2,
+              fatherCity: formData.fatherCity,
+              fatherState: formData.fatherState,
+              fatherZip: formData.fatherZip,
+              fatherPhone: formData.fatherPhone,
+              fatherEmail: formData.fatherEmail,
+              fatherOccupation: formData.fatherOccupation,
+              fatherEmployment: formData.fatherEmployment,
+              fatherWorkPhone: formData.fatherWorkPhone,
+              motherFirstName: formData.motherFirstName,
+              motherLastName: formData.motherLastName,
+              motherAddress1: formData.motherAddress1,
+              motherAddress2: formData.motherAddress2,
+              motherCity: formData.motherCity,
+              motherState: formData.motherState,
+              motherZip: formData.motherZip,
+              motherPhone: formData.motherPhone,
+              motherEmail: formData.motherEmail,
+              motherOccupation: formData.motherOccupation,
+              motherEmployment: formData.motherEmployment,
+              publicSchoolName: formData.publicSchoolName,
+              publicDistrict: formData.publicDistrict,
+              previousSchoolName: formData.previousSchoolName,
+              previousSchoolPhone: formData.previousSchoolPhone,
+              previousSchoolAddress: formData.previousSchoolAddress,
+              reasonForLeaving: formData.reasonForLeaving,
+              repeatedGrade: formData.repeatedGrade,
+              disciplinaryAction: formData.disciplinaryAction,
+              subjectsExcel: formData.subjectsExcel,
+              subjectsStruggle: formData.subjectsStruggle,
+              extracurricularActivities: formData.extracurricularActivities,
+              siblings: formData.siblings,
+              printName: formData.printName,
+            }),
+          }
+        ),
 
         // 2. Health Form
-        fetch("http://localhost:4000/api/forms/health-form", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            enrollmentId, // Link forms together
-            insuranceCompany: formData.insuranceCompany,
-            physicianName: formData.physicianName,
-            physicianNumber: formData.physicianNumber,
-            hasDisabilities: formData.hasDisabilities,
-            disabilityExplanation: formData.disabilityExplanation,
-            medicalConditions: formData.medicalConditions,
-            pastDiseases: formData.pastDiseases,
-            pastConditions: formData.pastConditions,
-            takesRegularMedication: formData.takesRegularMedication,
-            medicationExplanation: formData.medicationExplanation,
-            hasAllergies: formData.hasAllergies,
-            allergiesList: formData.allergiesList,
-            healthFormSignature: formData.healthFormSignature,
-          }),
-        }),
+        fetch(
+          "https://alrasheedacademyserver.onrender.com/api/forms/health-form",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              enrollmentId, // Link forms together
+              insuranceCompany: formData.insuranceCompany,
+              physicianName: formData.physicianName,
+              physicianNumber: formData.physicianNumber,
+              hasDisabilities: formData.hasDisabilities,
+              disabilityExplanation: formData.disabilityExplanation,
+              medicalConditions: formData.medicalConditions,
+              pastDiseases: formData.pastDiseases,
+              pastConditions: formData.pastConditions,
+              takesRegularMedication: formData.takesRegularMedication,
+              medicationExplanation: formData.medicationExplanation,
+              hasAllergies: formData.hasAllergies,
+              allergiesList: formData.allergiesList,
+              healthFormSignature: formData.healthFormSignature,
+            }),
+          }
+        ),
 
         // 3. Emergency Contact
-        fetch("http://localhost:4000/api/forms/emergency-contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            enrollmentId, // Link forms together
-            emergencyContact1Name: formData.emergencyContact1Name,
-            emergencyContact1Phone: formData.emergencyContact1Phone,
-            emergencyContact1Relationship:
-              formData.emergencyContact1Relationship,
-            emergencyContact2Name: formData.emergencyContact2Name,
-            emergencyContact2Phone: formData.emergencyContact2Phone,
-            emergencyContact2Relationship:
-              formData.emergencyContact2Relationship,
-            emergencyContact3Name: formData.emergencyContact3Name,
-            emergencyContact3Phone: formData.emergencyContact3Phone,
-            emergencyContact3Relationship:
-              formData.emergencyContact3Relationship,
-            pediatricianName: formData.pediatricianName,
-            pediatricianPhone: formData.pediatricianPhone,
-            authorizedPickup: formData.authorizedPickup,
-            emergencyFormSignature: formData.emergencyFormSignature,
-          }),
-        }),
+        fetch(
+          "https://alrasheedacademyserver.onrender.com/api/forms/emergency-contact",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              enrollmentId, // Link forms together
+              emergencyContact1Name: formData.emergencyContact1Name,
+              emergencyContact1Phone: formData.emergencyContact1Phone,
+              emergencyContact1Relationship:
+                formData.emergencyContact1Relationship,
+              emergencyContact2Name: formData.emergencyContact2Name,
+              emergencyContact2Phone: formData.emergencyContact2Phone,
+              emergencyContact2Relationship:
+                formData.emergencyContact2Relationship,
+              emergencyContact3Name: formData.emergencyContact3Name,
+              emergencyContact3Phone: formData.emergencyContact3Phone,
+              emergencyContact3Relationship:
+                formData.emergencyContact3Relationship,
+              pediatricianName: formData.pediatricianName,
+              pediatricianPhone: formData.pediatricianPhone,
+              authorizedPickup: formData.authorizedPickup,
+              emergencyFormSignature: formData.emergencyFormSignature,
+            }),
+          }
+        ),
 
         // 4. Picture Authorization
-        fetch("http://localhost:4000/api/forms/picture-authorization", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            enrollmentId, // Link forms together
-            pictureAuthSignature: formData.pictureAuthSignature,
-            disciplineAcknowledgment: formData.disciplineAcknowledgment,
-            signerRole: formData.signerRole,
-            disciplineFormSignature: formData.disciplineFormSignature,
-          }),
-        }),
+        fetch(
+          "https://alrasheedacademyserver.onrender.com/api/forms/picture-authorization",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              enrollmentId, // Link forms together
+              pictureAuthSignature: formData.pictureAuthSignature,
+              disciplineAcknowledgment: formData.disciplineAcknowledgment,
+              signerRole: formData.signerRole,
+              disciplineFormSignature: formData.disciplineFormSignature,
+            }),
+          }
+        ),
 
         // 5. Transfer Records
-        fetch("http://localhost:4000/api/forms/transfer-records", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            enrollmentId, // Link forms together
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            dateOfBirth: formData.dateOfBirth,
-            grade: formData.gradeLevel,
-            previousSchoolName: formData.previousSchoolName,
-            previousSchoolAddress: formData.previousSchoolAddress,
-            previousSchoolCity: formData.previousSchoolCity || formData.city,
-            previousSchoolState: formData.previousSchoolState || formData.state,
-            previousSchoolZip: formData.previousSchoolZip || formData.zipCode,
-            previousSchoolPhone: formData.previousSchoolPhone,
-            parentGuardianName: `${formData.fatherFirstName} ${formData.fatherLastName}`,
-            parentGuardianPhone: formData.fatherPhone,
-            parentGuardianEmail: formData.fatherEmail,
-            recordsNeeded: formData.recordsNeeded || "All Records",
-            urgencyLevel: formData.urgencyLevel || "Standard",
-            transferFormSignature:
-              formData.transferFormSignature || formData.printName,
-          }),
-        }),
+        fetch(
+          "https://alrasheedacademyserver.onrender.com/api/forms/transfer-records",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              enrollmentId, // Link forms together
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              dateOfBirth: formData.dateOfBirth,
+              grade: formData.gradeLevel,
+              previousSchoolName: formData.previousSchoolName,
+              previousSchoolAddress: formData.previousSchoolAddress,
+              previousSchoolCity: formData.previousSchoolCity || formData.city,
+              previousSchoolState:
+                formData.previousSchoolState || formData.state,
+              previousSchoolZip: formData.previousSchoolZip || formData.zipCode,
+              previousSchoolPhone: formData.previousSchoolPhone,
+              parentGuardianName: `${formData.fatherFirstName} ${formData.fatherLastName}`,
+              parentGuardianPhone: formData.fatherPhone,
+              parentGuardianEmail: formData.fatherEmail,
+              recordsNeeded: formData.recordsNeeded || "All Records",
+              urgencyLevel: formData.urgencyLevel || "Standard",
+              transferFormSignature:
+                formData.transferFormSignature || formData.printName,
+            }),
+          }
+        ),
 
         // 6. Tuition Contract
-        fetch("http://localhost:4000/api/forms/tuition-contract", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            enrollmentId, // Link forms together
-            guardianFirstName: formData.guardianFirstName,
-            guardianLastName: formData.guardianLastName,
-            guardianPhone: formData.guardianPhone,
-            guardianEmail: formData.guardianEmail,
-            guardianAddressLine1: formData.guardianAddressLine1,
-            guardianAddressLine2: formData.guardianAddressLine2,
-            guardianCity: formData.guardianCity,
-            guardianState: formData.guardianState,
-            guardianZipCode: formData.guardianZipCode,
-            tuitionAcknowledgment: formData.tuitionAcknowledgment,
-            textbookFeeAcknowledgment: formData.textbookFeeAcknowledgment,
-            applicationFeeAcknowledgment: formData.applicationFeeAcknowledgment,
-            paymentOption1: formData.paymentOption1,
-            paymentOption2: formData.paymentOption2,
-            paymentOption3: formData.paymentOption3,
-            tuitionContractSignature: formData.tuitionContractSignature,
-          }),
-        }),
+        fetch(
+          "https://alrasheedacademyserver.onrender.com/api/forms/tuition-contract",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              enrollmentId, // Link forms together
+              guardianFirstName: formData.guardianFirstName,
+              guardianLastName: formData.guardianLastName,
+              guardianPhone: formData.guardianPhone,
+              guardianEmail: formData.guardianEmail,
+              guardianAddressLine1: formData.guardianAddressLine1,
+              guardianAddressLine2: formData.guardianAddressLine2,
+              guardianCity: formData.guardianCity,
+              guardianState: formData.guardianState,
+              guardianZipCode: formData.guardianZipCode,
+              tuitionAcknowledgment: formData.tuitionAcknowledgment,
+              textbookFeeAcknowledgment: formData.textbookFeeAcknowledgment,
+              applicationFeeAcknowledgment:
+                formData.applicationFeeAcknowledgment,
+              paymentOption1: formData.paymentOption1,
+              paymentOption2: formData.paymentOption2,
+              paymentOption3: formData.paymentOption3,
+              tuitionContractSignature: formData.tuitionContractSignature,
+            }),
+          }
+        ),
       ]);
 
       // Parse all responses

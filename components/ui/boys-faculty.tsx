@@ -12,7 +12,7 @@ export default function BoysFacultySection() {
         let mounted = true
         const fetchCms = async () => {
             try {
-                const res = await fetch('http://localhost:4000/api/auth/cms/boys-faculty')
+                const res = await fetch('https://alrasheedacademyserver.onrender.com/api/auth/cms/boys-faculty')
                 if (!mounted) return
                 if (res.ok) {
                     const json = await res.json()

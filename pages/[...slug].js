@@ -22,7 +22,9 @@ const DynamicPage = () => {
     try {
       setLoading(true);
       // Fetch navbar data to find the content for this slug
-      const response = await fetch("http://localhost:4000/api/navbar");
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/navbar"
+      );
       if (response.ok) {
         const navbarData = await response.json();
 

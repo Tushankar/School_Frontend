@@ -43,7 +43,7 @@ export default function ArcGalleryHeroDemo() {
     const fetchGalleryImages = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/gallery?category=${selectedCategory}`
+          `https://alrasheedacademyserver.onrender.com/api/gallery?category=${selectedCategory}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -285,7 +285,7 @@ function MasonryImageGallery({ images, loading }) {
         {images.map((image, index) => {
           const isPortrait = Math.random() > 0.5;
           const ratio = isPortrait ? 9 / 16 : 16 / 9;
-          const imageUrl = `http://localhost:4000${image.imageUrl}`;
+          const imageUrl = `https://alrasheedacademyserver.onrender.com${image.imageUrl}`;
           console.log("Gallery Image URL:", imageUrl, "| Title:", image.title);
           return (
             <AnimatedImage

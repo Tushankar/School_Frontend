@@ -34,7 +34,7 @@ export default function Contact() {
         try {
             console.log('Sending request to backend...');
             
-            const response = await fetch('http://localhost:4000/api/contact/submit', {
+            const response = await fetch('https://alrasheedacademyserver.onrender.com/api/contact/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

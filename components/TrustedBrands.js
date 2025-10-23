@@ -37,7 +37,7 @@ const TrustedBrands = () => {
   const fetchTrustedBrandsData = async () => {
     try {
       const response = await fetch(
-        "http://localhost:4000/api/auth/cms/trusted-brands"
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/trusted-brands"
       );
       if (response.ok) {
         const data = await response.json();

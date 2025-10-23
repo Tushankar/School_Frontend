@@ -39,7 +39,7 @@ export default function PrincipalMessage() {
   const fetchPrincipalMessageData = async () => {
     try {
       const response = await fetch(
-        "http://localhost:4000/api/auth/cms/principal-message",
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/principal-message",
         {
           credentials: "include",
         }

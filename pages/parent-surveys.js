@@ -40,13 +40,16 @@ export default function ParentSurveys() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:4000/api/surveys/parent", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/surveys/parent",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
 
