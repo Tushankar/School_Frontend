@@ -40,7 +40,7 @@ const PrincipalMessageCMS = ({ setSelected }) => {
   const fetchPrincipalMessageData = async () => {
     try {
       const response = await fetch(
-        "http://localhost:4000/api/auth/cms/principal-message",
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/principal-message",
         {
           credentials: "include",
         }
@@ -169,7 +169,7 @@ const PrincipalMessageCMS = ({ setSelected }) => {
       };
 
       const response = await fetch(
-        "http://localhost:4000/api/auth/cms/principal-message",
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/principal-message",
         {
           method: "PUT",
           headers: {

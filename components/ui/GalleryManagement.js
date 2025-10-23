@@ -27,7 +27,7 @@ const GalleryManagement = ({ setSelected }) => {
   const fetchImages = async () => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/gallery?category=All`
+        `https://alrasheedacademyserver.onrender.com/api/gallery?category=All`
       );
       if (response.ok) {
         const data = await response.json();
@@ -130,10 +130,13 @@ const GalleryManagement = ({ setSelected }) => {
         }
       }
 
-      const response = await fetch("http://localhost:4000/api/gallery/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/gallery/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         const result = await response.json();
@@ -167,9 +170,12 @@ const GalleryManagement = ({ setSelected }) => {
 
   const handleDeleteImage = async (id) => {
     try {
-      const response = await fetch(`http://localhost:4000/api/gallery/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `https://alrasheedacademyserver.onrender.com/api/gallery/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
         setImages(images.filter((img) => img._id !== id));
@@ -240,7 +246,7 @@ const GalleryManagement = ({ setSelected }) => {
             >
               <div className="aspect-square relative">
                 <img
-                  src={`http://localhost:4000${image.imageUrl}`}
+                  src={`https://alrasheedacademyserver.onrender.com${image.imageUrl}`}
                   alt={image.title}
                   className="w-full h-full object-cover"
                   onError={(e) => {

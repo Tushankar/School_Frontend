@@ -52,9 +52,12 @@ const TeamCMS = ({ setSelected }) => {
 
   const fetchTeamData = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/auth/cms/team", {
-        credentials: "include",
-      });
+      const res = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/team",
+        {
+          credentials: "include",
+        }
+      );
       if (res.ok) {
         const data = await res.json();
         // Basic sanitize
@@ -108,12 +111,15 @@ const TeamCMS = ({ setSelected }) => {
       };
       if (storedToken) headers.Authorization = `Bearer ${storedToken}`;
 
-      const res = await fetch("http://localhost:4000/api/auth/cms/team", {
-        method: "PUT",
-        headers,
-        credentials: "include",
-        body: JSON.stringify({ content: dataToSave }),
-      });
+      const res = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/team",
+        {
+          method: "PUT",
+          headers,
+          credentials: "include",
+          body: JSON.stringify({ content: dataToSave }),
+        }
+      );
       if (res.ok) {
         toast.success("Team updated successfully!");
       } else {

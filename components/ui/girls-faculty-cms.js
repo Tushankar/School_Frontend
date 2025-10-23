@@ -112,7 +112,7 @@ export default function GirlsFacultyCMS({ setSelected }) {
     setLoading(true);
     try {
       const res = await fetch(
-        "http://localhost:4000/api/auth/cms/girls-faculty",
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/girls-faculty",
         {
           credentials: "include",
         }
@@ -229,7 +229,7 @@ export default function GirlsFacultyCMS({ setSelected }) {
       if (storedToken) headers.Authorization = `Bearer ${storedToken}`;
 
       const res = await fetch(
-        "http://localhost:4000/api/auth/cms/girls-faculty",
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/girls-faculty",
         {
           method: "PUT",
           headers,

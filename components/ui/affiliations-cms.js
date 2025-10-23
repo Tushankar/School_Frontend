@@ -54,7 +54,7 @@ const AffiliationsCMS = ({ setSelected }) => {
   const fetchAffiliationsData = async () => {
     try {
       const response = await fetch(
-        "http://localhost:4000/api/auth/cms/affiliations",
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/affiliations",
         {
           credentials: "include",
         }
@@ -84,7 +84,7 @@ const AffiliationsCMS = ({ setSelected }) => {
       }
 
       const response = await fetch(
-        "http://localhost:4000/api/auth/cms/affiliations",
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/affiliations",
         {
           method: "POST",
           headers: {

@@ -41,7 +41,7 @@ const CharacterCardsCMS = ({ setSelected }) => {
   const fetchCharacterCardsData = async () => {
     try {
       const response = await fetch(
-        "http://localhost:4000/api/auth/cms/character-cards",
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/character-cards",
         {
           credentials: "include",
         }
@@ -71,7 +71,7 @@ const CharacterCardsCMS = ({ setSelected }) => {
       }
 
       const response = await fetch(
-        "http://localhost:4000/api/auth/cms/character-cards",
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/character-cards",
         {
           method: "POST",
           headers: {

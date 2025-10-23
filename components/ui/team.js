@@ -15,7 +15,9 @@ const TeamSection = () => {
     let mounted = true;
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/auth/cms/team");
+        const res = await fetch(
+          "https://alrasheedacademyserver.onrender.com/api/auth/cms/team"
+        );
         if (!mounted) return;
         if (res.ok) {
           const json = await res.json();

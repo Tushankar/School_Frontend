@@ -39,9 +39,12 @@ const ContactFormsTable = ({ setSelected }) => {
 
   const fetchContactForms = async () => {
     try {
-      const response = await fetch("http://localhost:4000/api/contact", {
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/contact",
+        {
+          credentials: "include",
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         setContactForms(data);
@@ -176,7 +179,7 @@ const ContactFormDetailView = ({ formId, setSelected }) => {
   const fetchContactForm = async () => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/contact/${formId}`,
+        `https://alrasheedacademyserver.onrender.com/api/contact/${formId}`,
         {
           credentials: "include",
         }
@@ -198,7 +201,7 @@ const ContactFormDetailView = ({ formId, setSelected }) => {
     try {
       setUpdatingStatus(true);
       const response = await fetch(
-        `http://localhost:4000/api/contact/${formId}/status`,
+        `https://alrasheedacademyserver.onrender.com/api/contact/${formId}/status`,
         {
           method: "PUT",
           headers: {
@@ -238,7 +241,7 @@ const ContactFormDetailView = ({ formId, setSelected }) => {
     try {
       setSendingReply(true);
       const response = await fetch(
-        `http://localhost:4000/api/contact/${formId}/reply`,
+        `https://alrasheedacademyserver.onrender.com/api/contact/${formId}/reply`,
         {
           method: "POST",
           headers: {

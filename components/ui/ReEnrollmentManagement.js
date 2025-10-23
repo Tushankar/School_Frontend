@@ -25,7 +25,7 @@ const ReEnrollmentTable = ({ setSelected }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        "http://localhost:4000/api/renroll/renroll-form"
+        "https://alrasheedacademyserver.onrender.com/api/renroll/renroll-form"
       );
       const data = await response.json();
 
@@ -227,7 +227,7 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:4000/api/renroll/renroll-form/${id}`
+        `https://alrasheedacademyserver.onrender.com/api/renroll/renroll-form/${id}`
       );
       const data = await response.json();
 

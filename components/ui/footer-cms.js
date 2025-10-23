@@ -29,7 +29,7 @@ const FooterCMS = ({ setSelected }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        "http://localhost:4000/api/auth/cms/footer",
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/footer",
         {
           credentials: "include",
         }
@@ -52,7 +52,7 @@ const FooterCMS = ({ setSelected }) => {
     setSaving(true);
     try {
       const response = await fetch(
-        "http://localhost:4000/api/auth/cms/footer",
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/footer",
         {
           method: "PUT",
           headers: {
