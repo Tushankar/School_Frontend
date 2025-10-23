@@ -230,24 +230,24 @@ const FooterCMS = ({ setSelected }) => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
             Footer CMS
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
             Manage footer content and links
           </p>
         </div>
-        <div className="flex gap-3">
-          <Button onClick={fetchFooterData} variant="outline">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <Button onClick={fetchFooterData} variant="outline" className="w-full sm:w-auto">
             Refresh
           </Button>
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
           >
             {saving ? "Saving..." : "Save Changes"}
           </Button>
@@ -255,8 +255,8 @@ const FooterCMS = ({ setSelected }) => {
       </div>
 
       {/* Company Information */}
-      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-sm">
+        <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
           Company Information
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -298,12 +298,12 @@ const FooterCMS = ({ setSelected }) => {
       </div>
 
       {/* Social Links */}
-      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
             Social Links
           </h3>
-          <Button onClick={addSocialLink} variant="outline" size="sm">
+          <Button onClick={addSocialLink} variant="outline" size="sm" className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Add Link
           </Button>
@@ -359,12 +359,12 @@ const FooterCMS = ({ setSelected }) => {
       </div>
 
       {/* About Links */}
-      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
             About Links
           </h3>
-          <Button onClick={addAboutLink} variant="outline" size="sm">
+          <Button onClick={addAboutLink} variant="outline" size="sm" className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Add Link
           </Button>
@@ -398,12 +398,12 @@ const FooterCMS = ({ setSelected }) => {
       </div>
 
       {/* Service Links */}
-      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
             Academics Links
           </h3>
-          <Button onClick={addServiceLink} variant="outline" size="sm">
+          <Button onClick={addServiceLink} variant="outline" size="sm" className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Add Link
           </Button>
@@ -441,12 +441,12 @@ const FooterCMS = ({ setSelected }) => {
       </div>
 
       {/* Helpful Links */}
-      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
             Helpful Links
           </h3>
-          <Button onClick={addHelpfulLink} variant="outline" size="sm">
+          <Button onClick={addHelpfulLink} variant="outline" size="sm" className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Add Link
           </Button>
@@ -497,12 +497,12 @@ const FooterCMS = ({ setSelected }) => {
       </div>
 
       {/* Contact Information */}
-      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
             Contact Information
           </h3>
-          <Button onClick={addContactInfo} variant="outline" size="sm">
+          <Button onClick={addContactInfo} variant="outline" size="sm" className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Add Info
           </Button>

@@ -110,42 +110,43 @@ const ReEnrollmentTable = ({ setSelected }) => {
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 border-b border-gray-200 dark:border-gray-800">
+        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100">
           Re-Enrollments
         </h2>
         <Input
           placeholder="Search re-enrollments..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-96 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+          className="w-full sm:w-96 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
         />
       </div>
-      <Table>
+      <div className="overflow-x-auto">
+        <Table>
         <TableHeader>
           <TableRow className="border-gray-200 dark:border-gray-800">
-            <TableHead className="text-gray-600 dark:text-gray-400">
+            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[150px]">
               Student Name
             </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
+            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[120px]">
               Student ID
             </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
+            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px]">
               Grade Level
             </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
+            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[120px] hidden md:table-cell">
               Last Year Grade
             </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
+            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[150px] hidden lg:table-cell">
               Parent Email
             </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
+            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px]">
               Status
             </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
+            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px] hidden sm:table-cell">
               Submitted
             </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
+            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px]">
               Actions
             </TableHead>
           </TableRow>
@@ -165,10 +166,10 @@ const ReEnrollmentTable = ({ setSelected }) => {
               <TableCell className="text-gray-600 dark:text-gray-400">
                 {reenrollment.gradeLevel}
               </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400">
+              <TableCell className="text-gray-600 dark:text-gray-400 hidden md:table-cell">
                 {reenrollment.lastYearGrade}
               </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400">
+              <TableCell className="text-gray-600 dark:text-gray-400 hidden lg:table-cell">
                 {reenrollment.parentEmail}
               </TableCell>
               <TableCell>
@@ -180,14 +181,14 @@ const ReEnrollmentTable = ({ setSelected }) => {
                   {reenrollment.status}
                 </span>
               </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400">
+              <TableCell className="text-gray-600 dark:text-gray-400 hidden sm:table-cell">
                 {reenrollment.submittedAt}
               </TableCell>
               <TableCell className="flex gap-1">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
+                  className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 flex-1 sm:flex-none"
                   onClick={() =>
                     setSelected(`reenrollment-detail-${reenrollment.id}`)
                   }
@@ -197,7 +198,7 @@ const ReEnrollmentTable = ({ setSelected }) => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
+                  className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 flex-1 sm:flex-none"
                 >
                   <Settings className="h-4 w-4" />
                 </Button>
@@ -206,6 +207,7 @@ const ReEnrollmentTable = ({ setSelected }) => {
           ))}
         </TableBody>
       </Table>
+      </div>
     </div>
   );
 };
@@ -407,29 +409,29 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
           Re-Enrollment Details
         </h2>
         <Button
           variant="outline"
           onClick={() => setSelected("Re Enrollment")}
-          className="text-gray-600 dark:text-gray-400"
+          className="text-gray-600 dark:text-gray-400 w-full sm:w-auto"
         >
           ← Back to List
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
         {/* Left Column */}
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {/* Student Information */}
           <div className="border-b pb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Student Information
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                   Student ID
@@ -517,7 +519,7 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Father's Information
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                   Name
@@ -557,7 +559,7 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
                 {reenrollmentData.fatherZipCode}
               </p>
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-4">
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                   Occupation
@@ -582,7 +584,7 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Mother's Information
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                   Name
@@ -629,7 +631,7 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
                 )}
               </p>
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-4">
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                   Occupation
@@ -679,7 +681,7 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
         </div>
 
         {/* Right Column */}
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {/* Emergency Contacts */}
           <div className="border-b pb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
@@ -907,7 +909,7 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
               Tuition Contract
             </h3>
             <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
                 <div>
                   <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                     Guardian Name
@@ -946,7 +948,7 @@ const ReEnrollmentDetailView = ({ enrollmentId, setSelected }) => {
                   {reenrollmentData.paymentOption}
                 </p>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
                 <div>
                   <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                     Tuition Acknowledged

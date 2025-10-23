@@ -211,25 +211,25 @@ const BentoGridCMS = ({ setSelected }) => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
             Bento Grid CMS
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
             Edit bento grid section content and features
           </p>
         </div>
-        <div className="flex gap-3">
-          <Button onClick={addFeature} variant="outline">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <Button onClick={addFeature} variant="outline" className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Add Feature
           </Button>
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
           >
             {saving ? (
               <>
@@ -247,8 +247,8 @@ const BentoGridCMS = ({ setSelected }) => {
       </div>
 
       {/* Main Title and Subtitle */}
-      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-sm">
+        <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
           Page Header
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -286,21 +286,21 @@ const BentoGridCMS = ({ setSelected }) => {
 
       {/* Features */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
           Features ({bentoGridData.features.length})
         </h3>
         {bentoGridData.features.map((feature, index) => (
           <div
             key={index}
-            className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm"
+            className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-sm"
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <h4 className="text-md font-semibold text-gray-900 dark:text-gray-100">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <h4 className="text-sm md:text-md font-semibold text-gray-900 dark:text-gray-100">
                   Feature {index + 1}: {feature.name || "Untitled"}
                 </h4>
                 <span
-                  className={`px-2 py-1 text-xs font-medium rounded-full ${
+                  className={`px-2 py-1 text-xs font-medium rounded-full w-fit ${
                     feature.isActive
                       ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                       : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
@@ -309,15 +309,15 @@ const BentoGridCMS = ({ setSelected }) => {
                   {feature.isActive ? "Active" : "Inactive"}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
                 <Button
                   onClick={() => toggleFeature(index)}
                   variant="outline"
                   size="sm"
                   className={
                     feature.isActive
-                      ? "text-red-600 hover:text-red-700"
-                      : "text-green-600 hover:text-green-700"
+                      ? "text-red-600 hover:text-red-700 flex-1 sm:flex-none"
+                      : "text-green-600 hover:text-green-700 flex-1 sm:flex-none"
                   }
                 >
                   {feature.isActive ? (
@@ -330,7 +330,7 @@ const BentoGridCMS = ({ setSelected }) => {
                   onClick={() => removeFeature(index)}
                   variant="outline"
                   size="sm"
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 flex-1 sm:flex-none"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -450,8 +450,8 @@ const BentoGridCMS = ({ setSelected }) => {
       </div>
 
       {/* Preview Section */}
-      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-sm">
+        <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
           Preview
         </h3>
         <div className="border border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-800">

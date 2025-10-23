@@ -142,21 +142,21 @@ const SupplyListCMS = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
             Supply List CMS
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
             Edit school supply lists for all grades
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <Button
             onClick={addGrade}
             variant="outline"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 w-full sm:w-auto"
           >
             <Plus className="h-4 w-4" />
             Add Grade
@@ -164,7 +164,7 @@ const SupplyListCMS = () => {
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
           >
             {saving ? (
               <>
@@ -181,15 +181,15 @@ const SupplyListCMS = () => {
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {cmsData.map((gradeData, gradeIndex) => (
           <Card
             key={gradeIndex}
             className="border border-gray-200 dark:border-gray-800"
           >
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                   <Badge
                     variant="secondary"
                     className={`bg-${gradeData.color}-100 text-${gradeData.color}-800`}
@@ -197,20 +197,20 @@ const SupplyListCMS = () => {
                     {gradeData.color}
                   </Badge>
                   {editingGrade === gradeIndex ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
                       <Input
                         value={gradeData.grade}
                         onChange={(e) =>
                           updateGrade(gradeIndex, "grade", e.target.value)
                         }
-                        className="text-lg font-semibold w-48"
+                        className="text-lg font-semibold w-full sm:w-48 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
                       />
                       <select
                         value={gradeData.color}
                         onChange={(e) =>
                           updateGrade(gradeIndex, "color", e.target.value)
                         }
-                        className="px-2 py-1 border border-gray-300 rounded text-sm"
+                        className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 w-full sm:w-auto"
                       >
                         {colorOptions.map((color) => (
                           <option key={color.name} value={color.name}>
@@ -221,21 +221,21 @@ const SupplyListCMS = () => {
                       <Button
                         size="sm"
                         onClick={() => setEditingGrade(null)}
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-full sm:w-8 p-0"
                       >
                         <Check className="h-4 w-4" />
                       </Button>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      <CardTitle className="text-xl">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <CardTitle className="text-lg md:text-xl">
                         {gradeData.grade}
                       </CardTitle>
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={() => setEditingGrade(gradeIndex)}
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-full sm:w-8 p-0"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -246,7 +246,7 @@ const SupplyListCMS = () => {
                   size="sm"
                   variant="destructive"
                   onClick={() => removeGrade(gradeIndex)}
-                  className="h-8 w-8 p-0"
+                  className="h-8 w-full sm:w-8 p-0"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -254,15 +254,15 @@ const SupplyListCMS = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-gray-900 dark:text-gray-100">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <h4 className="font-medium text-gray-900 dark:text-gray-100 text-sm md:text-base">
                     Supply Items ({gradeData.items.length})
                   </h4>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => addItem(gradeIndex)}
-                    className="flex items-center gap-1"
+                    className="flex items-center gap-1 w-full sm:w-auto"
                   >
                     <Plus className="h-3 w-3" />
                     Add Item
@@ -272,23 +272,23 @@ const SupplyListCMS = () => {
                   {gradeData.items.map((item, itemIndex) => (
                     <div
                       key={itemIndex}
-                      className="flex items-center gap-2 p-2 border border-gray-200 dark:border-gray-700 rounded"
+                      className="flex flex-col sm:flex-row sm:items-center gap-2 p-2 border border-gray-200 dark:border-gray-700 rounded"
                     >
                       {editingItem?.gradeIndex === gradeIndex &&
                       editingItem?.itemIndex === itemIndex ? (
-                        <div className="flex-1 flex items-center gap-2">
+                        <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center gap-2">
                           <Input
                             value={item}
                             onChange={(e) =>
                               updateItem(gradeIndex, itemIndex, e.target.value)
                             }
-                            className="flex-1"
+                            className="flex-1 w-full"
                             autoFocus
                           />
                           <Button
                             size="sm"
                             onClick={() => setEditingItem(null)}
-                            className="h-8 w-8 p-0"
+                            className="h-8 w-full sm:w-8 p-0"
                           >
                             <Check className="h-3 w-3" />
                           </Button>
@@ -298,24 +298,26 @@ const SupplyListCMS = () => {
                           <span className="flex-1 text-sm text-gray-700 dark:text-gray-300">
                             {itemIndex + 1}. {item}
                           </span>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() =>
-                              setEditingItem({ gradeIndex, itemIndex })
-                            }
-                            className="h-8 w-8 p-0"
-                          >
-                            <Edit className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => removeItem(gradeIndex, itemIndex)}
-                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
+                          <div className="flex gap-1 w-full sm:w-auto">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() =>
+                                setEditingItem({ gradeIndex, itemIndex })
+                              }
+                              className="h-8 w-8 p-0 flex-1 sm:flex-none"
+                            >
+                              <Edit className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => removeItem(gradeIndex, itemIndex)}
+                              className="h-8 w-8 p-0 text-red-600 hover:text-red-700 flex-1 sm:flex-none"
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
                         </>
                       )}
                     </div>
