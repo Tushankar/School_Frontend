@@ -9,6 +9,7 @@ import {
   Image,
   Award,
   Briefcase,
+  ChevronDown,
 } from "lucide-react";
 
 const iconMap = {
@@ -101,6 +102,7 @@ const IslamicCenterPage = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMenuItem, setExpandedMenuItem] = useState(null);
+  const [expandedSubMenu, setExpandedSubMenu] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -337,7 +339,7 @@ const IslamicCenterPage = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && !loading && (
-          <div className="lg:hidden bg-black/95 backdrop-blur-sm px-4 py-6 space-y-4">
+          <div className="lg:hidden bg-black/95 backdrop-blur-sm px-4 py-6 space-y-2">
             {navItems.map((item, index) => (
               <div key={index}>
                 {item.dropdown && item.dropdown.length > 0 ? (
@@ -348,59 +350,76 @@ const IslamicCenterPage = () => {
                           expandedMenuItem === index ? null : index
                         )
                       }
-                      className="w-full flex items-center justify-between text-white hover:text-yellow-500 py-2 font-serif text-left"
+                      className="w-full flex items-center justify-between text-white hover:text-yellow-400 py-3 font-serif text-left rounded-lg hover:bg-white/5 px-2 transition-colors"
                     >
-                      <span>{item.name}</span>
-                      <svg
-                        className={`w-4 h-4 transition-transform ${
+                      <span className="font-medium">{item.name}</span>
+                      <ChevronDown
+                        size={18}
+                        className={`transition-transform duration-300 ${
                           expandedMenuItem === index ? "rotate-180" : ""
                         }`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                        />
-                      </svg>
+                      />
                     </button>
                     {expandedMenuItem === index && (
-                      <div className="pl-4 space-y-2 mt-2">
+                      <div className="pl-2 space-y-1 mt-1">
                         {item.dropdown.map((subItem, subIndex) => (
                           <div key={subIndex}>
-                            <Link
-                              href={subItem.url}
-                              className="block text-gray-300 hover:text-yellow-500 py-1 text-sm"
-                              onClick={() => {
-                                setMobileMenuOpen(false);
-                                setExpandedMenuItem(null);
-                              }}
-                            >
-                              {subItem.name}
-                            </Link>
-                            {subItem.dropdown &&
-                              subItem.dropdown.length > 0 && (
-                                <div className="pl-4 space-y-1 mt-1">
-                                  {subItem.dropdown.map(
-                                    (nestedItem, nestedIndex) => (
-                                      <Link
-                                        key={nestedIndex}
-                                        href={nestedItem.url}
-                                        className="block text-gray-400 hover:text-yellow-500 py-1 text-xs"
-                                        onClick={() => {
-                                          setMobileMenuOpen(false);
-                                          setExpandedMenuItem(null);
-                                        }}
-                                      >
-                                        {nestedItem.name}
-                                      </Link>
+                            {subItem.dropdown && subItem.dropdown.length > 0 ? (
+                              <>
+                                <button
+                                  onClick={() =>
+                                    setExpandedSubMenu(
+                                      expandedSubMenu === `${index}-${subIndex}`
+                                        ? null
+                                        : `${index}-${subIndex}`
                                     )
-                                  )}
-                                </div>
-                              )}
+                                  }
+                                  className="w-full flex items-center justify-between text-gray-300 hover:text-yellow-400 py-2 text-sm pl-3 pr-2 rounded-lg hover:bg-white/5 transition-colors"
+                                >
+                                  <span>{subItem.name}</span>
+                                  <ChevronDown
+                                    size={16}
+                                    className={`transition-transform duration-300 ${
+                                      expandedSubMenu === `${index}-${subIndex}`
+                                        ? "rotate-180"
+                                        : ""
+                                    }`}
+                                  />
+                                </button>
+                                {expandedSubMenu === `${index}-${subIndex}` && (
+                                  <div className="pl-3 space-y-1 mt-1">
+                                    {subItem.dropdown.map(
+                                      (nestedItem, nestedIndex) => (
+                                        <Link
+                                          key={nestedIndex}
+                                          href={nestedItem.url}
+                                          className="block text-gray-400 hover:text-yellow-400 py-2 text-xs pl-2 rounded-lg hover:bg-white/5 transition-colors"
+                                          onClick={() => {
+                                            setMobileMenuOpen(false);
+                                            setExpandedMenuItem(null);
+                                            setExpandedSubMenu(null);
+                                          }}
+                                        >
+                                          {nestedItem.name}
+                                        </Link>
+                                      )
+                                    )}
+                                  </div>
+                                )}
+                              </>
+                            ) : (
+                              <Link
+                                href={subItem.url}
+                                className="block text-gray-300 hover:text-yellow-400 py-2 text-sm pl-3 rounded-lg hover:bg-white/5 transition-colors"
+                                onClick={() => {
+                                  setMobileMenuOpen(false);
+                                  setExpandedMenuItem(null);
+                                  setExpandedSubMenu(null);
+                                }}
+                              >
+                                {subItem.name}
+                              </Link>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -409,10 +428,11 @@ const IslamicCenterPage = () => {
                 ) : (
                   <Link
                     href={item.url}
-                    className="block text-white hover:text-yellow-500 py-2 font-serif"
+                    className="block text-white hover:text-yellow-400 py-3 font-serif rounded-lg hover:bg-white/5 px-2 transition-colors"
                     onClick={() => {
                       setMobileMenuOpen(false);
                       setExpandedMenuItem(null);
+                      setExpandedSubMenu(null);
                     }}
                   >
                     {item.name}
@@ -421,7 +441,7 @@ const IslamicCenterPage = () => {
               </div>
             ))}
             <Link href="/contact">
-              <button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 py-2 rounded-full font-bold mt-4">
+              <button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 py-2 rounded-full font-bold mt-6">
                 Contact
               </button>
             </Link>
