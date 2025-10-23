@@ -10,7 +10,14 @@ export default function AdministrationSection() {
         let mounted = true
         const fetchCms = async () => {
             try {
-                const res = await fetch('http://localhost:4000/api/auth/cms/administration')
+                const storedToken = typeof window !== "undefined" ? localStorage.getItem("token") : null
+                const headers = storedToken
+                    ? { Authorization: `Bearer ${storedToken}` }
+                    : {}
+                const res = await fetch('http://localhost:4000/api/auth/cms/administration', {
+                    credentials: 'include',
+                    headers
+                })
                 if (!mounted) return
                 if (res.ok) {
                     const json = await res.json()
@@ -18,6 +25,8 @@ export default function AdministrationSection() {
                     if (Array.isArray(json.members)) setMembers(json.members)
                 } else if (res.status === 404) {
                     // keep defaults
+                } else if (res.status === 401) {
+                    console.warn('Not authenticated - using defaults for administration cms')
                 } else {
                     console.error('Failed to fetch administration cms', res.status)
                 }

@@ -36,6 +36,7 @@ export default function AdministrationPage() {
           router.push("/login");
         }
       } catch (err) {
+        console.error("Auth check error:", err);
         router.push("/login");
       } finally {
         setLoading(false);

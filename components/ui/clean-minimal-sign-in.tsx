@@ -151,70 +151,72 @@ const SignIn2: React.FC<SignIn2Props> = ({ onSignIn }) => {
         <p className="text-gray-500 text-sm mb-6 text-center">
           Make a new doc to bring your words, data, and teams together. For free
         </p>
-        <div className="w-full flex flex-col gap-3 mb-2">
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-              <Mail className="w-4 h-4" />
-            </span>
-            <input
-              placeholder="Email"
-              type="email"
-              value={email}
-              className="w-full pl-10 pr-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-gray-50 text-black text-sm"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          {!isForgotPassword && (
+        <form onSubmit={(e) => { e.preventDefault(); isForgotPassword ? handleResetPassword() : handleSignIn(); }} className="w-full">
+          <div className="w-full flex flex-col gap-3 mb-2">
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                <Lock className="w-4 h-4" />
+                <Mail className="w-4 h-4" />
               </span>
               <input
-                placeholder="Password"
-                type="password"
-                value={password}
-                className="w-full pl-10 pr-10 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-gray-50 text-black text-sm"
-                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Email"
+                type="email"
+                value={email}
+                className="w-full pl-10 pr-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-gray-50 text-black text-sm"
+                onChange={(e) => setEmail(e.target.value)}
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer text-xs select-none"></span>
             </div>
-          )}
-          {isForgotPassword && (
-            <>
-              <input
-                placeholder="Reset Code"
-                type="text"
-                value={resetCode}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-gray-50 text-black text-sm"
-                onChange={(e) => setResetCode(e.target.value)}
-              />
-              <input
-                placeholder="New Password"
-                type="password"
-                value={newPassword}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-gray-50 text-black text-sm"
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-            </>
-          )}
-          <div className="w-full flex justify-end">
-          {error && (
-            <div className="text-sm text-red-500 text-left">{error}</div>
-          )}
-          {resetMessage && (
-            <div className="text-sm text-green-500 text-left">{resetMessage}</div>
-          )}
-            <button onClick={isForgotPassword ? () => setIsForgotPassword(false) : handleForgotPassword} className="text-xs hover:underline font-medium">
-              {isForgotPassword ? "Back to Sign In" : "Forgot password?"}
-            </button>
+            {!isForgotPassword && (
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <Lock className="w-4 h-4" />
+                </span>
+                <input
+                  placeholder="Password"
+                  type="password"
+                  value={password}
+                  className="w-full pl-10 pr-10 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-gray-50 text-black text-sm"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer text-xs select-none"></span>
+              </div>
+            )}
+            {isForgotPassword && (
+              <>
+                <input
+                  placeholder="Reset Code"
+                  type="text"
+                  value={resetCode}
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-gray-50 text-black text-sm"
+                  onChange={(e) => setResetCode(e.target.value)}
+                />
+                <input
+                  placeholder="New Password"
+                  type="password"
+                  value={newPassword}
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-gray-50 text-black text-sm"
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+              </>
+            )}
+            <div className="w-full flex justify-end">
+            {error && (
+              <div className="text-sm text-red-500 text-left">{error}</div>
+            )}
+            {resetMessage && (
+              <div className="text-sm text-green-500 text-left">{resetMessage}</div>
+            )}
+              <button type="button" onClick={isForgotPassword ? () => setIsForgotPassword(false) : handleForgotPassword} className="text-xs hover:underline font-medium">
+                {isForgotPassword ? "Back to Sign In" : "Forgot password?"}
+              </button>
+            </div>
           </div>
-        </div>
-        <button
-          onClick={isForgotPassword ? handleResetPassword : handleSignIn}
-          className="w-full bg-gradient-to-b from-gray-700 to-gray-900 text-white font-medium py-2 rounded-xl shadow hover:brightness-105 cursor-pointer transition mb-4 mt-2"
-        >
-          {isForgotPassword ? "Reset Password" : "Get Started"}
-        </button>
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-b from-gray-700 to-gray-900 text-white font-medium py-2 rounded-xl shadow hover:brightness-105 cursor-pointer transition mb-4 mt-2"
+          >
+            {isForgotPassword ? "Reset Password" : "Get Started"}
+          </button>
+        </form>
         <div className="flex items-center w-full my-2">
           <div className="flex-grow border-t border-dashed border-gray-200"></div>
           <span className="mx-2 text-xs text-gray-400">Or sign in with</span>
