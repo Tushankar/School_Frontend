@@ -140,11 +140,11 @@ export default function ArcGalleryHeroDemo() {
               style={{ animation: "fadeIn 0.8s ease-out 800ms forwards" }}
             >
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold tracking-tight text-gray-900">
-                Rediscover Your Memories with AI
+                Explore Our Islamic Community
               </h1>
               <p className="mt-3 sm:mt-4 text-base sm:text-lg text-gray-600">
-                Our intelligent platform finds, organizes, and brings your most
-                cherished moments back to life.
+                Discover the vibrant moments, achievements, and spiritual growth
+                within our Al-Rasheed Academy family.
               </p>
               <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
                 {categories.map((category) => (
