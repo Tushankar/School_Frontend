@@ -105,12 +105,21 @@ const CollegePreparatoryCMS = ({ setSelected }) => {
   const handleSave = async () => {
     setSaving(true);
     try {
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!storedToken) {
+        toast.error("You must be logged in to save changes");
+        setSaving(false);
+        return;
+      }
+
       const response = await fetch(
         "https://alrasheedacademyserver.onrender.com/api/auth/cms/college-preparatory",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           credentials: "include",
           body: JSON.stringify(collegeData),
@@ -119,7 +128,10 @@ const CollegePreparatoryCMS = ({ setSelected }) => {
       if (response.ok) {
         toast.success("College Preparatory page updated successfully!");
       } else {
-        toast.error("Failed to update college preparatory page");
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(
+          errorData.error || "Failed to update college preparatory page"
+        );
       }
     } catch (err) {
       console.error("Error updating college preparatory page", err);

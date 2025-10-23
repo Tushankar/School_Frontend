@@ -118,12 +118,21 @@ const BentoGridCMS = ({ setSelected }) => {
   const handleSave = async () => {
     setSaving(true);
     try {
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!storedToken) {
+        toast.error("You must be logged in to save changes");
+        setSaving(false);
+        return;
+      }
+
       const response = await fetch(
         "https://alrasheedacademyserver.onrender.com/api/auth/cms/bento-grid",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           credentials: "include",
           body: JSON.stringify({ content: bentoGridData }),
@@ -132,7 +141,8 @@ const BentoGridCMS = ({ setSelected }) => {
       if (response.ok) {
         toast.success("Bento Grid updated successfully!");
       } else {
-        toast.error("Failed to update bento grid");
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.error || "Failed to update bento grid");
       }
     } catch (err) {
       console.error("Error updating bento grid", err);

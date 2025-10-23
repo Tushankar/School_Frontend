@@ -51,12 +51,21 @@ const FooterCMS = ({ setSelected }) => {
   const handleSave = async () => {
     setSaving(true);
     try {
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!storedToken) {
+        toast.error("You must be logged in to save changes");
+        setSaving(false);
+        return;
+      }
+
       const response = await fetch(
         "https://alrasheedacademyserver.onrender.com/api/auth/cms/footer",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           credentials: "include",
           body: JSON.stringify({ content: footerData }),
@@ -65,7 +74,8 @@ const FooterCMS = ({ setSelected }) => {
       if (response.ok) {
         toast.success("Footer updated successfully!");
       } else {
-        toast.error("Failed to update footer");
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.error || "Failed to update footer");
       }
     } catch (err) {
       console.error("Error updating footer", err);

@@ -174,6 +174,9 @@ const PrincipalMessageCMS = ({ setSelected }) => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${
+              typeof window !== "undefined" ? localStorage.getItem("token") : ""
+            }`,
           },
           credentials: "include",
           body: JSON.stringify({ content: dataToSave }),

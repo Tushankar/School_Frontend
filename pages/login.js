@@ -85,6 +85,7 @@ export default function Login() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
                   required
                   className="w-full p-3 border rounded-md"
                   placeholder="you@example.com"
@@ -99,6 +100,7 @@ export default function Login() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
                   required
                   className="w-full p-3 border rounded-md"
                   placeholder="Your password"

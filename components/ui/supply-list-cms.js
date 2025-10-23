@@ -52,12 +52,21 @@ const SupplyListCMS = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!storedToken) {
+        toast.error("You must be logged in to save changes");
+        setSaving(false);
+        return;
+      }
+
       const response = await fetch(
         "https://alrasheedacademyserver.onrender.com/api/auth/cms/supply-list",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           credentials: "include",
           body: JSON.stringify(cmsData),
@@ -66,7 +75,8 @@ const SupplyListCMS = () => {
       if (response.ok) {
         toast.success("Supply list updated successfully!");
       } else {
-        toast.error("Failed to update supply list");
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.error || "Failed to update supply list");
       }
     } catch (err) {
       console.error("Error updating supply list", err);

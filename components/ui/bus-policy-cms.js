@@ -166,12 +166,21 @@ const BusPolicyCMS = ({ setSelected }) => {
   const handleSave = async () => {
     setSaving(true);
     try {
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!storedToken) {
+        toast.error("You must be logged in to save changes");
+        setSaving(false);
+        return;
+      }
+
       const response = await fetch(
         "https://alrasheedacademyserver.onrender.com/api/auth/cms/bus-policy",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           credentials: "include",
           body: JSON.stringify({ content: cmsData }),
@@ -180,7 +189,8 @@ const BusPolicyCMS = ({ setSelected }) => {
       if (response.ok) {
         toast.success("Bus policy updated successfully!");
       } else {
-        toast.error("Failed to update bus policy");
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.error || "Failed to update bus policy");
       }
     } catch (err) {
       console.error("Error updating bus policy", err);

@@ -173,12 +173,21 @@ const DressCodeCMS = ({ setSelected }) => {
   const handleSave = async () => {
     setSaving(true);
     try {
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!storedToken) {
+        toast.error("You must be logged in to save changes");
+        setSaving(false);
+        return;
+      }
+
       const response = await fetch(
         "https://alrasheedacademyserver.onrender.com/api/auth/cms/dress-code",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           credentials: "include",
           body: JSON.stringify(dressCodeData),
@@ -187,7 +196,8 @@ const DressCodeCMS = ({ setSelected }) => {
       if (response.ok) {
         toast.success("Dress Code updated successfully!");
       } else {
-        toast.error("Failed to update dress code");
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.error || "Failed to update dress code");
       }
     } catch (err) {
       console.error("Error updating dress code", err);
