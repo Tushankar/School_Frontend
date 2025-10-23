@@ -86,9 +86,8 @@ export default function ArcGalleryHeroDemo() {
       <div className="w-full" style={{ backgroundColor: "#F9FAFB" }}>
         <section className="relative overflow-hidden text-gray-900 min-h-screen flex flex-col">
           <div
-            className="relative mx-auto"
+            className="relative mx-auto w-full"
             style={{
-              width: "100%",
               height: dimensions.radius * 1.2,
             }}
           >
@@ -135,24 +134,24 @@ export default function ArcGalleryHeroDemo() {
             </div>
           </div>
 
-          <div className="relative z-10 flex-1 flex items-center justify-center px-6 -mt-40 md:-mt-52 lg:-mt-64">
+          <div className="relative z-10 flex-1 flex items-center justify-center px-4 sm:px-6 -mt-20 sm:-mt-32 md:-mt-40 lg:-mt-52">
             <div
-              className="text-center max-w-2xl px-6 opacity-0"
+              className="text-center max-w-2xl opacity-0"
               style={{ animation: "fadeIn 0.8s ease-out 800ms forwards" }}
             >
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold tracking-tight text-gray-900">
                 Rediscover Your Memories with AI
               </h1>
-              <p className="mt-4 text-lg text-gray-600">
+              <p className="mt-3 sm:mt-4 text-base sm:text-lg text-gray-600">
                 Our intelligent platform finds, organizes, and brings your most
                 cherished moments back to life.
               </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
                 {categories.map((category) => (
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`px-6 py-2.5 rounded-full transition-all duration-200 ${
+                    className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full transition-all duration-200 text-sm sm:text-base ${
                       selectedCategory === category
                         ? "bg-indigo-600 text-white shadow-md hover:bg-indigo-700"
                         : "border border-gray-300 bg-white hover:bg-gray-100"
@@ -231,12 +230,12 @@ function AnimatedImage({ alt, src, ratio, placeholder }) {
   return (
     <div
       ref={ref}
-      className="bg-gray-100 relative w-full rounded-lg border border-gray-200 overflow-hidden"
+      className="bg-gray-100 relative w-full rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
       style={{ aspectRatio: ratio }}
     >
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+          <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-indigo-600"></div>
         </div>
       )}
       <img
@@ -257,10 +256,12 @@ function AnimatedImage({ alt, src, ratio, placeholder }) {
 function MasonryImageGallery({ images, loading }) {
   if (loading) {
     return (
-      <div className="relative flex w-full flex-col items-center justify-center py-20 px-4">
+      <div className="relative flex w-full flex-col items-center justify-center py-12 sm:py-16 md:py-20 px-4">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="text-gray-500 mt-4">Loading gallery images...</p>
+          <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="text-gray-500 mt-3 sm:mt-4 text-sm sm:text-base">
+            Loading gallery images...
+          </p>
         </div>
       </div>
     );
@@ -268,17 +269,19 @@ function MasonryImageGallery({ images, loading }) {
 
   if (!images || images.length === 0) {
     return (
-      <div className="relative flex w-full flex-col items-center justify-center py-10 px-4">
+      <div className="relative flex w-full flex-col items-center justify-center py-12 sm:py-16 md:py-20 px-4">
         <div className="text-center">
-          <p className="text-gray-500">No images available in this category.</p>
+          <p className="text-gray-500 text-sm sm:text-base">
+            No images available in this category.
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative flex w-full flex-col items-center justify-center py-10 px-4">
-      <div className="mx-auto grid w-full max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="relative flex w-full flex-col items-center justify-center py-10 px-4 sm:px-6 md:px-8">
+      <div className="mx-auto grid w-full max-w-7xl gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {images.map((image, index) => {
           const isPortrait = Math.random() > 0.5;
           const ratio = isPortrait ? 9 / 16 : 16 / 9;

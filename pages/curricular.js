@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import NavBarOnly from "../components/NavBarOnly";
 import Footer from "../components/Footer";
@@ -7,6 +7,39 @@ import Footer from "../components/Footer";
 const commonImg = "/assets/common.png";
 const engageImg = "/assets/engage.png";
 const scienceImg = "/assets/making_sense.png";
+
+const defaultCurriculumData = [
+  {
+    title: "Common Core Standards",
+    subTitle: null,
+    imageSrc: commonImg,
+    imageAlt: "Common Core State Standards Initiative logo",
+    content:
+      "Al-Rasheed Academy aligns its curriculum with the Common Core Standards, a set of rigorous and internationally benchmarked guidelines that ensure students develop essential skills in English Language Arts (ELA) and mathematics. By incorporating these standards into our teaching methods, we empower our students to think critically, communicate effectively, and solve complex problems—skills that are crucial for success in the 21st century.",
+    reverse: false,
+    accent: "#0ea5a4",
+  },
+  {
+    title: "EngageNY Mathematics",
+    subTitle: "Our Students. Their Moment.",
+    imageSrc: engageImg,
+    imageAlt: "EngageNY logo",
+    content:
+      "We are proud to implement the Engage New York curriculum in our mathematics program. This curriculum emphasizes a deep understanding of mathematical concepts, fostering a love for problem-solving and critical thinking. Through hands-on activities, real-world applications, and a focus on mathematical reasoning, our students not only master mathematical skills but also develop a genuine appreciation for the beauty and relevance of mathematics in their everyday lives.",
+    reverse: true,
+    accent: "#b87333",
+  },
+  {
+    title: "Making Sense of SCIENCE",
+    subTitle: null,
+    imageSrc: scienceImg,
+    imageAlt: "Making Sense of Science logo",
+    content:
+      "In our commitment to providing a comprehensive education, Al-Rasheed Academy incorporates the Next Generation Science Standards (NGSS). These standards guide our science curriculum, encouraging students to explore scientific concepts through inquiry-based learning, hands-on experiments, and collaborative projects. By engaging in the scientific process, our students develop a curiosity for the world around them and acquire the skills needed to succeed in an increasingly STEM-driven society.",
+    reverse: false,
+    accent: "#6b4226",
+  },
+];
 
 // --- Component for the Curriculum Sections ---
 const SectionCard = ({
@@ -109,10 +142,30 @@ const SectionCard = ({
 
 // --- The Main Curricular Component ---
 function CurricularPage() {
+  const [curriculumData, setCurriculumData] = useState(defaultCurriculumData);
+
+  useEffect(() => {
+    const fetchCurriculumData = async () => {
+      try {
+        const response = await fetch(
+          "https://alrasheedacademyserver.onrender.com/api/auth/cms/curricular"
+        );
+        if (response.ok) {
+          const data = await response.json();
+          if (data.sections && Array.isArray(data.sections)) {
+            setCurriculumData(data.sections);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch curriculum data", err);
+      }
+    };
+    fetchCurriculumData();
+  }, []);
   return (
     <div className="min-h-screen bg-white text-gray-900">
       <NavBarOnly />
-      
+
       {/* Banner Section */}
       <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
         <motion.div
@@ -123,7 +176,7 @@ function CurricularPage() {
           style={{
             backgroundImage: "url('/assets/hall.jpg')",
             backgroundSize: "cover",
-            backgroundPosition: "center"
+            backgroundPosition: "center",
           }}
         />
         <div className="absolute inset-0 bg-black/50"></div>
@@ -176,58 +229,19 @@ function CurricularPage() {
         </motion.div>
 
         <div className="space-y-16">
-          <SectionCard
-            title="Common Core Standards"
-            imageSrc={commonImg}
-            imageAlt="Common Core State Standards Initiative logo"
-            accent="#0ea5a4"
-          >
-            Al-Rasheed Academy aligns its curriculum with the Common Core
-            Standards, a set of rigorous and internationally benchmarked
-            guidelines that ensure students develop essential skills in English
-            Language Arts (ELA) and mathematics. By incorporating these
-            standards into our teaching methods, we empower our students to
-            think critically, communicate effectively, and solve complex
-            problems—skills that are crucial for success in the 21st century.
-          </SectionCard>
-
-          <SectionCard
-            title={
-              <>
-                Engage<span className="text-blue-500">NY</span> Mathematics
-              </>
-            }
-            subTitle="Our Students. Their Moment."
-            imageSrc={engageImg}
-            imageAlt="EngageNY logo"
-            reverse
-            accent="#b87333"
-          >
-            We are proud to implement the Engage New York curriculum in our
-            mathematics program. This curriculum emphasizes a deep understanding
-            of mathematical concepts, fostering a love for problem-solving and
-            critical thinking. Through hands-on activities, real-world
-            applications, and a focus on mathematical reasoning, our students
-            not only master mathematical skills but also develop a genuine
-            appreciation for the beauty and relevance of mathematics in their
-            everyday lives.
-          </SectionCard>
-
-          <SectionCard
-            title="Making Sense of SCIENCE"
-            imageSrc={scienceImg}
-            imageAlt="Making Sense of Science logo"
-            accent="#6b4226"
-          >
-            In our commitment to providing a comprehensive education, Al-Rasheed
-            Academy incorporates the Next Generation Science Standards (NGSS).
-            These standards guide our science curriculum, encouraging students
-            to explore scientific concepts through inquiry-based learning,
-            hands-on experiments, and collaborative projects. By engaging in the
-            scientific process, our students develop a curiosity for the world
-            around them and acquire the skills needed to succeed in an
-            increasingly STEM-driven society.
-          </SectionCard>
+          {curriculumData.map((section, index) => (
+            <SectionCard
+              key={index}
+              title={section.title}
+              subTitle={section.subTitle}
+              imageSrc={section.imageSrc}
+              imageAlt={section.imageAlt}
+              reverse={section.reverse}
+              accent={section.accent}
+            >
+              {section.content}
+            </SectionCard>
+          ))}
         </div>
       </main>
       <Footer />

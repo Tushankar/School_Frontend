@@ -11,19 +11,186 @@ import {
 
 const AboutUs = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = [
-    "https://www.alrasheedacademy.org/Admin/uploads/657a2bbe855ef1702505406.jpg",
-    "https://www.alrasheedacademy.org/Admin/uploads/657a2bca0b9781702505418.jpg",
-    "https://www.alrasheedacademy.org/Admin/uploads/657a2bf0ccb0c1702505456.jpg",
-  ];
+  const [aboutUsData, setAboutUsData] = useState({
+    title: "Know About Us",
+    mainHeading: "We Innovate Discover ARA",
+    highlightedText:
+      "Our commitment to fostering compassion and kindness reflects our dedication to the holistic development of each child and their smooth integration into our school environment.",
+    features: [
+      {
+        icon: "DollarSign",
+        text: "Quality education shouldn't come with exorbitant fees.",
+      },
+      {
+        icon: "Clock",
+        text: "Families deserve a streamlined enrollment process.",
+      },
+      {
+        icon: "Users",
+        text: "Students thrive with personalized attention and support.",
+      },
+      {
+        icon: "MessageSquare",
+        text: "Open communication between parents, teachers, and students.",
+      },
+      {
+        icon: "UserX",
+        text: "Direct access to educational excellence without barriers.",
+      },
+    ],
+    images: [
+      "https://www.alrasheedacademy.org/Admin/uploads/657a2bbe855ef1702505406.jpg",
+      "https://www.alrasheedacademy.org/Admin/uploads/657a2bca0b9781702505418.jpg",
+      "https://www.alrasheedacademy.org/Admin/uploads/657a2bf0ccb0c1702505456.jpg",
+    ],
+    rating: {
+      score: "4.9/5",
+      reviews: "19,201 reviews",
+      description: "Discover Our TrustScore & Customer Reviews",
+    },
+    buttonText: "Enroll Now",
+    buttonUrl: "/admission",
+  });
+  const [loading, setLoading] = useState(false);
+
+  // Icon mapping
+  const iconMap = {
+    DollarSign: DollarSign,
+    Clock: Clock,
+    Users: Users,
+    MessageSquare: MessageSquare,
+    UserX: UserX,
+  };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000); // Change image every 3 seconds
+    fetchAboutUsData();
+  }, []);
 
-    return () => clearInterval(interval);
-  }, [images.length]);
+  useEffect(() => {
+    if (aboutUsData?.images?.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % aboutUsData.images.length);
+      }, 3000); // Change image every 3 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [aboutUsData?.images?.length]);
+
+  const fetchAboutUsData = async () => {
+    try {
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/about-us"
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setAboutUsData(data);
+      } else {
+        // Fallback to default data if API fails
+        setAboutUsData({
+          title: "Know About Us",
+          mainHeading: "We Innovate Discover ARA",
+          highlightedText:
+            "Our commitment to fostering compassion and kindness reflects our dedication to the holistic development of each child and their smooth integration into our school environment.",
+          features: [
+            {
+              icon: "DollarSign",
+              text: "Quality education shouldn't come with exorbitant fees.",
+            },
+            {
+              icon: "Clock",
+              text: "Families deserve a streamlined enrollment process.",
+            },
+            {
+              icon: "Users",
+              text: "Students thrive with personalized attention and support.",
+            },
+            {
+              icon: "MessageSquare",
+              text: "Open communication between parents, teachers, and students.",
+            },
+            {
+              icon: "UserX",
+              text: "Direct access to educational excellence without barriers.",
+            },
+          ],
+          images: [
+            "https://www.alrasheedacademy.org/Admin/uploads/657a2bbe855ef1702505406.jpg",
+            "https://www.alrasheedacademy.org/Admin/uploads/657a2bca0b9781702505418.jpg",
+            "https://www.alrasheedacademy.org/Admin/uploads/657a2bf0ccb0c1702505456.jpg",
+          ],
+          rating: {
+            score: "4.9/5",
+            reviews: "19,201 reviews",
+            description: "Discover Our TrustScore & Customer Reviews",
+          },
+          buttonText: "Enroll Now",
+          buttonUrl: "/admission",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching about us data:", error);
+      // Fallback to default data
+      setAboutUsData({
+        title: "Know About Us",
+        mainHeading: "We Innovate Discover ARA",
+        highlightedText:
+          "Our commitment to fostering compassion and kindness reflects our dedication to the holistic development of each child and their smooth integration into our school environment.",
+        features: [
+          {
+            icon: "DollarSign",
+            text: "Quality education shouldn't come with exorbitant fees.",
+          },
+          {
+            icon: "Clock",
+            text: "Families deserve a streamlined enrollment process.",
+          },
+          {
+            icon: "Users",
+            text: "Students thrive with personalized attention and support.",
+          },
+          {
+            icon: "MessageSquare",
+            text: "Open communication between parents, teachers, and students.",
+          },
+          {
+            icon: "UserX",
+            text: "Direct access to educational excellence without barriers.",
+          },
+        ],
+        images: [
+          "https://www.alrasheedacademy.org/Admin/uploads/657a2bbe855ef1702505406.jpg",
+          "https://www.alrasheedacademy.org/Admin/uploads/657a2bca0b9781702505418.jpg",
+          "https://www.alrasheedacademy.org/Admin/uploads/657a2bf0ccb0c1702505456.jpg",
+        ],
+        rating: {
+          score: "4.9/5",
+          reviews: "19,201 reviews",
+          description: "Discover Our TrustScore & Customer Reviews",
+        },
+        buttonText: "Enroll Now",
+        buttonUrl: "/admission",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-gray-50 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <span className="ml-2 text-gray-600">
+              Loading about us content...
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const images = aboutUsData.images || [];
 
   return (
     <div className="bg-gray-50 py-12">
@@ -36,7 +203,7 @@ const AboutUs = () => {
           className="text-2xl sm:text-3xl font-bold text-center mb-8"
         >
           <span className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 bg-clip-text text-transparent">
-            Know About Us
+            {aboutUsData.title}
           </span>
         </motion.h1>
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
@@ -50,55 +217,37 @@ const AboutUs = () => {
           >
             <div>
               <h2 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-light text-gray-800 leading-tight">
-                We Innovate Discover ARA
+                {aboutUsData.mainHeading}
                 <br />
                 <span className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 bg-clip-text text-transparent font-medium">
-                  Our commitment to fostering compassion and kindness reflects
-                  our dedication to the holistic development of each child and
-                  their smooth integration into our school environment.
+                  {aboutUsData.highlightedText}
                 </span>
               </h2>
             </div>
 
             <div className="space-y-4 lg:space-y-6 text-gray-600 leading-relaxed">
-              <div className="flex items-start sm:items-center gap-3">
-                <DollarSign className="w-5 h-5 text-blue-600 mt-0.5 sm:mt-0" />
-                <p className="text-sm sm:text-base">
-                  Quality education shouldn&apos;t come with exorbitant fees.
-                </p>
-              </div>
-              <div className="flex items-start sm:items-center gap-3">
-                <Clock className="w-5 h-5 text-green-600 mt-0.5 sm:mt-0" />
-                <p className="text-sm sm:text-base">
-                  Families deserve a streamlined enrollment process.
-                </p>
-              </div>
-              <div className="flex items-start sm:items-center gap-3">
-                <Users className="w-5 h-5 text-purple-600 mt-0.5 sm:mt-0" />
-                <p className="text-sm sm:text-base">
-                  Students thrive with personalized attention and support.
-                </p>
-              </div>
-              <div className="flex items-start sm:items-center gap-3">
-                <MessageSquare className="w-5 h-5 text-orange-600 mt-0.5 sm:mt-0" />
-                <p className="text-sm sm:text-base">
-                  Open communication between parents, teachers, and students.
-                </p>
-              </div>
-              <div className="flex items-start sm:items-center gap-3">
-                <UserX className="w-5 h-5 text-red-600 mt-0.5 sm:mt-0" />
-                <p className="text-sm sm:text-base">
-                  Direct access to educational excellence without barriers.
-                </p>
-              </div>
+              {aboutUsData.features?.map((feature, index) => {
+                const IconComponent = iconMap[feature.icon] || DollarSign;
+                return (
+                  <div
+                    key={index}
+                    className="flex items-start sm:items-center gap-3"
+                  >
+                    <IconComponent className="w-5 h-5 text-blue-600 mt-0.5 sm:mt-0" />
+                    <p className="text-sm sm:text-base">{feature.text}</p>
+                  </div>
+                );
+              })}
             </div>
 
             <button
-              onClick={() => (window.location.href = "/admission")}
+              onClick={() =>
+                (window.location.href = aboutUsData.buttonUrl || "/admission")
+              }
               className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg hover:scale-105 transform transition duration-200 font-medium shadow-md focus:outline-none focus:ring-4 focus:ring-yellow-300 text-sm sm:text-base"
-              aria-label="Enroll Now"
+              aria-label={aboutUsData.buttonText || "Enroll Now"}
             >
-              Enroll Now
+              {aboutUsData.buttonText || "Enroll Now"}
             </button>
           </motion.div>
 
@@ -153,15 +302,16 @@ const AboutUs = () => {
               <div className="flex-1 bg-white rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col justify-center order-1 sm:order-2">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 gap-1 sm:gap-0">
                   <span className="text-2xl sm:text-3xl font-bold text-gray-800">
-                    4.9/5
+                    {aboutUsData.rating?.score || "4.9/5"}
                   </span>
                   <span className="text-xs sm:text-sm text-gray-500">
-                    ★ 19,201 reviews
+                    {aboutUsData.rating?.reviews || "19,201 reviews"}
                   </span>
                 </div>
 
                 <p className="text-xs sm:text-sm text-gray-600 mb-4">
-                  Discover Our TrustScore & Customer Reviews
+                  {aboutUsData.rating?.description ||
+                    "Discover Our TrustScore & Customer Reviews"}
                 </p>
 
                 <div className="flex space-x-1">

@@ -1,61 +1,58 @@
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-
-const members = [
-    {
-        name: 'Anwar Al-Kalai',
-        role: 'School Principal',
-        avatar: 'https://www.alrasheedacademy.org/Admin/images/26a478f08fa3204098346fcbcdbfc2831758763720jpeg',
-        link: '#',
-    },
-    {
-        name: 'Ahmed Nada',
-        role: 'Academic Director',
-        avatar: 'https://www.alrasheedacademy.org/Admin/images/289648f191687d568b74a00ccd76f3771758763603.png',
-        link: '#',
-    },
-    {
-        name: 'Abdullah Mardaie',
-        role: 'Office Manager',
-        avatar: 'https://alt.tailus.io/images/team/member-three.webp',
-        link: '#',
-    },
-]
+import React, { useEffect, useState } from 'react'
 
 export default function AdministrationSection() {
+    const [banner, setBanner] = useState({ backgroundImage: '/assets/hall.jpg', title: 'General Administration', breadcrumb: 'Home › Administration' })
+    const [members, setMembers] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        let mounted = true
+        const fetchCms = async () => {
+            try {
+                const res = await fetch('https://alrasheedacademyserver.onrender.com/api/auth/cms/administration')
+                if (!mounted) return
+                if (res.ok) {
+                    const json = await res.json()
+                    if (json.banner) setBanner(prev => ({ ...prev, ...json.banner }))
+                    if (Array.isArray(json.members)) setMembers(json.members)
+                } else if (res.status === 404) {
+                    // keep defaults
+                } else {
+                    console.error('Failed to fetch administration cms', res.status)
+                }
+            } catch (err) {
+                console.error('Error fetching administration cms', err)
+            } finally {
+                if (mounted) setLoading(false)
+            }
+        }
+        fetchCms()
+        return () => { mounted = false }
+    }, [])
+
+    const displayMembers = loading ? [] : (members.length ? members : [
+        { name: 'Anwar Al-Kalai', role: 'School Principal', avatar: 'https://www.alrasheedacademy.org/Admin/images/26a478f08fa3204098346fcbcdbfc2831758763720jpeg', link: '#' },
+        { name: 'Ahmed Nada', role: 'Academic Director', avatar: 'https://www.alrasheedacademy.org/Admin/images/289648f191687d568b74a00ccd76f3771758763603.png', link: '#' },
+        { name: 'Abdullah Mardaie', role: 'Office Manager', avatar: 'https://alt.tailus.io/images/team/member-three.webp', link: '#' },
+    ])
+
     return (
         <>
         {/* Banner Section */}
         <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
-            <motion.div
-                initial={{ x: -100, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 1, ease: "easeOut" }}
+            <div
                 className="absolute inset-0"
                 style={{
-                    backgroundImage: "url('/assets/hall.jpg')",
+                    backgroundImage: `url('${banner.backgroundImage}')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center"
                 }}
             />
             <div className="absolute inset-0 bg-black/50"></div>
             <div className="relative z-10 text-center text-white">
-                <motion.h1
-                    initial={{ y: -50, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                    className="text-5xl font-light tracking-wide"
-                >
-                    General Administration
-                </motion.h1>
-                <motion.p
-                    initial={{ x: 100, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-                    className="mt-4 text-sm"
-                >
-                    Home › Administration
-                </motion.p>
+                <h1 className="text-5xl font-light tracking-wide">{banner.title}</h1>
+                <p className="mt-4 text-sm">{banner.breadcrumb}</p>
             </div>
         </div>
         
@@ -63,15 +60,8 @@ export default function AdministrationSection() {
             <div className="mx-auto max-w-5xl px-6">
                 <div className="mt-12 md:mt-24">
                     <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-                        {members.map((member, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, x: index === 0 ? -200 : index === 1 ? 0 : 200, y: index === 1 ? 100 : 0 }}
-                                whileInView={{ opacity: 1, x: 0, y: 0 }}
-                                viewport={{ once: false, amount: 0.2 }}
-                                transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: index * 0.2 }}
-                                className="group overflow-hidden"
-                            >
+                        {displayMembers.map((member, index) => (
+                            <div key={index} className="group overflow-hidden">
                                 <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar} alt="administration member" width="826" height="1239" />
                                 <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
                                     <div className="flex justify-between">
@@ -88,7 +78,7 @@ export default function AdministrationSection() {
                                         </Link>
                                     </div>
                                 </div>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                 </div>

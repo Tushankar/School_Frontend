@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import React, { useEffect, useState } from 'react'
 
-const members = [
+const defaultMembers = [
     {
         name: 'Taha Omar',
         role: 'Chairman',
@@ -35,39 +35,57 @@ const members = [
 ]
 
 export default function TeamSectionDemo() {
+    const [members, setMembers] = useState(defaultMembers)
+    const [banner, setBanner] = useState({
+        backgroundImage: '/assets/hall.jpg',
+        title: 'The Board Members',
+        breadcrumb: 'Home › Team',
+    })
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        let mounted = true
+        const fetchCms = async () => {
+            try {
+                const res = await fetch('https://alrasheedacademyserver.onrender.com/api/auth/cms/team')
+                if (!mounted) return
+                if (res.ok) {
+                    const json = await res.json()
+                    if (json.banner) setBanner((prev) => ({ ...prev, ...json.banner }))
+                    if (Array.isArray(json.members)) setMembers(json.members)
+                } else if (res.status === 404) {
+                    // keep defaults
+                } else {
+                    console.error('Failed to fetch team cms', res.status)
+                }
+            } catch (err) {
+                console.error('Error fetching team cms', err)
+            } finally {
+                if (mounted) setLoading(false)
+            }
+        }
+        fetchCms()
+        return () => {
+            mounted = false
+        }
+    }, [])
+
     return (
         <>
         {/* Banner Section */}
         <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
-            <motion.div
-                initial={{ x: -100, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 1, ease: "easeOut" }}
+            <div
                 className="absolute inset-0"
                 style={{
-                    backgroundImage: "url('/assets/hall.jpg')",
+                    backgroundImage: `url('${banner.backgroundImage}')`,
                     backgroundSize: "cover",
-                    backgroundPosition: "center"
+                    backgroundPosition: "center",
                 }}
             />
             <div className="absolute inset-0 bg-black/50"></div>
             <div className="relative z-10 text-center text-white">
-                <motion.h1
-                    initial={{ y: -50, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                    className="text-5xl font-light tracking-wide"
-                >
-                    The Board Members
-                </motion.h1>
-                <motion.p
-                    initial={{ x: 100, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-                    className="mt-4 text-sm"
-                >
-                    Home › Team
-                </motion.p>
+                <h1 className="text-5xl font-light tracking-wide">{banner.title}</h1>
+                <p className="mt-4 text-sm">{banner.breadcrumb}</p>
             </div>
         </div>
         
@@ -76,35 +94,12 @@ export default function TeamSectionDemo() {
                 <div className="mt-12 md:mt-24">
                     <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
                         {members.map((member, index) => (
-                            <motion.div 
-                                key={index} 
-                                className="group overflow-hidden"
-                                initial={{ opacity: 0, x: index % 2 === 0 ? -200 : 200 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: false, amount: 0.2 }}
-                                transition={{ duration: 0.7, delay: index * 0.08, ease: "easeOut" }}
-                            >
+                            <div key={index} className="group overflow-hidden">
                                 <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar} alt="team member" width="826" height="1239" />
                                 <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
                                     <div className="flex justify-between">
-                                        <motion.h3 
-                                            className="text-title text-base font-medium transition-all duration-500 group-hover:tracking-wider"
-                                            initial={{ opacity: 0, y: -30 }}
-                                            whileInView={{ opacity: 1, y: 0 }}
-                                            viewport={{ once: false, amount: 0.2 }}
-                                            transition={{ duration: 0.6, delay: 0.3 + index * 0.08, ease: "easeOut" }}
-                                        >
-                                            {member.name}
-                                        </motion.h3>
-                                        <motion.span 
-                                            className="text-xs"
-                                            initial={{ opacity: 0, y: -30 }}
-                                            whileInView={{ opacity: 1, y: 0 }}
-                                            viewport={{ once: false, amount: 0.2 }}
-                                            transition={{ duration: 0.6, delay: 0.35 + index * 0.08, ease: "easeOut" }}
-                                        >
-                                            _0{index + 1}
-                                        </motion.span>
+                                        <h3 className="text-title text-base font-medium transition-all duration-500 group-hover:tracking-wider">{member.name}</h3>
+                                        <span className="text-xs">_0{index + 1}</span>
                                     </div>
                                     <div className="mt-1 flex items-center justify-between">
                                         <span className="text-muted-foreground inline-block translate-y-6 text-sm opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">{member.role}</span>
@@ -116,7 +111,7 @@ export default function TeamSectionDemo() {
                                         </Link>
                                     </div>
                                 </div>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                 </div>

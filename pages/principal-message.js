@@ -1,10 +1,145 @@
 import Head from "next/head";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import NavBarOnly from "../components/NavBarOnly";
 import Ticker from "../components/Ticker";
 import Footer from "../components/Footer";
 
 export default function PrincipalMessage() {
+  const [principalMessageData, setPrincipalMessageData] = useState({
+    banner: {
+      backgroundImage: "/assets/hall.jpg",
+      title: "Principal's Message",
+      breadcrumb: "Home › Principal's Message",
+    },
+    content: {
+      greeting: "Dear ARA Community,",
+      paragraphs: [
+        "I am delighted to extend my warmest greetings to each member of our esteemed school community and it is with great pleasure that I introduce myself as the School Principal and one of the founders of our beloved institution.",
+        "With over 25 years of dedicated service in the field of education and management, I bring a wealth of experience and a steadfast commitment to fostering an environment that nurtures academic excellence, character development, and lifelong learning.",
+        "Having played a pivotal role as the founding president of our school, I have been intricately involved in shaping its vision and mission from the outset. Our journey, marked by milestones and achievements, reflects the collective efforts of a dedicated team, supportive parents, and, most importantly, our talented students.",
+        "My passion for education stems from a belief in its transformative power and the profound impact it has on individuals and society at large. As we move forward, I am committed to upholding the principles that have been the cornerstone of our institution—integrity, inclusivity, innovation, and a relentless pursuit of excellence.",
+        "I am eager to work collaboratively with our esteemed faculty, dedicated staff, involved parents, and, of course, our bright and enthusiastic students. Together, we will continue to build on the strong foundation laid by the visionaries who founded this school.",
+        "I invite each of you to join hands as we embark on another exciting chapter in the history of our school. Your support, engagement, and commitment are invaluable, and together, we will create an environment where every student can thrive, learn, and achieve their fullest potential.",
+        "Thank you for entrusting me with the responsibility of leading our school. I am honored to serve in this capacity and look forward to a year filled with growth, learning, and success.",
+      ],
+      signature: {
+        closing: "Best regards,",
+        title: "School Principal",
+        school: "Al-Rasheed Academy",
+      },
+    },
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPrincipalMessageData();
+  }, []);
+
+  const fetchPrincipalMessageData = async () => {
+    try {
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/principal-message",
+        {
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        // Sanitize the data to ensure it's in the correct format
+        const sanitizedData = sanitizePrincipalMessageData(data);
+        setPrincipalMessageData(sanitizedData);
+      } else {
+        console.log("No CMS data found, using defaults");
+      }
+    } catch (err) {
+      console.error("Failed to fetch principal message data", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Helper function to sanitize CMS data
+  const sanitizePrincipalMessageData = (data) => {
+    const sanitized = {};
+
+    // Helper to ensure value is a string
+    const ensureString = (value, defaultValue) => {
+      if (typeof value === "string") return value;
+      return defaultValue;
+    };
+
+    // Sanitize banner section
+    if (data.banner) {
+      sanitized.banner = {
+        backgroundImage: ensureString(
+          data.banner.backgroundImage,
+          "/assets/hall.jpg"
+        ),
+        title: ensureString(data.banner.title, "Principal's Message"),
+        breadcrumb: ensureString(
+          data.banner.breadcrumb,
+          "Home › Principal's Message"
+        ),
+      };
+    } else {
+      sanitized.banner = principalMessageData.banner;
+    }
+
+    // Sanitize content section
+    if (data.content) {
+      sanitized.content = {
+        greeting: ensureString(data.content.greeting, "Dear ARA Community,"),
+        paragraphs: Array.isArray(data.content.paragraphs)
+          ? data.content.paragraphs.map((paragraph, index) =>
+              ensureString(
+                paragraph,
+                principalMessageData.content.paragraphs[index] || ""
+              )
+            )
+          : principalMessageData.content.paragraphs,
+        signature: data.content.signature
+          ? {
+              closing: ensureString(
+                data.content.signature.closing,
+                "Best regards,"
+              ),
+              title: ensureString(
+                data.content.signature.title,
+                "School Principal"
+              ),
+              school: ensureString(
+                data.content.signature.school,
+                "Al-Rasheed Academy"
+              ),
+            }
+          : principalMessageData.content.signature,
+      };
+    } else {
+      sanitized.content = principalMessageData.content;
+    }
+
+    return sanitized;
+  };
+
+  if (loading) {
+    return (
+      <>
+        <Head>
+          <title>Principal&apos;s Message - Al-Rasheed Academy</title>
+        </Head>
+        <NavBarOnly />
+        <Ticker />
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading principal's message...</p>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
   return (
     <>
       <Head>
@@ -32,9 +167,9 @@ export default function PrincipalMessage() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="absolute inset-0"
           style={{
-            backgroundImage: "url('/assets/hall.jpg')",
+            backgroundImage: `url('${principalMessageData.banner.backgroundImage}')`,
             backgroundSize: "cover",
-            backgroundPosition: "center"
+            backgroundPosition: "center",
           }}
         />
         <div className="absolute inset-0 bg-black/50"></div>
@@ -45,7 +180,7 @@ export default function PrincipalMessage() {
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
             className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-wide"
           >
-            Principal&apos;s Message
+            {principalMessageData.banner.title}
           </motion.h1>
           <motion.p
             initial={{ x: 100, opacity: 0 }}
@@ -53,7 +188,7 @@ export default function PrincipalMessage() {
             transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
             className="mt-4 text-sm"
           >
-            Home › Principal&apos;s Message
+            {principalMessageData.banner.breadcrumb}
           </motion.p>
         </div>
       </div>
@@ -226,73 +361,29 @@ export default function PrincipalMessage() {
             <div className="p-6 sm:p-8 lg:p-12">
               <div className="prose prose-lg max-w-none">
                 <p className="text-xl sm:text-2xl font-serif text-blue-900 mb-6 sm:mb-8 font-medium">
-                  Dear ARA Community,
+                  {principalMessageData.content.greeting}
                 </p>
 
-                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
-                  I am delighted to extend my warmest greetings to each member
-                  of our esteemed school community and it is with great pleasure
-                  that I introduce myself as the School Principal and one of the
-                  founders of our beloved institution.
-                </p>
-
-                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
-                  With over 25 years of dedicated service in the field of
-                  education and management, I bring a wealth of experience and a
-                  steadfast commitment to fostering an environment that nurtures
-                  academic excellence, character development, and lifelong
-                  learning.
-                </p>
-
-                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
-                  Having played a pivotal role as the founding president of our
-                  school, I have been intricately involved in shaping its vision
-                  and mission from the outset. Our journey, marked by milestones
-                  and achievements, reflects the collective efforts of a
-                  dedicated team, supportive parents, and, most importantly, our
-                  talented students.
-                </p>
-
-                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
-                  My passion for education stems from a belief in its
-                  transformative power and the profound impact it has on
-                  individuals and society at large. As we move forward, I am
-                  committed to upholding the principles that have been the
-                  cornerstone of our institution—integrity, inclusivity,
-                  innovation, and a relentless pursuit of excellence.
-                </p>
-
-                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
-                  I am eager to work collaboratively with our esteemed faculty,
-                  dedicated staff, involved parents, and, of course, our bright
-                  and enthusiastic students. Together, we will continue to build
-                  on the strong foundation laid by the visionaries who founded
-                  this school.
-                </p>
-
-                <p className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg">
-                  I invite each of you to join hands as we embark on another
-                  exciting chapter in the history of our school. Your support,
-                  engagement, and commitment are invaluable, and together, we
-                  will create an environment where every student can thrive,
-                  learn, and achieve their fullest potential.
-                </p>
-
-                <p className="text-gray-700 leading-7 sm:leading-8 mb-6 sm:mb-8 font-light text-base sm:text-lg">
-                  Thank you for entrusting me with the responsibility of leading
-                  our school. I am honored to serve in this capacity and look
-                  forward to a year filled with growth, learning, and success.
-                </p>
+                {principalMessageData.content.paragraphs.map(
+                  (paragraph, index) => (
+                    <p
+                      key={index}
+                      className="text-gray-700 leading-7 sm:leading-8 mb-4 sm:mb-6 font-light text-base sm:text-lg"
+                    >
+                      {paragraph}
+                    </p>
+                  )
+                )}
 
                 <div className="mt-8 sm:mt-12 text-right border-t border-gray-200 pt-6 sm:pt-8">
                   <p className="text-blue-900 font-serif text-lg sm:text-xl font-semibold mb-2">
-                    Best regards,
+                    {principalMessageData.content.signature.closing}
                   </p>
                   <p className="text-gray-800 font-serif text-base sm:text-lg">
-                    School Principal
+                    {principalMessageData.content.signature.title}
                   </p>
                   <p className="text-gray-600 text-sm mt-2">
-                    Al-Rasheed Academy
+                    {principalMessageData.content.signature.school}
                   </p>
                 </div>
               </div>

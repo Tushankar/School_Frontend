@@ -103,101 +103,103 @@ const EnrollmentTable = ({ setSelected }) => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 md:p-6 border-b border-gray-200 dark:border-gray-800 gap-4">
+        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100">
           New Enrollments ({enrollments.length})
         </h2>
         <Input
           placeholder="Search enrollments..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-96 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+          className="w-full md:w-96 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
         />
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow className="border-gray-200 dark:border-gray-800">
-            <TableHead className="text-gray-600 dark:text-gray-400">
-              Student Name
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
-              Grade Level
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
-              Date of Birth
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
-              Parent Email
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
-              Status
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
-              Submitted
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400">
-              Actions
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredEnrollments.map((enrollment) => (
-            <TableRow
-              key={enrollment.id}
-              className="border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
-            >
-              <TableCell className="font-medium text-gray-900 dark:text-gray-100">
-                {enrollment.firstName} {enrollment.lastName}
-              </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400">
-                {enrollment.gradeLevel}
-              </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400">
-                {enrollment.dateOfBirth
-                  ? new Date(enrollment.dateOfBirth).toLocaleDateString()
-                  : ""}
-              </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400">
-                {enrollment.parentEmail}
-              </TableCell>
-              <TableCell>
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadge(
-                    enrollment.status
-                  )}`}
-                >
-                  {enrollment.status}
-                </span>
-              </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400">
-                {enrollment.submittedAt
-                  ? new Date(enrollment.submittedAt).toLocaleDateString()
-                  : ""}
-              </TableCell>
-              <TableCell className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
-                  onClick={() =>
-                    setSelected(`enrollment-detail-${enrollment.id}`)
-                  }
-                >
-                  <User className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
-                >
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </TableCell>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-gray-200 dark:border-gray-800">
+              <TableHead className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">
+                Student Name
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 text-xs md:text-sm hidden sm:table-cell">
+                Grade Level
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 text-xs md:text-sm hidden md:table-cell">
+                Date of Birth
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 text-xs md:text-sm hidden lg:table-cell">
+                Parent Email
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">
+                Status
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 text-xs md:text-sm hidden md:table-cell">
+                Submitted
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">
+                Actions
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filteredEnrollments.map((enrollment) => (
+              <TableRow
+                key={enrollment.id}
+                className="border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
+              >
+                <TableCell className="font-medium text-gray-900 dark:text-gray-100 text-xs md:text-sm">
+                  {enrollment.firstName} {enrollment.lastName}
+                </TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-400 text-xs md:text-sm hidden sm:table-cell">
+                  {enrollment.gradeLevel}
+                </TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-400 text-xs md:text-sm hidden md:table-cell">
+                  {enrollment.dateOfBirth
+                    ? new Date(enrollment.dateOfBirth).toLocaleDateString()
+                    : ""}
+                </TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-400 text-xs md:text-sm hidden lg:table-cell truncate">
+                  {enrollment.parentEmail}
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadge(
+                      enrollment.status
+                    )}`}
+                  >
+                    {enrollment.status}
+                  </span>
+                </TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-400 text-xs md:text-sm hidden md:table-cell">
+                  {enrollment.submittedAt
+                    ? new Date(enrollment.submittedAt).toLocaleDateString()
+                    : ""}
+                </TableCell>
+                <TableCell className="flex gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
+                    onClick={() =>
+                      setSelected(`enrollment-detail-${enrollment.id}`)
+                    }
+                  >
+                    <User className="h-3 md:h-4 w-3 md:w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
+                  >
+                    <Settings className="h-3 md:h-4 w-3 md:w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };
@@ -419,89 +421,89 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 md:p-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
           New Enrollment Details
         </h2>
         <Button
           variant="outline"
           onClick={() => setSelected("New Enrollment")}
-          className="text-gray-600 dark:text-gray-400"
+          className="text-gray-600 dark:text-gray-400 w-full md:w-auto"
         >
           ← Back to List
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {/* Student Information */}
         <div className="space-y-6">
           <div className="border-b pb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Student Information
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <label className="block text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">
                   First Name
                 </label>
-                <p className="text-gray-900 dark:text-gray-100">
+                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100">
                   {enrollmentData.firstName}
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <label className="block text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">
                   Last Name
                 </label>
-                <p className="text-gray-900 dark:text-gray-100">
+                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100">
                   {enrollmentData.lastName}
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <label className="block text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">
                   Gender
                 </label>
-                <p className="text-gray-900 dark:text-gray-100">
+                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100">
                   {enrollmentData.gender}
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <label className="block text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">
                   Date of Birth
                 </label>
-                <p className="text-gray-900 dark:text-gray-100">
+                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100">
                   {enrollmentData.dateOfBirth}
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <label className="block text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">
                   Grade Level
                 </label>
-                <p className="text-gray-900 dark:text-gray-100">
+                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100">
                   {enrollmentData.gradeLevel}
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <label className="block text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">
                   House Number
                 </label>
-                <p className="text-gray-900 dark:text-gray-100">
+                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100">
                   {enrollmentData.houseNumber}
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <label className="block text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">
                   Citizenship
                 </label>
-                <p className="text-gray-900 dark:text-gray-100">
+                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100">
                   {enrollmentData.citizenship}
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <label className="block text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">
                   Ethnicity
                 </label>
-                <p className="text-gray-900 dark:text-gray-100">
+                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100">
                   {enrollmentData.ethnicity}
                 </p>
               </div>

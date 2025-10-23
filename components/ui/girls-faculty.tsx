@@ -1,8 +1,9 @@
 'use client'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-const members = [
+const defaultMembers = [
     {
         name: 'Razan Abdulgalil',
         role: 'Admin Asst',
@@ -90,6 +91,32 @@ const members = [
 ]
 
 export default function GirlsFacultySection() {
+    const [members, setMembers] = useState(defaultMembers)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchMembers = async () => {
+            try {
+                const response = await fetch('/api/auth/cms/girls-faculty')
+                if (response.ok) {
+                    const data = await response.json()
+                    if (data.content?.members && data.content.members.length > 0) {
+                        setMembers(data.content.members)
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching girls faculty data:', error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchMembers()
+    }, [])
+
+    if (loading) {
+        return <div className="w-full h-screen flex items-center justify-center">Loading...</div>
+    }
+
     return (
         <>
         {/* Banner Section */}
@@ -98,8 +125,9 @@ export default function GirlsFacultySection() {
                 initial={{ x: -100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute inset-0"
                 style={{
+                    position: "absolute",
+                    inset: 0,
                     backgroundImage: "url('/assets/hall.jpg')",
                     backgroundSize: "cover",
                     backgroundPosition: "center"
@@ -111,7 +139,11 @@ export default function GirlsFacultySection() {
                     initial={{ y: -50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                    className="text-5xl font-light tracking-wide"
+                    style={{
+                        fontSize: "3rem",
+                        fontWeight: 300,
+                        letterSpacing: "0.05em"
+                    }}
                 >
                     Girls&apos; Section Faculty
                 </motion.h1>
@@ -119,7 +151,10 @@ export default function GirlsFacultySection() {
                     initial={{ x: 100, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-                    className="mt-4 text-sm"
+                    style={{
+                        marginTop: "1rem",
+                        fontSize: "0.875rem"
+                    }}
                 >
                     Home › Girls Faculty
                 </motion.p>
@@ -141,20 +176,25 @@ export default function GirlsFacultySection() {
                             return (
                                 <motion.div
                                     key={index}
-                                    className="group overflow-hidden"
                                     initial={{ opacity: 0, x: direction.x, y: direction.y }}
                                     whileInView={{ opacity: 1, x: 0, y: 0 }}
                                     viewport={{ once: false, amount: 0.3 }}
                                     transition={{ duration: 0.6, ease: "easeOut" }}
+                                    style={{
+                                        overflow: "hidden"
+                                    }}
                                 >
                                     <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar} alt="faculty member" width="826" height="1239" />
                                     <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
                                         <motion.div
-                                            className="flex justify-between"
                                             initial={{ opacity: 0, y: 20 }}
                                             whileInView={{ opacity: 1, y: 0 }}
                                             viewport={{ once: false, amount: 0.3 }}
                                             transition={{ duration: 0.5, delay: 0.2 }}
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "space-between"
+                                            }}
                                         >
                                             <h3 className="text-title text-base font-medium transition-all duration-500 group-hover:tracking-wider">{member.name}</h3>
                                             <span className="text-xs">_0{index + 1}</span>

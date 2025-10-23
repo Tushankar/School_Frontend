@@ -252,69 +252,71 @@ const CalendarView = ({ setSelected }) => {
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
       {/* Calendar Section */}
-      <div className="flex-1 space-y-6">
+      <div className="flex-1 space-y-4 md:space-y-6">
         {/* Calendar Header */}
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-3">
-                {/* Month badge uses primary blue gradient to match the rest of the UI */}
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                  {monthNames[currentDate.getMonth()]}{" "}
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 md:p-6 border-b border-gray-200 dark:border-gray-800 gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <h2 className="text-lg md:text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {monthNames[currentDate.getMonth()]}{" "}
+                <span className="hidden sm:inline">
                   {currentDate.getFullYear()}
-                </h2>
+                </span>
+                <span className="sm:hidden text-base md:text-lg">
+                  {currentDate.getFullYear()}
+                </span>
+              </h2>
 
-                {/* Prev/Next buttons - circular, respects light/dark so they don't appear washed-out */}
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => navigateMonth(-1)}
-                    className="h-8 w-8 p-0 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-200 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => navigateMonth(1)}
-                    className="h-8 w-8 p-0 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-200 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
+              {/* Prev/Next buttons */}
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigateMonth(-1)}
+                  className="h-8 w-8 p-0 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-200 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigateMonth(1)}
+                  className="h-8 w-8 p-0 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-200 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
               </div>
             </div>
             <Button
               onClick={() => setShowAddEvent(true)}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto text-sm md:text-base"
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="h-3 md:h-4 w-3 md:w-4 mr-1 md:mr-2" />
               Add Event
             </Button>
           </div>
 
           {/* Calendar Grid */}
-          <div className="p-6">
-            <div className="grid grid-cols-7 gap-1 mb-4">
+          <div className="p-3 md:p-6 overflow-x-auto">
+            <div className="grid grid-cols-7 gap-1 mb-2 md:mb-4 min-w-max md:min-w-0">
               {dayNames.map((day) => (
                 <div
                   key={day}
-                  className="p-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400"
+                  className="p-1 md:p-2 text-center text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 w-10 md:w-auto"
                 >
                   {day}
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-7 gap-1">
+            <div className="grid grid-cols-7 gap-1 min-w-max md:min-w-0">
               {days.map((day, index) => {
                 const dayEvents = getEventsForDate(day);
                 return (
                   <div
                     key={index}
-                    className={`min-h-[100px] p-2 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                    className={`min-h-[80px] md:min-h-[100px] p-1 md:p-2 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-xs md:text-base w-10 md:w-auto ${
                       !day
                         ? "bg-gray-100 dark:bg-gray-800"
                         : "bg-white dark:bg-gray-900"
@@ -325,14 +327,14 @@ const CalendarView = ({ setSelected }) => {
                   >
                     {day && (
                       <>
-                        <div className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
+                        <div className="text-base md:text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">
                           {day}
                         </div>
-                        <div className="space-y-1">
+                        <div className="space-y-0.5">
                           {dayEvents.slice(0, 2).map((event) => (
                             <div
                               key={event.id}
-                              className={`text-xs p-2 rounded group relative ${
+                              className={`text-xs p-1 md:p-2 rounded group relative line-clamp-1 ${
                                 event.color === "none"
                                   ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   : event.color === "custom"
@@ -365,14 +367,10 @@ const CalendarView = ({ setSelected }) => {
                                   : {}
                               }
                             >
-                              <div className="flex items-center justify-between gap-1">
+                              <div className="flex items-center justify-between gap-0.5">
                                 <div className="truncate font-medium flex-1">
                                   {event.endDate && event.endDate !== event.date
-                                    ? `${event.title} (${new Date(
-                                        event.date
-                                      ).getDate()}-${new Date(
-                                        event.endDate
-                                      ).getDate()})`
+                                    ? `${event.title}`
                                     : event.title}
                                 </div>
                                 <button
@@ -380,7 +378,7 @@ const CalendarView = ({ setSelected }) => {
                                     e.stopPropagation();
                                     handleDeleteEvent(event.id);
                                   }}
-                                  className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-red-500 rounded"
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-red-500 rounded flex-shrink-0 hidden md:block"
                                   title="Delete event"
                                 >
                                   <Trash2 className="h-3 w-3" />
@@ -390,7 +388,7 @@ const CalendarView = ({ setSelected }) => {
                           ))}
                           {dayEvents.length > 2 && (
                             <div className="text-xs text-gray-500 dark:text-gray-400">
-                              +{dayEvents.length - 2} more
+                              +{dayEvents.length - 2}
                             </div>
                           )}
                         </div>
@@ -404,24 +402,26 @@ const CalendarView = ({ setSelected }) => {
         </div>
       </div>
 
-      {/* Event Legend - Right Side */}
-      <div className="w-80 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+      {/* Event Legend - Right Side / Bottom on Mobile */}
+      <div className="w-full lg:w-80 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm p-4 md:p-6">
+        <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 md:mb-4">
           Event Legend
         </h3>
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 md:gap-3">
           {eventTypes.map((type) => (
-            <div key={type.value} className="flex items-center gap-3">
-              <div className={`w-4 h-4 rounded ${type.bgColor}`}></div>
-              <span className="text-sm text-gray-600 dark:text-gray-400">
+            <div key={type.value} className="flex items-center gap-2 md:gap-3">
+              <div
+                className={`w-3 md:w-4 h-3 md:h-4 rounded flex-shrink-0 ${type.bgColor}`}
+              ></div>
+              <span className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
                 {type.label}
               </span>
             </div>
           ))}
         </div>
 
-        <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+        <div className="mt-4 md:mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="text-xs text-gray-500 dark:text-gray-400 space-y-0.5 md:space-y-1">
             <p>109 Ridge Road, Lackawanna, New York 14218</p>
             <p>www.alrasheedacademy.org</p>
             <p>Phone (716) 822-0440 Fax (716) 706-1303</p>
@@ -431,31 +431,31 @@ const CalendarView = ({ setSelected }) => {
 
       {/* Add Event Modal */}
       {showAddEvent && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 w-full max-w-lg shadow-xl">
-            <div className="flex items-start justify-between gap-4">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] p-3 md:p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4 md:p-6 w-full max-w-lg shadow-xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-start justify-between gap-3 md:gap-4 mb-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
                   Add Event
                 </h3>
                 {selectedDate && (
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">
                     {monthNames[currentDate.getMonth()]} {selectedDate}
                   </p>
                 )}
               </div>
               <button
                 onClick={() => (setShowAddEvent(false), setSelectedDate(null))}
-                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex-shrink-0"
                 aria-label="Close"
               >
                 ✕
               </button>
             </div>
 
-            <div className="mt-4 grid grid-cols-1 gap-4">
+            <div className="mt-3 md:mt-4 grid grid-cols-1 gap-3 md:gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
                   Event Title
                 </label>
                 <Input
@@ -464,13 +464,13 @@ const CalendarView = ({ setSelected }) => {
                     setNewEvent({ ...newEvent, title: e.target.value })
                   }
                   placeholder="Enter event title"
-                  className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                  className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs md:text-base"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
                     Start Date
                   </label>
                   <Input
@@ -487,11 +487,11 @@ const CalendarView = ({ setSelected }) => {
                     onChange={(e) =>
                       setNewEvent({ ...newEvent, startDate: e.target.value })
                     }
-                    className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                    className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs md:text-base"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
                     End Date (Optional)
                   </label>
                   <Input
@@ -500,14 +500,14 @@ const CalendarView = ({ setSelected }) => {
                     onChange={(e) =>
                       setNewEvent({ ...newEvent, endDate: e.target.value })
                     }
-                    className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                    className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs md:text-base"
                     placeholder="Same as start date"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
                   Event Type
                 </label>
                 <select
@@ -522,7 +522,7 @@ const CalendarView = ({ setSelected }) => {
                       color: selectedType.color,
                     });
                   }}
-                  className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                  className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-xs md:text-base"
                 >
                   {eventTypes.map((type) => (
                     <option key={type.value} value={type.value}>
@@ -531,22 +531,20 @@ const CalendarView = ({ setSelected }) => {
                   ))}
                 </select>
               </div>
-
-              {/* Custom Color removed as requested */}
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex flex-col sm:flex-row gap-2 md:gap-3 mt-4 md:mt-6">
               <Button
                 onClick={handleAddEvent}
                 disabled={loading || !newEvent.title}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-xs md:text-base"
               >
                 {loading ? "Adding..." : "Add Event"}
               </Button>
               <Button
                 variant="outline"
                 onClick={() => (setShowAddEvent(false), setSelectedDate(null))}
-                className="flex-1 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="flex-1 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-xs md:text-base"
               >
                 Cancel
               </Button>

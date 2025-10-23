@@ -9,78 +9,134 @@ import {
   Twitter,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
-const data = {
-  facebookLink: 'https://facebook.com/alrasheedacademy',
-  instaLink: 'https://instagram.com/alrasheedacademy',
-  twitterLink: 'https://twitter.com/alrasheedacademy',
-  githubLink: 'https://github.com/alrasheedacademy',
-  dribbbleLink: 'https://dribbble.com/alrasheedacademy',
-  services: {
-    admission: '/admission',
-    learning: '/learning',
-    accreditation: '/accreditation',
-    career: '/career',
-  },
-  about: {
-    history: '/about/history',
-    faculty: '/about/faculty',
-    mission: '/about/mission',
-    careers: '/careers',
-  },
-  help: {
-    faqs: '/faqs',
-    support: '/support',
-    contact: '/contact',
-  },
-  contact: {
-    email: 'info@alrasheedacademy.org',
-    phone: '+1(716) 822-0440',
-    address: '3122 Abbott Road Orchard Park, New York 14127',
-  },
-  company: {
-    name: 'Al-Rasheed Academy',
-    description:
-      'Excellence in Islamic Education. Accredited by New York State Education Department, providing quality K-12 education with Islamic values.',
-    logo: '/logo.png',
-  },
+// Icon mapping for CMS data
+const iconMap = {
+  Facebook,
+  Instagram,
+  Twitter,
+  Github,
+  Dribbble,
+  Mail,
+  Phone,
+  MapPin,
 };
 
-const socialLinks = [
-  { icon: Facebook, label: 'Facebook', href: data.facebookLink },
-  { icon: Instagram, label: 'Instagram', href: data.instaLink },
-  { icon: Twitter, label: 'Twitter', href: data.twitterLink },
-  { icon: Github, label: 'GitHub', href: data.githubLink },
-  { icon: Dribbble, label: 'Dribbble', href: data.dribbbleLink },
-];
-
-const aboutLinks = [
-  { text: 'Our History', href: data.about.history },
-  { text: 'Faculty & Staff', href: data.about.faculty },
-  { text: 'Mission & Vision', href: data.about.mission },
-  { text: 'Careers', href: data.about.careers },
-];
-
-const serviceLinks = [
-  { text: 'Admission', href: data.services.admission },
-  { text: 'Learning Programs', href: data.services.learning },
-  { text: 'Accreditation', href: data.services.accreditation },
-  { text: 'Career Services', href: data.services.career },
-];
-
-const helpfulLinks = [
-  { text: 'FAQs', href: data.help.faqs },
-  { text: 'Student Support', href: data.help.support },
-  { text: 'Contact Us', href: data.help.contact, hasIndicator: true },
-];
-
-const contactInfo = [
-  { icon: Mail, text: data.contact.email },
-  { icon: Phone, text: data.contact.phone },
-  { icon: MapPin, text: data.contact.address, isAddress: true },
-];
-
 export default function Footer4Col() {
+  const [footerData, setFooterData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFooterData = async () => {
+      try {
+        const response = await fetch('https://alrasheedacademyserver.onrender.com/api/auth/cms/footer');
+        if (response.ok) {
+          const data = await response.json();
+          setFooterData(data);
+        } else {
+          console.error('Failed to fetch footer data');
+          // Fallback to default data if API fails
+          setFooterData({
+            company: {
+              name: 'Al-Rasheed Academy',
+              description: 'Excellence in Islamic Education. Accredited by New York State Education Department, providing quality K-12 education with Islamic values.',
+              logo: '/logo.png'
+            },
+            socialLinks: [
+              { label: 'Facebook', href: 'https://facebook.com/alrasheedacademy', icon: 'Facebook' },
+              { label: 'Instagram', href: 'https://instagram.com/alrasheedacademy', icon: 'Instagram' },
+              { label: 'Twitter', href: 'https://twitter.com/alrasheedacademy', icon: 'Twitter' },
+              { label: 'GitHub', href: 'https://github.com/alrasheedacademy', icon: 'Github' },
+              { label: 'Dribbble', href: 'https://dribbble.com/alrasheedacademy', icon: 'Dribbble' }
+            ],
+            aboutLinks: [
+              { text: 'Our History', href: '/about/history' },
+              { text: 'Faculty & Staff', href: '/about/faculty' },
+              { text: 'Mission & Vision', href: '/about/mission' },
+              { text: 'Careers', href: '/careers' }
+            ],
+            serviceLinks: [
+              { text: 'Admission', href: '/admission' },
+              { text: 'Learning Programs', href: '/learning' },
+              { text: 'Accreditation', href: '/accreditation' },
+              { text: 'Career Services', href: '/career' }
+            ],
+            helpfulLinks: [
+              { text: 'FAQs', href: '/faqs' },
+              { text: 'Student Support', href: '/support' },
+              { text: 'Contact Us', href: '/contact', hasIndicator: true }
+            ],
+            contactInfo: [
+              { text: 'info@alrasheedacademy.org', icon: 'Mail', isAddress: false },
+              { text: '+1(716) 822-0440', icon: 'Phone', isAddress: false },
+              { text: '3122 Abbott Road Orchard Park, New York 14127', icon: 'MapPin', isAddress: true }
+            ]
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching footer data:', error);
+        // Fallback to default data if API fails
+        setFooterData({
+          company: {
+            name: 'Al-Rasheed Academy',
+            description: 'Excellence in Islamic Education. Accredited by New York State Education Department, providing quality K-12 education with Islamic values.',
+            logo: '/logo.png'
+          },
+          socialLinks: [
+            { label: 'Facebook', href: 'https://facebook.com/alrasheedacademy', icon: 'Facebook' },
+            { label: 'Instagram', href: 'https://instagram.com/alrasheedacademy', icon: 'Instagram' },
+            { label: 'Twitter', href: 'https://twitter.com/alrasheedacademy', icon: 'Twitter' },
+            { label: 'GitHub', href: 'https://github.com/alrasheedacademy', icon: 'Github' },
+            { label: 'Dribbble', href: 'https://dribbble.com/alrasheedacademy', icon: 'Dribbble' }
+          ],
+          aboutLinks: [
+            { text: 'Our History', href: '/about/history' },
+            { text: 'Faculty & Staff', href: '/about/faculty' },
+            { text: 'Mission & Vision', href: '/about/mission' },
+            { text: 'Careers', href: '/careers' }
+          ],
+          serviceLinks: [
+            { text: 'Admission', href: '/admission' },
+            { text: 'Learning Programs', href: '/learning' },
+            { text: 'Accreditation', href: '/accreditation' },
+            { text: 'Career Services', href: '/career' }
+          ],
+          helpfulLinks: [
+            { text: 'FAQs', href: '/faqs' },
+            { text: 'Student Support', href: '/support' },
+            { text: 'Contact Us', href: '/contact', hasIndicator: true }
+          ],
+          contactInfo: [
+            { text: 'info@alrasheedacademy.org', icon: 'Mail', isAddress: false },
+            { text: '+1(716) 822-0440', icon: 'Phone', isAddress: false },
+            { text: '3122 Abbott Road Orchard Park, New York 14127', icon: 'MapPin', isAddress: true }
+          ]
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFooterData();
+  }, []);
+
+  if (loading) {
+    return (
+      <footer className="bg-gray-900 text-white mt-auto w-full rounded-t-xl">
+        <div className="mx-auto max-w-screen-xl px-4 pt-16 pb-6 sm:px-6 lg:px-8 lg:pt-24">
+          <div className="flex items-center justify-center">
+            <div className="text-white/60">Loading footer...</div>
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
+  if (!footerData) {
+    return null;
+  }
+
   return (
     <footer className="bg-gray-900 text-white mt-auto w-full rounded-t-xl">
       <div className="mx-auto max-w-screen-xl px-4 pt-16 pb-6 sm:px-6 lg:px-8 lg:pt-24">
@@ -165,26 +221,29 @@ export default function Footer4Col() {
                 />
               </div>
               <span className="text-2xl font-semibold">
-                {data.company.name}
+                {footerData.company?.name || 'Al-Rasheed Academy'}
               </span>
             </div>
 
             <p className="text-white/60 mt-6 max-w-md text-center leading-relaxed sm:max-w-xs sm:text-left">
-              {data.company.description}
+              {footerData.company?.description || 'Excellence in Islamic Education.'}
             </p>
 
             <ul className="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
-              {socialLinks.map(({ icon: Icon, label, href }) => (
-                <li key={label}>
-                  <Link
-                    href={href}
-                    className="text-primary hover:text-primary/80 transition"
-                  >
-                    <span className="sr-only">{label}</span>
-                    <Icon className="size-6" />
-                  </Link>
-                </li>
-              ))}
+              {footerData.socialLinks?.map(({ icon, label, href }) => {
+                const IconComponent = iconMap[icon] || Facebook;
+                return (
+                  <li key={label}>
+                    <Link
+                      href={href}
+                      className="text-primary hover:text-primary/80 transition"
+                    >
+                      <span className="sr-only">{label}</span>
+                      <IconComponent className="size-6" />
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -192,11 +251,11 @@ export default function Footer4Col() {
             <div className="text-center sm:text-left">
               <p className="text-lg font-medium">About Us</p>
               <ul className="mt-8 space-y-4 text-sm">
-                {aboutLinks.map(({ text, href }) => (
+                {footerData.aboutLinks?.map(({ text, href }) => (
                   <li key={text}>
-                      <a className="text-white/70 transition" href={href}>
-                        {text}
-                      </a>
+                    <a className="text-white/70 transition" href={href}>
+                      {text}
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -205,7 +264,7 @@ export default function Footer4Col() {
             <div className="text-center sm:text-left">
               <p className="text-lg font-medium">Academics</p>
               <ul className="mt-8 space-y-4 text-sm">
-                {serviceLinks.map(({ text, href }) => (
+                {footerData.serviceLinks?.map(({ text, href }) => (
                   <li key={text}>
                     <a className="text-white/70 transition" href={href}>
                       {text}
@@ -218,7 +277,7 @@ export default function Footer4Col() {
             <div className="text-center sm:text-left">
               <p className="text-lg font-medium">Helpful Links</p>
               <ul className="mt-8 space-y-4 text-sm">
-                {helpfulLinks.map(({ text, href, hasIndicator }) => (
+                {footerData.helpfulLinks?.map(({ text, href, hasIndicator }) => (
                   <li key={text}>
                     <a
                       href={href}
@@ -244,23 +303,26 @@ export default function Footer4Col() {
             <div className="text-center sm:text-left">
               <p className="text-lg font-medium">Contact Us</p>
               <ul className="mt-8 space-y-4 text-sm">
-                {contactInfo.map(({ icon: Icon, text, isAddress }) => (
-                  <li key={text}>
-                    <a
-                      className="flex items-center justify-center gap-1.5 sm:justify-start"
-                      href="#"
-                    >
-                      <Icon className="text-primary size-5 shrink-0 shadow-sm" />
-                      {isAddress ? (
-                        <address className="text-white/70 -mt-0.5 flex-1 not-italic transition">
-                          {text}
-                        </address>
-                      ) : (
-                        <span className="text-white/70 flex-1 transition">{text}</span>
-                      )}
-                    </a>
-                  </li>
-                ))}
+                {footerData.contactInfo?.map(({ icon, text, isAddress }) => {
+                  const IconComponent = iconMap[icon] || Mail;
+                  return (
+                    <li key={text}>
+                      <a
+                        className="flex items-center justify-center gap-1.5 sm:justify-start"
+                        href="#"
+                      >
+                        <IconComponent className="text-primary size-5 shrink-0 shadow-sm" />
+                        {isAddress ? (
+                          <address className="text-white/70 -mt-0.5 flex-1 not-italic transition">
+                            {text}
+                          </address>
+                        ) : (
+                          <span className="text-white/70 flex-1 transition">{text}</span>
+                        )}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>
@@ -273,7 +335,7 @@ export default function Footer4Col() {
             </p>
 
             <p className="text-white/70 mt-4 text-sm transition sm:order-first sm:mt-0">
-              &copy; 2025 {data.company.name}
+              &copy; 2025 {footerData.company?.name || 'Al-Rasheed Academy'}
             </p>
           </div>
         </div>

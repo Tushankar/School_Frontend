@@ -19,13 +19,9 @@ const GalleryManagement = ({ setSelected }) => {
     previewUrl: "",
   });
 
-  
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-
   const categories = ["All", "Art", "Events", "Science Fair"];
-
-
 
   // Fetch images from backend
   const fetchImages = async () => {
@@ -201,23 +197,23 @@ const GalleryManagement = ({ setSelected }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 md:p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 md:gap-4 mb-4 md:mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <h2 className="text-lg md:text-2xl font-bold text-gray-900 dark:text-gray-100">
               Gallery Management
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">
               Upload and organize gallery images
             </p>
           </div>
           <Button
             onClick={() => setShowUploadModal(true)}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto text-xs md:text-base"
           >
-            <Upload className="h-4 w-4 mr-2" />
+            <Upload className="h-3 md:h-4 w-3 md:w-4 mr-1 md:mr-2" />
             Upload Image
           </Button>
         </div>
@@ -228,7 +224,7 @@ const GalleryManagement = ({ setSelected }) => {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm transition-all duration-200 ${
+              className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm transition-all duration-200 ${
                 selectedCategory === category
                   ? "bg-blue-600 text-white shadow-md"
                   : "border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -241,8 +237,8 @@ const GalleryManagement = ({ setSelected }) => {
       </div>
 
       {/* Images Grid */}
-      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 md:p-6 shadow-sm">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
           {filteredImages.map((image) => (
             <div
               key={image._id}
@@ -259,34 +255,34 @@ const GalleryManagement = ({ setSelected }) => {
                   }}
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                  <div className="flex gap-2">
+                  <div className="flex gap-1 md:gap-2">
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="text-white hover:bg-white/20"
+                      className="text-white hover:bg-white/20 h-8 w-8 md:h-9 md:w-9 p-0"
                     >
-                      <Edit className="h-4 w-4" />
+                      <Edit className="h-3 md:h-4 w-3 md:w-4" />
                     </Button>
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="text-white hover:bg-red-500/20"
+                      className="text-white hover:bg-red-500/20 h-8 w-8 md:h-9 md:w-9 p-0"
                       onClick={() => handleDeleteImage(image._id)}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-3 md:h-4 w-3 md:w-4" />
                     </Button>
                   </div>
                 </div>
               </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate">
+              <div className="p-2 md:p-4">
+                <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate text-xs md:text-sm">
                   {image.title}
                 </h3>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 rounded-full">
+                <div className="flex items-center justify-between mt-1 md:mt-2 gap-1">
+                  <span className="text-xs px-1.5 md:px-2 py-0.5 md:py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 rounded-full truncate">
                     {image.category}
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
                     {image.uploadedAt}
                   </span>
                 </div>
@@ -296,9 +292,9 @@ const GalleryManagement = ({ setSelected }) => {
         </div>
 
         {filteredImages.length === 0 && (
-          <div className="text-center py-12">
-            <Image className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">
+          <div className="text-center py-8 md:py-12">
+            <Image className="h-8 md:h-12 w-8 md:w-12 text-gray-400 mx-auto mb-2 md:mb-4" />
+            <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
               No images found in{" "}
               {selectedCategory === "All" ? "gallery" : selectedCategory}
             </p>
@@ -308,23 +304,23 @@ const GalleryManagement = ({ setSelected }) => {
 
       {/* Upload Modal */}
       {showUploadModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 w-full max-w-md shadow-xl backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] p-3 md:p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4 md:p-6 w-full max-w-md shadow-xl backdrop-blur-sm max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4 md:mb-6 gap-3">
+              <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Upload Image
               </h3>
               <button
                 onClick={() => setShowUploadModal(false)}
-                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex-shrink-0"
               >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
                   Image Title
                 </label>
                 <Input
@@ -333,12 +329,12 @@ const GalleryManagement = ({ setSelected }) => {
                     setNewImage({ ...newImage, title: e.target.value })
                   }
                   placeholder="Enter image title"
-                  className="w-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100"
+                  className="w-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 text-xs md:text-base"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
                   Category
                 </label>
                 <select
@@ -346,7 +342,7 @@ const GalleryManagement = ({ setSelected }) => {
                   onChange={(e) =>
                     setNewImage({ ...newImage, category: e.target.value })
                   }
-                  className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                  className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-xs md:text-base"
                 >
                   {categories
                     .filter((cat) => cat !== "All")
@@ -359,19 +355,19 @@ const GalleryManagement = ({ setSelected }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
                   Image File
                 </label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleFileUpload}
-                  className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/20 dark:file:text-blue-300 dark:hover:file:bg-blue-900/30"
+                  className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 file:mr-2 md:file:mr-4 file:py-1 md:file:py-2 file:px-2 md:file:px-4 file:rounded-full file:border-0 file:text-xs md:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/20 dark:file:text-blue-300 dark:hover:file:bg-blue-900/30"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
                   Or Image URL
                 </label>
                 <Input
@@ -385,9 +381,9 @@ const GalleryManagement = ({ setSelected }) => {
                     })
                   }
                   placeholder="https://example.com/image.jpg"
-                  className="w-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100"
+                  className="w-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 text-xs md:text-base"
                 />
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 md:mt-1">
                   Note: Some URLs may not work due to CORS restrictions. If URL
                   upload fails, please download the image and upload the file
                   directly.
@@ -395,14 +391,14 @@ const GalleryManagement = ({ setSelected }) => {
               </div>
 
               {newImage.previewUrl && (
-                <div className="mt-4">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <div className="mt-3 md:mt-4">
+                  <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
                     Preview
                   </label>
                   <img
                     src={newImage.previewUrl}
                     alt="Preview"
-                    className="w-full h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+                    className="w-full h-24 md:h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
                     onError={(e) => {
                       e.currentTarget.src =
                         "https://placehold.co/400x200/334155/e2e8f0?text=Invalid+URL";
@@ -412,10 +408,10 @@ const GalleryManagement = ({ setSelected }) => {
               )}
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex flex-col sm:flex-row gap-2 md:gap-3 mt-4 md:mt-6">
               <Button
                 onClick={handleAddImage}
-                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-xs md:text-base"
                 disabled={
                   !newImage.title ||
                   (!newImage.file && !newImage.url) ||
@@ -427,7 +423,7 @@ const GalleryManagement = ({ setSelected }) => {
               <Button
                 variant="outline"
                 onClick={() => setShowUploadModal(false)}
-                className="flex-1 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="flex-1 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 text-xs md:text-base"
               >
                 Cancel
               </Button>

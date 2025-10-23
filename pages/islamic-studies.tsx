@@ -4,7 +4,7 @@ import NavBarOnly from "../components/NavBarOnly";
 import Footer from "../components/Footer";
 import Ticker from "../components/Ticker";
 
-const slides = [
+const defaultSlides = [
   {
     img: "/assets/istudies_1.png",
     heading: "Islamic Studies at Al-Rasheed Academy: Embracing Faith and Knowledge",
@@ -43,8 +43,26 @@ const slides = [
 ];
 
 export default function IslamicStudies() {
+  const [slides, setSlides] = useState(defaultSlides);
   const [current, setCurrent] = useState(0);
   const [pausedUntil, setPausedUntil] = useState(0);
+
+  useEffect(() => {
+    const fetchCmsData = async () => {
+      try {
+        const response = await fetch("https://alrasheedacademyserver.onrender.com/api/auth/cms/islamic-studies");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.slides && Array.isArray(data.slides)) {
+            setSlides(data.slides);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch CMS data", err);
+      }
+    };
+    fetchCmsData();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {

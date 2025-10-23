@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+import { NavBar } from "./ui/tubelight-navbar";
 import {
   Home,
   User,
@@ -11,92 +11,62 @@ import {
   Briefcase,
 } from "lucide-react";
 
-// Dynamically import NavBar with SSR disabled to prevent hydration issues
-const NavBar = dynamic(
-  () =>
-    import("./ui/tubelight-navbar").then((mod) => ({ default: mod.NavBar })),
-  {
-    ssr: false,
-    loading: () => <div className="h-12 bg-transparent"></div>,
-  }
-);
+const iconMap = {
+  Home,
+  User,
+  FileText,
+  BookOpen,
+  Image,
+  Award,
+  Briefcase,
+};
 
 const NavBarOnly = () => {
+  const [navItems, setNavItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  const navItems = [
-    { name: "Home", url: "/", icon: Home },
-    {
-      name: "About",
-      url: "#",
-      icon: User,
-      dropdown: [
-        { name: "Mission and Vision", url: "/mission-vision" },
-        { name: "Principal's message", url: "/principal-message" },
-        { name: "School Board", url: "/team" },
-        { name: "General Administration", url: "/administration" },
-        { name: "Parent handbook", url: "/parent-handbook" },
-        {
-          name: "Faculty",
-          url: "#",
-          dropdown: [
-            { name: "K-3 Section", url: "/k3-section" },
-            { name: "Boys' Section", url: "/boys-section" },
-            { name: "Girls' Section", url: "/girls-section" },
-          ],
-        },
-      ],
-    },
-    {
-      name: "Admission",
-      url: "#",
-      icon: FileText,
-      dropdown: [
-        { name: "New Enrollment", url: "/enrollment" },
-        { name: "Re-Enrollment", url: "/renroll" },
-        { name: "Uniform Policy", url: "/dress-code" },
-        { name: "Bus Policy", url: "/bus-policy" },
-        { name: "Supply List", url: "/supply-list" },
-      ],
-    },
-    {
-      name: "Learning",
-      url: "#",
-      icon: BookOpen,
-      dropdown: [
-        { name: "Calendar", url: "/calendar" },
-        { name: "College Preparatory", url: "/college-preparatory" },
-        { name: "Islamic Studies & Qur'an", url: "/islamic-studies" },
-        { name: "Curricular", url: "/curricular" },
-      ],
-    },
-    { name: "Gallery", url: "/gallery", icon: Image },
-    {
-      name: "Accreditation",
-      url: "#",
-      icon: Award,
-      dropdown: [
-        { name: "Staff Surveys", url: "/staff-surveys" },
-        { name: "Parents Surveys", url: "/parent-surveys" },
-        { name: "Students Surveys", url: "/student-surveys" },
-      ],
-    },
-    {
-      name: "Career",
-      url: "#",
-      icon: Briefcase,
-      dropdown: [
-        { name: "Job Application", url: "/career/job-application" },
-        { name: "Volunteer Application", url: "/career/volunteer-application" },
-      ],
-    },
-  ];
+
+  useEffect(() => {
+    const fetchNavItems = async () => {
+      try {
+        const response = await fetch(
+          "https://alrasheedacademyserver.onrender.com/api/navbar"
+        );
+        if (response.ok) {
+          const data = await response.json();
+          // Filter active items and map icon strings to components
+          const filteredData = data.filter((item) => item.isActive !== false);
+          const mappedData = filteredData.map((item) => ({
+            ...item,
+            icon: iconMap[item.icon] || Home,
+            dropdown: item.dropdown
+              ?.filter((subItem) => subItem.isActive !== false)
+              .map((subItem) => ({
+                ...subItem,
+                dropdown: subItem.dropdown
+                  ?.filter((nestedItem) => nestedItem.isActive !== false)
+                  .map((nestedItem) => nestedItem),
+              })),
+          }));
+          setNavItems(mappedData);
+        } else {
+          console.error("Failed to fetch navbar items");
+        }
+      } catch (error) {
+        console.error("Error fetching navbar items:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNavItems();
+  }, []);
 
   return (
     <div className="relative bg-gradient-to-r from-[#381607] to-black overflow-visible">
       {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 pointer-events-none"
         style={{
           backgroundImage:
             "url('https://images.unsplash.com/photo-1678395211776-4b2fcb1e3368?w=1920&auto=format&fit=crop&q=90&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fG1hc2ppZCUyMG5pZ2h0fGVufDB8fDB8fHww')",
@@ -104,10 +74,10 @@ const NavBarOnly = () => {
       />
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80 pointer-events-none" />
 
       {/* Navigation */}
-      <div className="relative z-[9999]">
+      <div className="relative z-10">
         <nav className="flex items-center justify-between px-4 sm:px-6 lg:px-12 py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
@@ -281,8 +251,8 @@ const NavBarOnly = () => {
           </Link>
 
           {/* Navigation Menu */}
-          <div className="hidden lg:flex items-center space-x-8 text-lg font-serif relative z-[999]">
-            <NavBar items={navItems} />
+          <div className="hidden lg:flex items-center space-x-8 text-lg font-serif relative">
+            {!loading && <NavBar items={navItems} />}
           </div>
 
           {/* Mobile Menu Button */}
@@ -290,11 +260,26 @@ const NavBarOnly = () => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="lg:hidden text-yellow-500 p-2 z-[9999]"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               {mobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               )}
             </svg>
           </button>
@@ -308,24 +293,34 @@ const NavBarOnly = () => {
         </nav>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
+        {mobileMenuOpen && !loading && (
           <div className="lg:hidden bg-gradient-to-r from-[#381607] to-black backdrop-blur-sm px-4 py-6 space-y-4 relative z-[9998]">
             {navItems.map((item, index) => (
               <div key={index}>
-                <Link href={item.url} className="block text-white hover:text-yellow-500 py-2 font-serif">
+                <Link
+                  href={item.url}
+                  className="block text-white hover:text-yellow-500 py-2 font-serif"
+                >
                   {item.name}
                 </Link>
-                {item.dropdown && (
+                {item.dropdown && item.dropdown.length > 0 && (
                   <div className="pl-4 space-y-2 mt-2">
                     {item.dropdown.map((subItem, subIndex) => (
                       <div key={subIndex}>
-                        <Link href={subItem.url} className="block text-gray-300 hover:text-yellow-500 py-1 text-sm">
+                        <Link
+                          href={subItem.url}
+                          className="block text-gray-300 hover:text-yellow-500 py-1 text-sm"
+                        >
                           {subItem.name}
                         </Link>
-                        {subItem.dropdown && (
+                        {subItem.dropdown && subItem.dropdown.length > 0 && (
                           <div className="pl-4 space-y-1 mt-1">
                             {subItem.dropdown.map((nestedItem, nestedIndex) => (
-                              <Link key={nestedIndex} href={nestedItem.url} className="block text-gray-400 hover:text-yellow-500 py-1 text-xs">
+                              <Link
+                                key={nestedIndex}
+                                href={nestedItem.url}
+                                className="block text-gray-400 hover:text-yellow-500 py-1 text-xs"
+                              >
                                 {nestedItem.name}
                               </Link>
                             ))}

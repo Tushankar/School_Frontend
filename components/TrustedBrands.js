@@ -1,7 +1,75 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const TrustedBrands = () => {
+  const [trustedBrandsData, setTrustedBrandsData] = useState({
+    title: "Accreditations, Memberships, and Recognitions",
+    brands: [
+      {
+        image: "https://www.alrasheedacademy.org/images/Nysed-seal.png",
+        description:
+          "University of the State of New York Education Department Board of Regents",
+        alt: "NYSED Seal",
+      },
+      {
+        image:
+          "https://www.alrasheedacademy.org/images/Logo-Long-Revised-1-2048x564.png",
+        description: "The Council of Islamic Schools",
+        alt: "Logo Long Revised",
+      },
+      {
+        image:
+          "https://www.alrasheedacademy.org/images/cognia-white-500-400x108.png",
+        description: "Cognia Accreditation Organization",
+        alt: "COGNIA",
+      },
+    ],
+    buttonText: "View All Accreditations",
+    buttonUrl: "/accreditations",
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTrustedBrandsData();
+  }, []);
+
+  const fetchTrustedBrandsData = async () => {
+    try {
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/trusted-brands"
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setTrustedBrandsData(data);
+      } else {
+        console.log("Using default trusted brands data");
+      }
+    } catch (error) {
+      console.error("Error fetching trusted brands data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          backgroundColor: "#f8f9fa",
+          padding: "120px 20px 60px",
+          minHeight: "70vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <span className="ml-2 text-gray-600">Loading accreditations...</span>
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -33,7 +101,7 @@ const TrustedBrands = () => {
               backgroundClip: "text",
             }}
           >
-            Accreditations, Memberships, and Recognitions
+            {trustedBrandsData.title}
           </span>
         </motion.h1>
 
@@ -49,147 +117,64 @@ const TrustedBrands = () => {
             minHeight: "240px",
           }}
         >
-          <motion.div
-            initial={{ opacity: 0, x: -200 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "320px",
-            }}
-          >
-            <div
+          {trustedBrandsData.brands.map((brand, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: index % 2 === 0 ? -200 : 200 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
+              transition={{
+                duration: 1,
+                ease: [0.25, 0.1, 0.25, 1],
+                delay: index * 0.2,
+              }}
               style={{
                 display: "flex",
-                justifyContent: "center",
+                flexDirection: "column",
                 alignItems: "center",
-                height: "180px",
-                width: "100%",
-                marginBottom: "16px",
+                width: "320px",
               }}
             >
-              <img
-                src="https://www.alrasheedacademy.org/images/Nysed-seal.png"
-                alt="NYSED Seal"
+              <div
                 style={{
-                  height: "170px",
-                  width: "auto",
-                  maxWidth: "100%",
-                  objectFit: "contain",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "180px",
+                  width: "100%",
+                  marginBottom: "16px",
                 }}
-              />
-            </div>
-            <p
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                color: "#333",
-                textAlign: "center",
-                margin: "0",
-                lineHeight: "1.4",
-              }}
-            >
-              University of the State of New York Education Department Board of
-              Regents
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 100 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "320px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "180px",
-                width: "100%",
-                marginBottom: "16px",
-              }}
-            >
-              <img
-                src="https://www.alrasheedacademy.org/images/Logo-Long-Revised-1-2048x564.png"
-                alt="Logo Long Revised"
+              >
+                <img
+                  src={brand.image}
+                  alt={brand.alt}
+                  style={{
+                    height: "170px",
+                    width: "auto",
+                    maxWidth: "100%",
+                    objectFit: "contain",
+                  }}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://via.placeholder.com/300x170?text=Image+Not+Available";
+                  }}
+                />
+              </div>
+              <p
                 style={{
-                  height: "170px",
-                  width: "auto",
-                  maxWidth: "100%",
-                  objectFit: "contain",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: "#333",
+                  textAlign: "center",
+                  margin: "0",
+                  lineHeight: "1.4",
                 }}
-              />
-            </div>
-            <p
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                color: "#333",
-                textAlign: "center",
-                margin: "0",
-                lineHeight: "1.4",
-              }}
-            >
-              The Council of Islamic Schools
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 200 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.4 }}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "320px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "180px",
-                width: "100%",
-                marginBottom: "16px",
-              }}
-            >
-              <img
-                src="https://www.alrasheedacademy.org/images/cognia-white-500-400x108.png"
-                alt="COGNIA"
-                style={{
-                  height: "140px",
-                  width: "auto",
-                  maxWidth: "100%",
-                  objectFit: "contain",
-                }}
-              />
-            </div>
-            <p
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                color: "#333",
-                textAlign: "center",
-                margin: "0",
-                lineHeight: "1.4",
-              }}
-            >
-              Cognia Accreditation Organization
-            </p>
-          </motion.div>
+              >
+                {brand.description}
+              </p>
+            </motion.div>
+          ))}
         </div>
 
         {/* Bottom Section */}
@@ -205,6 +190,7 @@ const TrustedBrands = () => {
           }}
         >
           <button
+            onClick={() => (window.location.href = trustedBrandsData.buttonUrl)}
             style={{
               background: "linear-gradient(to right, #d97706, #f59e0b)",
               color: "white",
@@ -217,7 +203,7 @@ const TrustedBrands = () => {
               boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
             }}
           >
-            View All Accreditations
+            {trustedBrandsData.buttonText}
           </button>
         </motion.div>
       </div>

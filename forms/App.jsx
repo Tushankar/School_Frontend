@@ -1142,7 +1142,9 @@ const EnrollmentForm = () => {
                         : "bg-white border-2 border-orange-500 text-orange-500 hover:bg-orange-50 shadow-md"
                     }`}
                   >
-                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" /> <span className="hidden sm:inline">Back</span><span className="sm:hidden">←</span>
+                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />{" "}
+                    <span className="hidden sm:inline">Back</span>
+                    <span className="sm:hidden">←</span>
                   </motion.button>
 
                   {currentPage < 5 ? (
@@ -1153,7 +1155,9 @@ const EnrollmentForm = () => {
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 lg:px-6 py-2 lg:py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all shadow-md text-xs sm:text-sm lg:text-base"
                     >
-                      <span className="hidden sm:inline">Next</span><span className="sm:hidden">→</span> <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <span className="hidden sm:inline">Next</span>
+                      <span className="sm:hidden">→</span>{" "}
+                      <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
                     </motion.button>
                   ) : (
                     <motion.button
@@ -1167,8 +1171,12 @@ const EnrollmentForm = () => {
                           : "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white"
                       }`}
                     >
-                      <span className="hidden sm:inline">{isSubmitting ? "Submitting..." : "Submit Enrollment"}</span>
-                      <span className="sm:hidden">{isSubmitting ? "..." : "Submit"}</span>{" "}
+                      <span className="hidden sm:inline">
+                        {isSubmitting ? "Submitting..." : "Submit Enrollment"}
+                      </span>
+                      <span className="sm:hidden">
+                        {isSubmitting ? "..." : "Submit"}
+                      </span>{" "}
                       <Check className="h-3 w-3 sm:h-4 sm:w-4" />
                     </motion.button>
                   )}

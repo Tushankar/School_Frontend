@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   BookOpenIcon,
@@ -6,129 +6,121 @@ import {
   UserPlusIcon,
   NewspaperIcon,
   BriefcaseIcon,
+  HeartIcon,
+  StarIcon,
+  UsersIcon,
 } from "lucide-react";
 
 import { BentoCard, BentoGrid } from "../components/ui/bento-grid";
 
-const features = [
-  {
-    Icon: UserPlusIcon,
-    name: "Admissions",
-    description:
-      "Learn about our admission process, requirements, and how to join our vibrant school community.",
-    href: "/",
-    cta: "Apply Now",
-    background: (
-      <img
-        src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=600&fit=crop"
-        alt="Admissions"
-        className="absolute inset-0 w-full h-full object-cover blur-sm"
-      />
-    ),
-    className: "lg:row-start-1 lg:row-end-4 lg:col-start-2 lg:col-end-3",
-  },
-  {
-    Icon: BookOpenIcon,
-    name: "Islamic Education",
-    description:
-      "Comprehensive Islamic studies program integrating faith, knowledge, and character development.",
-    href: "/",
-    cta: "Learn more",
-    background: (
-      <img
-        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=600&fit=crop"
-        alt="Islamic Education"
-        className="absolute inset-0 w-full h-full object-cover blur-sm"
-      />
-    ),
-    className: "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3",
-  },
-  {
-    Icon: GraduationCapIcon,
-    name: "College Preparatory",
-    description:
-      "Rigorous academic preparation and guidance to help students succeed in higher education.",
-    href: "/",
-    cta: "Learn more",
-    background: (
-      <img
-        src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&h=600&fit=crop"
-        alt="College Preparatory"
-        className="absolute inset-0 w-full h-full object-cover blur-sm"
-      />
-    ),
-    className: "lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4",
-  },
-  {
-    Icon: NewspaperIcon,
-    name: "Latest News",
-    description:
-      "Stay updated with school announcements, events, achievements, and community news.",
-    href: "/latest-news",
-    cta: "Read More",
-    background: (
-      <img
-        src="https://images.unsplash.com/photo-1567427018141-0584cfcbf1b8?w=800&h=600&fit=crop"
-        alt="Latest News"
-        className="absolute inset-0 w-full h-full object-cover blur-sm"
-      />
-    ),
-    className: "lg:col-start-3 lg:col-end-3 lg:row-start-1 lg:row-end-2",
-  },
-  {
-    Icon: BookOpenIcon,
-    name: "Academics",
-    description:
-      "Explore our comprehensive curriculum, subjects, and academic programs designed for excellence.",
-    href: "/curricular",
-    cta: "Learn more",
-    background: (
-      <img
-        src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&h=600&fit=crop"
-        alt="Academics"
-        className="absolute inset-0 w-full h-full object-cover blur-sm"
-      />
-    ),
-    className: "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4",
-  },
-  {
-    Icon: BriefcaseIcon,
-    name: "Career",
-    description:
-      "Career guidance, counseling, and preparation for future professional success and lifelong learning.",
-    href: "/",
-    cta: "Explore Careers",
-    background: (
-      <img
-        src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&h=400&fit=crop"
-        alt="Career"
-        className="absolute inset-0 w-full h-full object-cover blur-sm"
-      />
-    ),
-    className: "lg:col-start-1 lg:col-end-4 lg:row-start-4 lg:row-end-5",
-  },
-];
+// Icon mapping for dynamic icon names
+const iconMap = {
+  UserPlus: UserPlusIcon,
+  BookOpen: BookOpenIcon,
+  GraduationCap: GraduationCapIcon,
+  Newspaper: NewspaperIcon,
+  Briefcase: BriefcaseIcon,
+  Heart: HeartIcon,
+  Star: StarIcon,
+  Users: UsersIcon,
+};
 
-function BentoDemo() {
+function BentoDemo({ features }) {
   return (
     <BentoGrid className="lg:grid-rows-4">
-      {features.map((feature, index) => (
-        <motion.div
-          key={feature.name}
-          className={feature.className}
-          initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
-        >
-          <BentoCard {...feature} className="h-full" />
-        </motion.div>
-      ))}
+      {features.map((feature, index) => {
+        const IconComponent = iconMap[feature.icon] || BookOpenIcon;
+
+        // Convert backgroundImage string to ReactNode
+        const backgroundElement = feature.backgroundImage ? (
+          <img
+            src={feature.backgroundImage}
+            alt={feature.name}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : null;
+
+        // For responsive design: keep desktop positioning, use simple layout for mobile/tablet
+        const responsiveClassName = feature.className
+          ? `${feature.className} col-span-1`
+          : "col-span-1";
+
+        const featureWithIcon = {
+          ...feature,
+          Icon: IconComponent,
+          background: backgroundElement,
+        };
+
+        return (
+          <motion.div
+            key={feature.name}
+            className={responsiveClassName}
+            initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
+          >
+            <BentoCard {...featureWithIcon} className="h-full" />
+          </motion.div>
+        );
+      })}
     </BentoGrid>
   );
 }
 
 export default function BentoGridPage() {
+  const [bentoGridData, setBentoGridData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBentoGridData = async () => {
+      try {
+        const response = await fetch(
+          "https://alrasheedacademyserver.onrender.com/api/auth/cms/bento-grid"
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setBentoGridData(data);
+        } else {
+          console.error("Failed to fetch bento grid data");
+        }
+      } catch (error) {
+        console.error("Error fetching bento grid data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBentoGridData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
+            <span className="ml-2 text-gray-600">Loading...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!bentoGridData) {
+    return (
+      <div className="bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center py-12">
+            <p className="text-gray-600">
+              Unable to load content. Please try again later.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -141,15 +133,16 @@ export default function BentoGridPage() {
         >
           <h1 className="text-2xl sm:text-3xl font-bold text-center mb-8">
             <span className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 bg-clip-text text-transparent">
-              Our Features & Programs
+              {bentoGridData.mainTitle || "Our Features & Programs"}
             </span>
           </h1>
           <p className="text-xl text-gray-600">
-            Discover what makes ARA Academy exceptional
+            {bentoGridData.subtitle ||
+              "Discover what makes ARA Academy exceptional"}
           </p>
         </motion.div>
 
-        <BentoDemo />
+        <BentoDemo features={bentoGridData.features || []} />
       </div>
     </div>
   );
