@@ -241,7 +241,11 @@ const FooterCMS = ({ setSelected }) => {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          <Button onClick={fetchFooterData} variant="outline" className="w-full sm:w-auto">
+          <Button
+            onClick={fetchFooterData}
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
             Refresh
           </Button>
           <Button
@@ -303,7 +307,12 @@ const FooterCMS = ({ setSelected }) => {
           <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
             Social Links
           </h3>
-          <Button onClick={addSocialLink} variant="outline" size="sm" className="w-full sm:w-auto">
+          <Button
+            onClick={addSocialLink}
+            variant="outline"
+            size="sm"
+            className="w-full sm:w-auto"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Link
           </Button>
@@ -364,7 +373,12 @@ const FooterCMS = ({ setSelected }) => {
           <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
             About Links
           </h3>
-          <Button onClick={addAboutLink} variant="outline" size="sm" className="w-full sm:w-auto">
+          <Button
+            onClick={addAboutLink}
+            variant="outline"
+            size="sm"
+            className="w-full sm:w-auto"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Link
           </Button>
@@ -403,7 +417,12 @@ const FooterCMS = ({ setSelected }) => {
           <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
             Academics Links
           </h3>
-          <Button onClick={addServiceLink} variant="outline" size="sm" className="w-full sm:w-auto">
+          <Button
+            onClick={addServiceLink}
+            variant="outline"
+            size="sm"
+            className="w-full sm:w-auto"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Link
           </Button>
@@ -446,7 +465,12 @@ const FooterCMS = ({ setSelected }) => {
           <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
             Helpful Links
           </h3>
-          <Button onClick={addHelpfulLink} variant="outline" size="sm" className="w-full sm:w-auto">
+          <Button
+            onClick={addHelpfulLink}
+            variant="outline"
+            size="sm"
+            className="w-full sm:w-auto"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Link
           </Button>
@@ -502,7 +526,12 @@ const FooterCMS = ({ setSelected }) => {
           <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100">
             Contact Information
           </h3>
-          <Button onClick={addContactInfo} variant="outline" size="sm" className="w-full sm:w-auto">
+          <Button
+            onClick={addContactInfo}
+            variant="outline"
+            size="sm"
+            className="w-full sm:w-auto"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Info
           </Button>

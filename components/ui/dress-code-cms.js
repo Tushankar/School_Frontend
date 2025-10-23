@@ -337,7 +337,11 @@ const DressCodeCMS = ({ setSelected }) => {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          <Button onClick={addInfoCard} variant="outline" className="w-full sm:w-auto">
+          <Button
+            onClick={addInfoCard}
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Info Card
           </Button>
@@ -757,7 +761,12 @@ const DressCodeCMS = ({ setSelected }) => {
               Grade Sections (
               {dressCodeData.uniforms.daily.gradeSections.length})
             </h4>
-            <Button onClick={addGradeSection} variant="outline" size="sm" className="w-full sm:w-auto">
+            <Button
+              onClick={addGradeSection}
+              variant="outline"
+              size="sm"
+              className="w-full sm:w-auto"
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Grade Section
             </Button>

@@ -123,90 +123,90 @@ const ReEnrollmentTable = ({ setSelected }) => {
       </div>
       <div className="overflow-x-auto">
         <Table>
-        <TableHeader>
-          <TableRow className="border-gray-200 dark:border-gray-800">
-            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[150px]">
-              Student Name
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[120px]">
-              Student ID
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px]">
-              Grade Level
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[120px] hidden md:table-cell">
-              Last Year Grade
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[150px] hidden lg:table-cell">
-              Parent Email
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px]">
-              Status
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px] hidden sm:table-cell">
-              Submitted
-            </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px]">
-              Actions
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredReenrollments.map((reenrollment) => (
-            <TableRow
-              key={reenrollment.id}
-              className="border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
-            >
-              <TableCell className="font-medium text-gray-900 dark:text-gray-100">
-                {reenrollment.firstName} {reenrollment.lastName}
-              </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400">
-                {reenrollment.studentId}
-              </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400">
-                {reenrollment.gradeLevel}
-              </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400 hidden md:table-cell">
-                {reenrollment.lastYearGrade}
-              </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400 hidden lg:table-cell">
-                {reenrollment.parentEmail}
-              </TableCell>
-              <TableCell>
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadge(
-                    reenrollment.status
-                  )}`}
-                >
-                  {reenrollment.status}
-                </span>
-              </TableCell>
-              <TableCell className="text-gray-600 dark:text-gray-400 hidden sm:table-cell">
-                {reenrollment.submittedAt}
-              </TableCell>
-              <TableCell className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 flex-1 sm:flex-none"
-                  onClick={() =>
-                    setSelected(`reenrollment-detail-${reenrollment.id}`)
-                  }
-                >
-                  <User className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 flex-1 sm:flex-none"
-                >
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </TableCell>
+          <TableHeader>
+            <TableRow className="border-gray-200 dark:border-gray-800">
+              <TableHead className="text-gray-600 dark:text-gray-400 min-w-[150px]">
+                Student Name
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 min-w-[120px]">
+                Student ID
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px]">
+                Grade Level
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 min-w-[120px] hidden md:table-cell">
+                Last Year Grade
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 min-w-[150px] hidden lg:table-cell">
+                Parent Email
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px]">
+                Status
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px] hidden sm:table-cell">
+                Submitted
+              </TableHead>
+              <TableHead className="text-gray-600 dark:text-gray-400 min-w-[100px]">
+                Actions
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filteredReenrollments.map((reenrollment) => (
+              <TableRow
+                key={reenrollment.id}
+                className="border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
+              >
+                <TableCell className="font-medium text-gray-900 dark:text-gray-100">
+                  {reenrollment.firstName} {reenrollment.lastName}
+                </TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-400">
+                  {reenrollment.studentId}
+                </TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-400">
+                  {reenrollment.gradeLevel}
+                </TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-400 hidden md:table-cell">
+                  {reenrollment.lastYearGrade}
+                </TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-400 hidden lg:table-cell">
+                  {reenrollment.parentEmail}
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadge(
+                      reenrollment.status
+                    )}`}
+                  >
+                    {reenrollment.status}
+                  </span>
+                </TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-400 hidden sm:table-cell">
+                  {reenrollment.submittedAt}
+                </TableCell>
+                <TableCell className="flex gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 flex-1 sm:flex-none"
+                    onClick={() =>
+                      setSelected(`reenrollment-detail-${reenrollment.id}`)
+                    }
+                  >
+                    <User className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 flex-1 sm:flex-none"
+                  >
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

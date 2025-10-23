@@ -251,7 +251,11 @@ const CollegePreparatoryCMS = ({ setSelected }) => {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          <Button onClick={addProgramFeature} variant="outline" className="w-full sm:w-auto">
+          <Button
+            onClick={addProgramFeature}
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Program Feature
           </Button>
@@ -575,7 +579,12 @@ const CollegePreparatoryCMS = ({ setSelected }) => {
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               University Logos ({collegeData.universities.logos.length})
             </label>
-            <Button onClick={addLogo} variant="outline" size="sm" className="w-full sm:w-auto">
+            <Button
+              onClick={addLogo}
+              variant="outline"
+              size="sm"
+              className="w-full sm:w-auto"
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Logo
             </Button>
