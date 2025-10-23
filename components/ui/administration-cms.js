@@ -46,7 +46,7 @@ const AdministrationCMS = ({ setSelected }) => {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/administration",
+        "http://localhost:4000/api/auth/cms/administration",
         {
           credentials: "include",
         }
@@ -109,7 +109,7 @@ const AdministrationCMS = ({ setSelected }) => {
       if (storedToken) headers.Authorization = `Bearer ${storedToken}`;
 
       const res = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/administration",
+        "http://localhost:4000/api/auth/cms/administration",
         {
           method: "PUT",
           headers,

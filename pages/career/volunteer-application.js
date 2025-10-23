@@ -122,7 +122,7 @@ function VolunteerApplication() {
 
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/volunteer-applications",
+        "http://localhost:4000/api/volunteer-applications",
         {
           method: "POST",
           headers: {

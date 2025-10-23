@@ -42,7 +42,7 @@ const TrustedBrandsCMS = ({ setSelected }) => {
   const fetchTrustedBrandsData = async () => {
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/trusted-brands",
+        "http://localhost:4000/api/auth/cms/trusted-brands",
         {
           credentials: "include",
         }
@@ -72,7 +72,7 @@ const TrustedBrandsCMS = ({ setSelected }) => {
       }
 
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/trusted-brands",
+        "http://localhost:4000/api/auth/cms/trusted-brands",
         {
           method: "POST",
           headers: {

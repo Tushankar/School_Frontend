@@ -11,7 +11,7 @@ export default function K3FacultySection() {
         let mounted = true
         const fetchCms = async () => {
             try {
-                const res = await fetch('https://alrasheedacademyserver.onrender.com/api/auth/cms/k3-faculty')
+                const res = await fetch('http://localhost:4000/api/auth/cms/k3-faculty')
                 if (!mounted) return
                 if (res.ok) {
                     const json = await res.json()

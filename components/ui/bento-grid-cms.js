@@ -96,7 +96,7 @@ const BentoGridCMS = ({ setSelected }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/bento-grid",
+        "http://localhost:4000/api/auth/cms/bento-grid",
         {
           credentials: "include",
         }
@@ -119,7 +119,7 @@ const BentoGridCMS = ({ setSelected }) => {
     setSaving(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/bento-grid",
+        "http://localhost:4000/api/auth/cms/bento-grid",
         {
           method: "PUT",
           headers: {

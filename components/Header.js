@@ -49,9 +49,7 @@ const IslamicCenterPage = () => {
   useEffect(() => {
     const fetchNavItems = async () => {
       try {
-        const response = await fetch(
-          "https://alrasheedacademyserver.onrender.com/api/navbar"
-        );
+        const response = await fetch("http://localhost:4000/api/navbar");
         if (response.ok) {
           const data = await response.json();
           // Filter active items and map icon strings to components
@@ -79,9 +77,7 @@ const IslamicCenterPage = () => {
 
     const fetchHeroData = async () => {
       try {
-        const response = await fetch(
-          "https://alrasheedacademyserver.onrender.com/api/auth/cms/hero"
-        );
+        const response = await fetch("http://localhost:4000/api/auth/cms/hero");
         if (response.ok) {
           const data = await response.json();
           setHeroData(data);

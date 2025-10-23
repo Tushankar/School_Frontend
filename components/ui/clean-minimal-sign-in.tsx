@@ -35,7 +35,7 @@ const SignIn2: React.FC<SignIn2Props> = ({ onSignIn }) => {
     }
     setError("");
     try {
-      const response = await fetch("https://alrasheedacademyserver.onrender.com/api/auth/forgot-password", {
+      const response = await fetch("http://localhost:4000/api/auth/forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +61,7 @@ const SignIn2: React.FC<SignIn2Props> = ({ onSignIn }) => {
     }
     setError("");
     try {
-      const response = await fetch("https://alrasheedacademyserver.onrender.com/api/auth/reset-password", {
+      const response = await fetch("http://localhost:4000/api/auth/reset-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +95,7 @@ const SignIn2: React.FC<SignIn2Props> = ({ onSignIn }) => {
     }
     setError("");
     try {
-      const response = await fetch("https://alrasheedacademyserver.onrender.com/api/auth/login", {
+      const response = await fetch("http://localhost:4000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -19,13 +19,10 @@ export default function AdminDashboard() {
           ? { Authorization: `Bearer ${storedToken}` }
           : {};
 
-        const res = await fetch(
-          "https://alrasheedacademyserver.onrender.com/api/auth/me",
-          {
-            credentials: "include",
-            headers,
-          }
-        );
+        const res = await fetch("http://localhost:4000/api/auth/me", {
+          credentials: "include",
+          headers,
+        });
 
         if (res.ok) {
           setIsLoggedIn(true);

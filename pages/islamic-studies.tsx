@@ -50,7 +50,7 @@ export default function IslamicStudies() {
   useEffect(() => {
     const fetchCmsData = async () => {
       try {
-        const response = await fetch("https://alrasheedacademyserver.onrender.com/api/auth/cms/islamic-studies");
+        const response = await fetch("http://localhost:4000/api/auth/cms/islamic-studies");
         if (response.ok) {
           const data = await response.json();
           if (data.slides && Array.isArray(data.slides)) {

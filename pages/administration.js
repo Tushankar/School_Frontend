@@ -21,13 +21,10 @@ export default function AdministrationPage() {
           ? { Authorization: `Bearer ${storedToken}` }
           : {};
 
-        const response = await fetch(
-          "https://alrasheedacademyserver.onrender.com/api/auth/me",
-          {
-            credentials: "include",
-            headers,
-          }
-        );
+        const response = await fetch("http://localhost:4000/api/auth/me", {
+          credentials: "include",
+          headers,
+        });
         if (response.ok) {
           const data = await response.json();
           if (data.user.role === "admin") {

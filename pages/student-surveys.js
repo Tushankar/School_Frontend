@@ -40,7 +40,7 @@ export default function StudentSurveys() {
 
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/surveys/student",
+        "http://localhost:4000/api/surveys/student",
         {
           method: "POST",
           headers: {

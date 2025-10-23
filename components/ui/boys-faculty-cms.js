@@ -104,7 +104,7 @@ const BoysFacultyCMS = ({ setSelected }) => {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/boys-faculty",
+        "http://localhost:4000/api/auth/cms/boys-faculty",
         {
           credentials: "include",
         }
@@ -167,7 +167,7 @@ const BoysFacultyCMS = ({ setSelected }) => {
       if (storedToken) headers.Authorization = `Bearer ${storedToken}`;
 
       const res = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/boys-faculty",
+        "http://localhost:4000/api/auth/cms/boys-faculty",
         {
           method: "PUT",
           headers,

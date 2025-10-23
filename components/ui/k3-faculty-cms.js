@@ -79,12 +79,9 @@ const K3FacultyCMS = ({ setSelected }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/k3-faculty",
-        {
-          credentials: "include",
-        }
-      );
+      const res = await fetch("http://localhost:4000/api/auth/cms/k3-faculty", {
+        credentials: "include",
+      });
       if (res.ok) {
         const responseData = await res.json();
         console.log("Fetched K3 Faculty CMS data:", responseData);
@@ -141,15 +138,12 @@ const K3FacultyCMS = ({ setSelected }) => {
       const headers = { "Content-Type": "application/json" };
       if (storedToken) headers.Authorization = `Bearer ${storedToken}`;
 
-      const res = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/k3-faculty",
-        {
-          method: "PUT",
-          headers,
-          credentials: "include",
-          body: JSON.stringify({ content: payload }),
-        }
-      );
+      const res = await fetch("http://localhost:4000/api/auth/cms/k3-faculty", {
+        method: "PUT",
+        headers,
+        credentials: "include",
+        body: JSON.stringify({ content: payload }),
+      });
       if (res.ok) {
         toast.success("K3 Faculty updated successfully!");
       } else {

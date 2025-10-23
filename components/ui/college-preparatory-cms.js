@@ -83,7 +83,7 @@ const CollegePreparatoryCMS = ({ setSelected }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/college-preparatory",
+        "http://localhost:4000/api/auth/cms/college-preparatory",
         {
           credentials: "include",
         }
@@ -106,7 +106,7 @@ const CollegePreparatoryCMS = ({ setSelected }) => {
     setSaving(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/college-preparatory",
+        "http://localhost:4000/api/auth/cms/college-preparatory",
         {
           method: "POST",
           headers: {

@@ -13,7 +13,7 @@ export default function MissionVisionPage() {
   const fetchMissionVisionData = async () => {
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/mission-vision"
+        "http://localhost:4000/api/auth/cms/mission-vision"
       );
       if (response.ok) {
         const data = await response.json();

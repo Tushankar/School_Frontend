@@ -26,7 +26,7 @@ const JobApplicationTable = ({ setSelected }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/job-applications"
+        "http://localhost:4000/api/job-applications"
       );
       const data = await response.json();
 
@@ -226,7 +226,7 @@ const VolunteerApplicationTable = ({ setSelected }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/volunteer-applications"
+        "http://localhost:4000/api/volunteer-applications"
       );
       const data = await response.json();
 
@@ -411,7 +411,7 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
       }
 
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/job-applications/${id}`
+        `http://localhost:4000/api/job-applications/${id}`
       );
       const data = await response.json();
 
@@ -438,7 +438,7 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
       if (!id || id === "detail" || id === applicationId) return;
 
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/job-applications/${id}/emails`
+        `http://localhost:4000/api/job-applications/${id}/emails`
       );
       const data = await response.json();
 
@@ -453,7 +453,7 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
   const downloadFile = (fileType) => {
     const id = applicationId.replace("job-application-detail-", "");
     window.open(
-      `https://alrasheedacademyserver.onrender.com/api/job-applications/${id}/download/${fileType}`,
+      `http://localhost:4000/api/job-applications/${id}/download/${fileType}`,
       "_blank"
     );
   };
@@ -463,7 +463,7 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
       setUpdatingStatus(true);
       const id = applicationId.replace("job-application-detail-", "");
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/job-applications/${id}/status`,
+        `http://localhost:4000/api/job-applications/${id}/status`,
         {
           method: "PUT",
           headers: {
@@ -506,7 +506,7 @@ const JobApplicationDetailView = ({ applicationId, setSelected }) => {
       const id = applicationId.replace("job-application-detail-", "");
 
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/job-applications/${id}/send-email`,
+        `http://localhost:4000/api/job-applications/${id}/send-email`,
         {
           method: "POST",
           headers: {
@@ -1552,7 +1552,7 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
       }
 
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/volunteer-applications/${id}`
+        `http://localhost:4000/api/volunteer-applications/${id}`
       );
       const data = await response.json();
 
@@ -1577,7 +1577,7 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
       if (!id || id === "detail" || id === applicationId) return;
 
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/volunteer-applications/${id}/emails`
+        `http://localhost:4000/api/volunteer-applications/${id}/emails`
       );
       const data = await response.json();
 
@@ -1594,7 +1594,7 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
       setUpdatingStatus(true);
       const id = applicationId.replace("volunteer-application-detail-", "");
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/volunteer-applications/${id}/status`,
+        `http://localhost:4000/api/volunteer-applications/${id}/status`,
         {
           method: "PUT",
           headers: {
@@ -1637,7 +1637,7 @@ const VolunteerApplicationDetailView = ({ applicationId, setSelected }) => {
       const id = applicationId.replace("volunteer-application-detail-", "");
 
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/volunteer-applications/${id}/send-email`,
+        `http://localhost:4000/api/volunteer-applications/${id}/send-email`,
         {
           method: "POST",
           headers: {

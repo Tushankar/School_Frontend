@@ -151,7 +151,7 @@ const DressCodeCMS = ({ setSelected }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/dress-code",
+        "http://localhost:4000/api/auth/cms/dress-code",
         {
           credentials: "include",
         }
@@ -174,7 +174,7 @@ const DressCodeCMS = ({ setSelected }) => {
     setSaving(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/dress-code",
+        "http://localhost:4000/api/auth/cms/dress-code",
         {
           method: "POST",
           headers: {

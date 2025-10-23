@@ -12,16 +12,24 @@ export default function CharacterCards() {
   const fetchCharacterCardsData = async () => {
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/character-cards"
+        "http://localhost:4000/api/auth/cms/character-cards"
       );
       if (response.ok) {
         const data = await response.json();
         setCharacterCardsData(data);
       } else {
-        console.error("Failed to fetch character cards data");
+        console.error(
+          "Failed to fetch character cards data:",
+          response.status,
+          response.statusText
+        );
       }
     } catch (error) {
-      console.error("Error fetching character cards data:", error);
+      console.error("Error fetching character cards data:", {
+        message: error.message,
+        cause: error.cause,
+        stack: error.stack,
+      });
     } finally {
       setLoading(false);
     }

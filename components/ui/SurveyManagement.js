@@ -24,9 +24,7 @@ const ParentSurveyTable = ({ setSelected }) => {
   const fetchSurveys = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/surveys/parent"
-      );
+      const response = await fetch("http://localhost:4000/api/surveys/parent");
       const data = await response.json();
       if (data.success) {
         setSurveys(data.surveys);
@@ -113,9 +111,7 @@ const StaffSurveyTable = ({ setSelected }) => {
 
   const fetchSurveys = async () => {
     try {
-      const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/surveys/staff"
-      );
+      const response = await fetch("http://localhost:4000/api/surveys/staff");
       const data = await response.json();
       if (data.success) setSurveys(data.surveys);
       setLoading(false);
@@ -197,9 +193,7 @@ const StudentSurveyTable = ({ setSelected }) => {
 
   const fetchSurveys = async () => {
     try {
-      const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/surveys/student"
-      );
+      const response = await fetch("http://localhost:4000/api/surveys/student");
       const data = await response.json();
       if (data.success) setSurveys(data.surveys);
       setLoading(false);
@@ -285,7 +279,7 @@ const ParentSurveyDetailView = ({ surveyId, setSelected }) => {
     try {
       const id = surveyId.replace("parent-survey-detail-", "");
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/surveys/parent/${id}`
+        `http://localhost:4000/api/surveys/parent/${id}`
       );
       const data = await response.json();
       if (data.success) setSurvey(data.survey);
@@ -372,7 +366,7 @@ const StaffSurveyDetailView = ({ surveyId, setSelected }) => {
     try {
       const id = surveyId.replace("staff-survey-detail-", "");
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/surveys/staff/${id}`
+        `http://localhost:4000/api/surveys/staff/${id}`
       );
       const data = await response.json();
       if (data.success) setSurvey(data.survey);
@@ -455,7 +449,7 @@ const StudentSurveyDetailView = ({ surveyId, setSelected }) => {
     try {
       const id = surveyId.replace("student-survey-detail-", "");
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/surveys/student/${id}`
+        `http://localhost:4000/api/surveys/student/${id}`
       );
       const data = await response.json();
       if (data.success) setSurvey(data.survey);

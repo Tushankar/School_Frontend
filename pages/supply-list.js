@@ -68,7 +68,7 @@ const SupplyList = () => {
     const fetchSupplyListData = async () => {
       try {
         const response = await fetch(
-          "https://alrasheedacademyserver.onrender.com/api/auth/cms/supply-list"
+          "http://localhost:4000/api/auth/cms/supply-list"
         );
         if (response.ok) {
           const data = await response.json();

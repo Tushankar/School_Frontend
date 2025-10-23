@@ -49,7 +49,7 @@ export function Demo() {
   const fetchAffiliationsData = async () => {
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/affiliations"
+        "http://localhost:4000/api/auth/cms/affiliations"
       );
       if (response.ok) {
         const data = await response.json();

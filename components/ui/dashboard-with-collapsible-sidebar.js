@@ -166,13 +166,10 @@ export const Dashboard = () => {
           ? { Authorization: `Bearer ${storedToken}` }
           : {};
 
-        const res = await fetch(
-          "https://alrasheedacademyserver.onrender.com/api/auth/me",
-          {
-            credentials: "include",
-            headers,
-          }
-        );
+        const res = await fetch("http://localhost:4000/api/auth/me", {
+          credentials: "include",
+          headers,
+        });
         if (res.ok) {
           setAuthorized(true);
           return;
@@ -480,7 +477,7 @@ const Sidebar = ({ selected, setSelected }) => {
                         onClick={async () => {
                           try {
                             await fetch(
-                              "https://alrasheedacademyserver.onrender.com/api/auth/logout",
+                              "http://localhost:4000/api/auth/logout",
                               {
                                 method: "POST",
                                 credentials: "include",
@@ -919,40 +916,28 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
           studentSurveysRes,
           contactFormsRes,
         ] = await Promise.all([
-          fetch(
-            "https://alrasheedacademyserver.onrender.com/api/forms/student-registration"
-          ).catch(() => ({ ok: false })),
-          fetch(
-            "https://alrasheedacademyserver.onrender.com/api/renroll/renroll-form"
-          ).catch(() => ({
+          fetch("http://localhost:4000/api/forms/student-registration").catch(
+            () => ({ ok: false })
+          ),
+          fetch("http://localhost:4000/api/renroll/renroll-form").catch(() => ({
             ok: false,
           })),
-          fetch(
-            "https://alrasheedacademyserver.onrender.com/api/job-applications/"
-          ).catch(() => ({
+          fetch("http://localhost:4000/api/job-applications/").catch(() => ({
             ok: false,
           })),
-          fetch(
-            "https://alrasheedacademyserver.onrender.com/api/volunteer-applications/"
-          ).catch(() => ({ ok: false })),
-          fetch(
-            "https://alrasheedacademyserver.onrender.com/api/surveys/staff"
-          ).catch(() => ({
+          fetch("http://localhost:4000/api/volunteer-applications/").catch(
+            () => ({ ok: false })
+          ),
+          fetch("http://localhost:4000/api/surveys/staff").catch(() => ({
             ok: false,
           })),
-          fetch(
-            "https://alrasheedacademyserver.onrender.com/api/surveys/parent"
-          ).catch(() => ({
+          fetch("http://localhost:4000/api/surveys/parent").catch(() => ({
             ok: false,
           })),
-          fetch(
-            "https://alrasheedacademyserver.onrender.com/api/surveys/student"
-          ).catch(() => ({
+          fetch("http://localhost:4000/api/surveys/student").catch(() => ({
             ok: false,
           })),
-          fetch(
-            "https://alrasheedacademyserver.onrender.com/api/contact/"
-          ).catch(() => ({
+          fetch("http://localhost:4000/api/contact/").catch(() => ({
             ok: false,
           })),
         ]);
@@ -1162,48 +1147,36 @@ const DashboardContent = ({ isDark, setIsDark, selected, setSelected }) => {
         studentSurveysRes,
         contactFormsRes,
       ] = await Promise.all([
-        fetch(
-          "https://alrasheedacademyserver.onrender.com/api/forms/student-registration"
-        ).catch(() => ({ ok: false, json: () => ({}) })),
-        fetch(
-          "https://alrasheedacademyserver.onrender.com/api/renroll/renroll-form"
-        ).catch(() => ({
-          ok: false,
-          json: () => ({}),
-        })),
-        fetch(
-          "https://alrasheedacademyserver.onrender.com/api/job-applications/"
-        ).catch(() => ({
-          ok: false,
-          json: () => ({}),
-        })),
-        fetch(
-          "https://alrasheedacademyserver.onrender.com/api/volunteer-applications/"
-        ).catch(() => ({ ok: false, json: () => ({}) })),
-        fetch(
-          "https://alrasheedacademyserver.onrender.com/api/surveys/staff"
-        ).catch(() => ({
-          ok: false,
-          json: () => ({}),
-        })),
-        fetch(
-          "https://alrasheedacademyserver.onrender.com/api/surveys/parent"
-        ).catch(() => ({
-          ok: false,
-          json: () => ({}),
-        })),
-        fetch(
-          "https://alrasheedacademyserver.onrender.com/api/surveys/student"
-        ).catch(() => ({
-          ok: false,
-          json: () => ({}),
-        })),
-        fetch("https://alrasheedacademyserver.onrender.com/api/contact/").catch(
-          () => ({
-            ok: false,
-            json: () => ({}),
-          })
+        fetch("http://localhost:4000/api/forms/student-registration").catch(
+          () => ({ ok: false, json: () => ({}) })
         ),
+        fetch("http://localhost:4000/api/renroll/renroll-form").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
+        fetch("http://localhost:4000/api/job-applications/").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
+        fetch("http://localhost:4000/api/volunteer-applications/").catch(
+          () => ({ ok: false, json: () => ({}) })
+        ),
+        fetch("http://localhost:4000/api/surveys/staff").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
+        fetch("http://localhost:4000/api/surveys/parent").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
+        fetch("http://localhost:4000/api/surveys/student").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
+        fetch("http://localhost:4000/api/contact/").catch(() => ({
+          ok: false,
+          json: () => ({}),
+        })),
       ]);
 
       const [
@@ -2276,12 +2249,9 @@ const NavbarCMS = ({ setSelected }) => {
   const fetchNavbarData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/navbar",
-        {
-          credentials: "include",
-        }
-      );
+      const response = await fetch("http://localhost:4000/api/navbar", {
+        credentials: "include",
+      });
       if (response.ok) {
         const data = await response.json();
         setNavbarItems(data);
@@ -2299,17 +2269,14 @@ const NavbarCMS = ({ setSelected }) => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/navbar",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ items: navbarItems }),
-        }
-      );
+      const response = await fetch("http://localhost:4000/api/navbar", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ items: navbarItems }),
+      });
       if (response.ok) {
         toast.success("Navbar updated successfully!");
       } else {
@@ -3483,7 +3450,7 @@ const CMSManagement = ({ setSelected }) => {
   const fetchCmsData = async () => {
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/contact",
+        "http://localhost:4000/api/auth/cms/contact",
         {
           credentials: "include",
         }
@@ -3502,7 +3469,7 @@ const CMSManagement = ({ setSelected }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/contact",
+        "http://localhost:4000/api/auth/cms/contact",
         {
           method: "PUT",
           headers: {
@@ -3720,7 +3687,7 @@ const TickerCMS = ({ setSelected }) => {
   const fetchTickerData = async () => {
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/ticker",
+        "http://localhost:4000/api/auth/cms/ticker",
         {
           credentials: "include",
         }
@@ -3739,7 +3706,7 @@ const TickerCMS = ({ setSelected }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/ticker",
+        "http://localhost:4000/api/auth/cms/ticker",
         {
           method: "PUT",
           headers: {
@@ -3958,7 +3925,7 @@ const MissionVisionCMS = ({ setSelected }) => {
   const fetchMissionVisionData = async () => {
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/mission-vision",
+        "http://localhost:4000/api/auth/cms/mission-vision",
         {
           credentials: "include",
         }
@@ -4151,7 +4118,7 @@ const MissionVisionCMS = ({ setSelected }) => {
       };
 
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/mission-vision",
+        "http://localhost:4000/api/auth/cms/mission-vision",
         {
           method: "PUT",
           headers: {
@@ -4524,7 +4491,7 @@ const SupplyListCMS = ({ setSelected }) => {
   const fetchSupplyListData = async () => {
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/supply-list",
+        "http://localhost:4000/api/auth/cms/supply-list",
         {
           credentials: "include",
         }
@@ -4546,7 +4513,7 @@ const SupplyListCMS = ({ setSelected }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/supply-list",
+        "http://localhost:4000/api/auth/cms/supply-list",
         {
           method: "PUT",
           headers: {
@@ -4751,7 +4718,7 @@ const IslamicStudiesCMS = ({ setSelected }) => {
   const fetchSlides = async () => {
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/islamic-studies",
+        "http://localhost:4000/api/auth/cms/islamic-studies",
         {
           credentials: "include",
         }
@@ -4794,7 +4761,7 @@ const IslamicStudiesCMS = ({ setSelected }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/islamic-studies",
+        "http://localhost:4000/api/auth/cms/islamic-studies",
         {
           method: "PUT",
           headers: {
@@ -4963,7 +4930,7 @@ const CurricularCMS = ({ setSelected }) => {
   const fetchSections = async () => {
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/curricular",
+        "http://localhost:4000/api/auth/cms/curricular",
         {
           credentials: "include",
         }
@@ -4986,7 +4953,7 @@ const CurricularCMS = ({ setSelected }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/curricular",
+        "http://localhost:4000/api/auth/cms/curricular",
         {
           method: "PUT",
           headers: {

@@ -278,7 +278,7 @@ export default function JobApplication() {
       }
       
       // Submit to API
-      const response = await fetch('https://alrasheedacademyserver.onrender.com/api/job-applications', {
+      const response = await fetch('http://localhost:4000/api/job-applications', {
         method: 'POST',
         body: apiFormData,
       });

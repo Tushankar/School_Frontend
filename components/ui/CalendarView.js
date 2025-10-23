@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
 import { Button } from "./button";
 import { Input } from "./input";
 
-const API_URL = "https://alrasheedacademyserver.onrender.com/api/calendar";
+const API_URL = "http://localhost:4000/api/calendar";
 
 const CalendarView = ({ setSelected }) => {
   const [currentDate, setCurrentDate] = useState(new Date());

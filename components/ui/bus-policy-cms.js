@@ -147,7 +147,7 @@ const BusPolicyCMS = ({ setSelected }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/bus-policy"
+        "http://localhost:4000/api/auth/cms/bus-policy"
       );
       if (response.ok) {
         const data = await response.json();
@@ -167,7 +167,7 @@ const BusPolicyCMS = ({ setSelected }) => {
     setSaving(true);
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/bus-policy",
+        "http://localhost:4000/api/auth/cms/bus-policy",
         {
           method: "PUT",
           headers: {

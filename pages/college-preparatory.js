@@ -199,7 +199,7 @@ const CollegeGuidancePage = () => {
   const fetchCollegeData = async () => {
     try {
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/auth/cms/college-preparatory"
+        "http://localhost:4000/api/auth/cms/college-preparatory"
       );
       if (response.ok) {
         const data = await response.json();

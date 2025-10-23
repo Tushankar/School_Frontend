@@ -148,7 +148,7 @@ function CurricularPage() {
     const fetchCurriculumData = async () => {
       try {
         const response = await fetch(
-          "https://alrasheedacademyserver.onrender.com/api/auth/cms/curricular"
+          "http://localhost:4000/api/auth/cms/curricular"
         );
         if (response.ok) {
           const data = await response.json();

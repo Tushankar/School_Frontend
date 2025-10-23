@@ -76,7 +76,7 @@ export default function BentoGridPage() {
     const fetchBentoGridData = async () => {
       try {
         const response = await fetch(
-          "https://alrasheedacademyserver.onrender.com/api/auth/cms/bento-grid"
+          "http://localhost:4000/api/auth/cms/bento-grid"
         );
         if (response.ok) {
           const data = await response.json();

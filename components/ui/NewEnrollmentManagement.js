@@ -25,7 +25,7 @@ const EnrollmentTable = ({ setSelected }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/forms/enrollments"
+        "http://localhost:4000/api/forms/enrollments"
       );
       const data = await response.json();
 
@@ -221,7 +221,7 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/forms/enrollments/${id}`
+        `http://localhost:4000/api/forms/enrollments/${id}`
       );
       const data = await response.json();
 

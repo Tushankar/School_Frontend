@@ -93,7 +93,7 @@ export default function Ticker() {
     const fetchTickerData = async () => {
       try {
         const response = await fetch(
-          "https://alrasheedacademyserver.onrender.com/api/auth/cms/ticker"
+          "http://localhost:4000/api/auth/cms/ticker"
         );
         if (response.ok) {
           const data = await response.json();

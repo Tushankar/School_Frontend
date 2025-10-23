@@ -27,7 +27,7 @@ const DressCodePage = () => {
     const fetchDressCodeData = async () => {
       try {
         const response = await fetch(
-          "https://alrasheedacademyserver.onrender.com/api/auth/cms/dress-code"
+          "http://localhost:4000/api/auth/cms/dress-code"
         );
         if (response.ok) {
           const data = await response.json();
