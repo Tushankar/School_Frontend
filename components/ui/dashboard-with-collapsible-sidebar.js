@@ -3501,12 +3501,21 @@ const CMSManagement = ({ setSelected }) => {
   const handleSave = async () => {
     setLoading(true);
     try {
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!storedToken) {
+        toast.error("You must be logged in to save changes");
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch(
         "https://alrasheedacademyserver.onrender.com/api/auth/cms/contact",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           credentials: "include",
           body: JSON.stringify({ content: cmsData }),
@@ -3518,6 +3527,7 @@ const CMSManagement = ({ setSelected }) => {
         toast.error("Failed to update CMS");
       }
     } catch (err) {
+      console.error("Error updating CMS", err);
       toast.error("Error updating CMS");
     } finally {
       setLoading(false);
@@ -3738,12 +3748,21 @@ const TickerCMS = ({ setSelected }) => {
   const handleSave = async () => {
     setLoading(true);
     try {
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!storedToken) {
+        toast.error("You must be logged in to save changes");
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch(
         "https://alrasheedacademyserver.onrender.com/api/auth/cms/ticker",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           credentials: "include",
           body: JSON.stringify({ content: tickerData }),
@@ -3752,9 +3771,11 @@ const TickerCMS = ({ setSelected }) => {
       if (response.ok) {
         toast.success("Ticker updated successfully!");
       } else {
-        toast.error("Failed to update ticker");
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.error || "Failed to update ticker");
       }
     } catch (err) {
+      console.error("Error updating ticker", err);
       toast.error("Error updating ticker");
     } finally {
       setLoading(false);
@@ -4156,6 +4177,9 @@ const MissionVisionCMS = ({ setSelected }) => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${
+              typeof window !== "undefined" ? localStorage.getItem("token") : ""
+            }`,
           },
           credentials: "include",
           body: JSON.stringify({ content: dataToSave }),
@@ -4545,12 +4569,21 @@ const SupplyListCMS = ({ setSelected }) => {
   const handleSave = async () => {
     setLoading(true);
     try {
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!storedToken) {
+        toast.error("You must be logged in to save changes");
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch(
         "https://alrasheedacademyserver.onrender.com/api/auth/cms/supply-list",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           credentials: "include",
           body: JSON.stringify({ content: supplyListData }),
@@ -4793,12 +4826,21 @@ const IslamicStudiesCMS = ({ setSelected }) => {
   const handleSave = async () => {
     setLoading(true);
     try {
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!storedToken) {
+        toast.error("You must be logged in to save changes");
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch(
         "https://alrasheedacademyserver.onrender.com/api/auth/cms/islamic-studies",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           credentials: "include",
           body: JSON.stringify({ content: { slides } }),
@@ -4808,7 +4850,7 @@ const IslamicStudiesCMS = ({ setSelected }) => {
         toast.success("Islamic Studies slides updated successfully!");
         fetchSlides();
       } else {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
         toast.error(
           errorData.error || "Failed to update islamic studies slides"
         );
@@ -4985,12 +5027,21 @@ const CurricularCMS = ({ setSelected }) => {
   const handleSave = async () => {
     setLoading(true);
     try {
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!storedToken) {
+        toast.error("You must be logged in to save changes");
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch(
         "https://alrasheedacademyserver.onrender.com/api/auth/cms/curricular",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           credentials: "include",
           body: JSON.stringify({ content: { sections } }),
@@ -5000,7 +5051,7 @@ const CurricularCMS = ({ setSelected }) => {
         toast.success("Curricular sections updated successfully!");
         fetchSections();
       } else {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
         toast.error(errorData.error || "Failed to update curricular sections");
       }
     } catch (err) {
