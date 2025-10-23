@@ -25,6 +25,7 @@ const NavBarOnly = () => {
   const [navItems, setNavItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [expandedMenuItem, setExpandedMenuItem] = useState(null);
 
   useEffect(() => {
     const fetchNavItems = async () => {
@@ -297,38 +298,83 @@ const NavBarOnly = () => {
           <div className="lg:hidden bg-gradient-to-r from-[#381607] to-black backdrop-blur-sm px-4 py-6 space-y-4 relative z-[9998]">
             {navItems.map((item, index) => (
               <div key={index}>
-                <Link
-                  href={item.url}
-                  className="block text-white hover:text-yellow-500 py-2 font-serif"
-                >
-                  {item.name}
-                </Link>
-                {item.dropdown && item.dropdown.length > 0 && (
-                  <div className="pl-4 space-y-2 mt-2">
-                    {item.dropdown.map((subItem, subIndex) => (
-                      <div key={subIndex}>
-                        <Link
-                          href={subItem.url}
-                          className="block text-gray-300 hover:text-yellow-500 py-1 text-sm"
-                        >
-                          {subItem.name}
-                        </Link>
-                        {subItem.dropdown && subItem.dropdown.length > 0 && (
-                          <div className="pl-4 space-y-1 mt-1">
-                            {subItem.dropdown.map((nestedItem, nestedIndex) => (
-                              <Link
-                                key={nestedIndex}
-                                href={nestedItem.url}
-                                className="block text-gray-400 hover:text-yellow-500 py-1 text-xs"
-                              >
-                                {nestedItem.name}
-                              </Link>
-                            ))}
+                {item.dropdown && item.dropdown.length > 0 ? (
+                  <>
+                    <button
+                      onClick={() =>
+                        setExpandedMenuItem(
+                          expandedMenuItem === index ? null : index
+                        )
+                      }
+                      className="w-full flex items-center justify-between text-white hover:text-yellow-500 py-2 font-serif text-left"
+                    >
+                      <span>{item.name}</span>
+                      <svg
+                        className={`w-4 h-4 transition-transform ${
+                          expandedMenuItem === index ? "rotate-180" : ""
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                        />
+                      </svg>
+                    </button>
+                    {expandedMenuItem === index && (
+                      <div className="pl-4 space-y-2 mt-2">
+                        {item.dropdown.map((subItem, subIndex) => (
+                          <div key={subIndex}>
+                            <Link
+                              href={subItem.url}
+                              className="block text-gray-300 hover:text-yellow-500 py-1 text-sm"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                setExpandedMenuItem(null);
+                              }}
+                            >
+                              {subItem.name}
+                            </Link>
+                            {subItem.dropdown &&
+                              subItem.dropdown.length > 0 && (
+                                <div className="pl-4 space-y-1 mt-1">
+                                  {subItem.dropdown.map(
+                                    (nestedItem, nestedIndex) => (
+                                      <Link
+                                        key={nestedIndex}
+                                        href={nestedItem.url}
+                                        className="block text-gray-400 hover:text-yellow-500 py-1 text-xs"
+                                        onClick={() => {
+                                          setMobileMenuOpen(false);
+                                          setExpandedMenuItem(null);
+                                        }}
+                                      >
+                                        {nestedItem.name}
+                                      </Link>
+                                    )
+                                  )}
+                                </div>
+                              )}
                           </div>
-                        )}
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    )}
+                  </>
+                ) : (
+                  <Link
+                    href={item.url}
+                    className="block text-white hover:text-yellow-500 py-2 font-serif"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setExpandedMenuItem(null);
+                    }}
+                  >
+                    {item.name}
+                  </Link>
                 )}
               </div>
             ))}
