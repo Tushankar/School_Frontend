@@ -119,7 +119,11 @@ const IslamicCenterPage = () => {
           key={index}
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
           style={{
-            backgroundImage: `url(${image})`,
+            backgroundImage: `url(${
+              image.startsWith("/uploads/")
+                ? `https://alrasheedacademyserver.onrender.com${image}`
+                : image
+            })`,
             opacity: index === currentImage ? 0.9 : 0,
           }}
         />

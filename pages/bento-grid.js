@@ -34,7 +34,11 @@ function BentoDemo({ features }) {
         // Convert backgroundImage string to ReactNode
         const backgroundElement = feature.backgroundImage ? (
           <img
-            src={feature.backgroundImage}
+            src={
+              feature.backgroundImage.startsWith("/uploads/")
+                ? `https://alrasheedacademyserver.onrender.com${feature.backgroundImage}`
+                : feature.backgroundImage
+            }
             alt={feature.name}
             className="absolute inset-0 w-full h-full object-cover"
           />

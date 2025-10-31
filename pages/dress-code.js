@@ -79,7 +79,9 @@ const DressCodePage = () => {
               className="absolute inset-0"
               style={{
                 backgroundImage: `url('${
-                  cmsData.banner?.backgroundImage || "/assets/hall.jpg"
+                  cmsData.banner?.backgroundImage?.startsWith("/uploads/")
+                    ? `https://alrasheedacademyserver.onrender.com${cmsData.banner.backgroundImage}`
+                    : cmsData.banner?.backgroundImage || "/assets/hall.jpg"
                 }')`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
@@ -615,7 +617,15 @@ const DressCodePage = () => {
                           <div className="flex items-center justify-center">
                             <div className="w-48 h-48 bg-white rounded-xl shadow-lg border-4 border-blue-200 overflow-hidden flex items-center justify-center">
                               <img
-                                src="/assets/12grade.png"
+                                src={
+                                  cmsData.uniforms?.daily?.gradeSections?.[0]?.image?.startsWith(
+                                    "/uploads/"
+                                  )
+                                    ? `https://alrasheedacademyserver.onrender.com${cmsData.uniforms.daily.gradeSections[0].image}`
+                                    : cmsData.uniforms?.daily
+                                        ?.gradeSections?.[0]?.image ||
+                                      "/assets/12grade.png"
+                                }
                                 alt="Kindergarten through 3rd grade uniform"
                                 className="w-full h-full object-contain p-2"
                               />
@@ -667,7 +677,15 @@ const DressCodePage = () => {
                           <div className="flex items-center justify-center">
                             <div className="w-48 h-48 bg-white rounded-xl shadow-lg border-4 border-purple-200 overflow-hidden flex items-center justify-center">
                               <img
-                                src="/assets/hijabblack.png"
+                                src={
+                                  cmsData.uniforms?.daily?.gradeSections?.[1]?.image?.startsWith(
+                                    "/uploads/"
+                                  )
+                                    ? `https://alrasheedacademyserver.onrender.com${cmsData.uniforms.daily.gradeSections[1].image}`
+                                    : cmsData.uniforms?.daily
+                                        ?.gradeSections?.[1]?.image ||
+                                      "/assets/hijabblack.png"
+                                }
                                 alt="4th through 12th grade uniform"
                                 className="w-full h-full object-contain p-2"
                               />
@@ -724,37 +742,64 @@ const DressCodePage = () => {
                               <div className="text-center">
                                 <div className="bg-white rounded-lg shadow-md p-2 mb-2 border-2 border-teal-200 h-24 overflow-hidden">
                                   <img
-                                    src="/assets/kgpant.png"
+                                    src={
+                                      cmsData.uniforms?.daily?.gradeSections?.[2]?.images?.[0]?.startsWith(
+                                        "/uploads/"
+                                      )
+                                        ? `https://alrasheedacademyserver.onrender.com${cmsData.uniforms.daily.gradeSections[2].images[0]}`
+                                        : cmsData.uniforms?.daily
+                                            ?.gradeSections?.[2]?.images?.[0] ||
+                                          "/assets/kgpant.png"
+                                    }
                                     alt="Elementary uniform"
                                     className="w-full h-full object-contain"
                                   />
                                 </div>
                                 <p className="text-xs font-medium text-gray-700">
-                                  Elementary
+                                  {cmsData.uniforms?.daily?.gradeSections?.[2]
+                                    ?.imageLabels?.[0] || "Elementary"}
                                 </p>
                               </div>
                               <div className="text-center">
                                 <div className="bg-white rounded-lg shadow-md p-2 mb-2 border-2 border-teal-200 h-24 overflow-hidden">
                                   <img
-                                    src="/assets/shoe.png"
+                                    src={
+                                      cmsData.uniforms?.daily?.gradeSections?.[2]?.images?.[1]?.startsWith(
+                                        "/uploads/"
+                                      )
+                                        ? `https://alrasheedacademyserver.onrender.com${cmsData.uniforms.daily.gradeSections[2].images[1]}`
+                                        : cmsData.uniforms?.daily
+                                            ?.gradeSections?.[2]?.images?.[1] ||
+                                          "/assets/shoe.png"
+                                    }
                                     alt="School shoes"
                                     className="w-full h-full object-contain"
                                   />
                                 </div>
                                 <p className="text-xs font-medium text-gray-700">
-                                  School Shoes
+                                  {cmsData.uniforms?.daily?.gradeSections?.[2]
+                                    ?.imageLabels?.[1] || "School Shoes"}
                                 </p>
                               </div>
                               <div className="text-center">
                                 <div className="bg-white rounded-lg shadow-md p-2 mb-2 border-2 border-teal-200 h-24 overflow-hidden">
                                   <img
-                                    src="/assets/kgthr12Pant.png"
+                                    src={
+                                      cmsData.uniforms?.daily?.gradeSections?.[2]?.images?.[2]?.startsWith(
+                                        "/uploads/"
+                                      )
+                                        ? `https://alrasheedacademyserver.onrender.com${cmsData.uniforms.daily.gradeSections[2].images[2]}`
+                                        : cmsData.uniforms?.daily
+                                            ?.gradeSections?.[2]?.images?.[2] ||
+                                          "/assets/kgthr12Pant.png"
+                                    }
                                     alt="High school uniform"
                                     className="w-full h-full object-contain"
                                   />
                                 </div>
                                 <p className="text-xs font-medium text-gray-700">
-                                  High School
+                                  {cmsData.uniforms?.daily?.gradeSections?.[2]
+                                    ?.imageLabels?.[2] || "High School"}
                                 </p>
                               </div>
                             </div>

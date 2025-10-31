@@ -221,7 +221,11 @@ export default function IslamicStudies() {
                   className="relative flex-shrink-0 w-full h-screen overflow-hidden"
                 >
                   <img
-                    src={slide.img}
+                    src={
+                      slide.img.startsWith("/uploads/")
+                        ? `https://alrasheedacademyserver.onrender.com${slide.img}`
+                        : slide.img
+                    }
                     alt={slide.heading}
                     className="w-full h-full object-cover"
                   />

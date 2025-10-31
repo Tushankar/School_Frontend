@@ -91,18 +91,18 @@ const defaultMembers = [
 ]
 
 export default function GirlsFacultySection() {
+    const [banner, setBanner] = useState({ backgroundImage: '/assets/hall.jpg', title: 'Girls\' Section Faculty', breadcrumb: 'Home › Girls Faculty' })
     const [members, setMembers] = useState(defaultMembers)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchMembers = async () => {
             try {
-                const response = await fetch('/api/auth/cms/girls-faculty')
+                const response = await fetch('https://alrasheedacademyserver.onrender.com/api/auth/cms/girls-faculty')
                 if (response.ok) {
                     const data = await response.json()
-                    if (data.content?.members && data.content.members.length > 0) {
-                        setMembers(data.content.members)
-                    }
+                    if (data.banner) setBanner(prev => ({ ...prev, ...data.banner }))
+                    if (Array.isArray(data.members)) setMembers(data.members)
                 }
             } catch (error) {
                 console.error('Error fetching girls faculty data:', error)
@@ -113,9 +113,7 @@ export default function GirlsFacultySection() {
         fetchMembers()
     }, [])
 
-    if (loading) {
-        return <div className="w-full h-screen flex items-center justify-center">Loading...</div>
-    }
+    const displayMembers = loading ? [] : (members.length ? members : defaultMembers)
 
     return (
         <>
@@ -128,7 +126,7 @@ export default function GirlsFacultySection() {
                 style={{
                     position: "absolute",
                     inset: 0,
-                    backgroundImage: "url('/assets/hall.jpg')",
+                    backgroundImage: `url('${banner.backgroundImage.startsWith('/uploads/') ? `https://alrasheedacademyserver.onrender.com${banner.backgroundImage}` : banner.backgroundImage}')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center"
                 }}
@@ -145,7 +143,7 @@ export default function GirlsFacultySection() {
                         letterSpacing: "0.05em"
                     }}
                 >
-                    Girls&apos; Section Faculty
+                    {banner.title}
                 </motion.h1>
                 <motion.p
                     initial={{ x: 100, opacity: 0 }}
@@ -156,7 +154,7 @@ export default function GirlsFacultySection() {
                         fontSize: "0.875rem"
                     }}
                 >
-                    Home › Girls Faculty
+                    {banner.breadcrumb}
                 </motion.p>
             </div>
         </div>
@@ -165,7 +163,7 @@ export default function GirlsFacultySection() {
             <div className="mx-auto max-w-5xl px-6">
                 <div className="mt-12 md:mt-24">
                     <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-                        {members.map((member, index) => {
+                        {displayMembers.map((member, index) => {
                             const directions = [
                                 { x: -100, y: 0 },
                                 { x: 0, y: -100 },
@@ -184,7 +182,7 @@ export default function GirlsFacultySection() {
                                         overflow: "hidden"
                                     }}
                                 >
-                                    <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar} alt="faculty member" width="826" height="1239" />
+                                    <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar.startsWith('/uploads/') ? `https://alrasheedacademyserver.onrender.com${member.avatar}` : member.avatar} alt="faculty member" width="826" height="1239" />
                                     <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
                                         <motion.div
                                             initial={{ opacity: 0, y: 20 }}

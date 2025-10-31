@@ -10,6 +10,13 @@ export default function MissionVisionPage() {
     fetchMissionVisionData();
   }, []);
 
+  const getFullImageUrl = (imageUrl) => {
+    if (imageUrl && imageUrl.startsWith("/uploads/")) {
+      return `https://alrasheedacademyserver.onrender.com${imageUrl}`;
+    }
+    return imageUrl;
+  };
+
   const fetchMissionVisionData = async () => {
     try {
       const response = await fetch(
@@ -146,7 +153,9 @@ export default function MissionVisionPage() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="absolute inset-0"
           style={{
-            backgroundImage: `url('${cmsData.banner.backgroundImage}')`,
+            backgroundImage: `url('${getFullImageUrl(
+              cmsData.banner.backgroundImage
+            )}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -360,7 +369,9 @@ export default function MissionVisionPage() {
               <div
                 className="rounded-2xl overflow-hidden shadow-lg mx-4 md:mx-0"
                 style={{
-                  backgroundImage: `url('${cmsData.philosophy.backgroundImage}')`,
+                  backgroundImage: `url('${getFullImageUrl(
+                    cmsData.philosophy.backgroundImage
+                  )}')`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   minHeight: "240px",

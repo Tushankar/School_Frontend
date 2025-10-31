@@ -146,7 +146,11 @@ const TrustedBrands = () => {
                 }}
               >
                 <img
-                  src={brand.image}
+                  src={
+                    brand.image.startsWith("/uploads/")
+                      ? `https://alrasheedacademyserver.onrender.com${brand.image}`
+                      : brand.image
+                  }
                   alt={brand.alt}
                   style={{
                     height: "170px",

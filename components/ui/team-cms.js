@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
@@ -45,6 +45,9 @@ const TeamCMS = ({ setSelected }) => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const fileInputRef = useRef(null);
+  const memberFileInputRefs = useRef([]);
 
   useEffect(() => {
     fetchTeamData();
@@ -155,6 +158,97 @@ const TeamCMS = ({ setSelected }) => {
     }));
   };
 
+  const handleImageUpload = async (file) => {
+    if (!file) return;
+
+    setUploadLoading(true);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/upload-image",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${
+              typeof window !== "undefined" ? localStorage.getItem("token") : ""
+            }`,
+          },
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setTeamData((prev) => ({
+          ...prev,
+          banner: { ...prev.banner, backgroundImage: data.imageUrl },
+        }));
+        toast.success("Image uploaded successfully!");
+        // Clear the file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Failed to upload image");
+        // Revert to previous value on error
+        setTeamData((prev) => prev); // Keep current value
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Error uploading image");
+      // Revert to previous value on error
+      setTeamData((prev) => prev); // Keep current value
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
+  const handleMemberImageUpload = async (file, memberIndex) => {
+    if (!file) return;
+
+    setUploadLoading(true);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/upload-image",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${
+              typeof window !== "undefined" ? localStorage.getItem("token") : ""
+            }`,
+          },
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        updateMember(memberIndex, "avatar", data.imageUrl);
+        toast.success("Member image uploaded successfully!");
+        // Clear the file input
+        if (memberFileInputRefs.current[memberIndex]) {
+          memberFileInputRefs.current[memberIndex].value = "";
+        }
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Failed to upload member image");
+      }
+    } catch (error) {
+      console.error("Member upload error:", error);
+      toast.error("Error uploading member image");
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-4 md:space-y-6 p-3 md:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4">
@@ -191,18 +285,58 @@ const TeamCMS = ({ setSelected }) => {
         <div className="grid grid-cols-1 gap-3 md:gap-4">
           <div>
             <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
-              Background Image URL
+              Background Image
             </label>
-            <Input
-              value={teamData.banner.backgroundImage}
-              onChange={(e) =>
-                setTeamData((prev) => ({
-                  ...prev,
-                  banner: { ...prev.banner, backgroundImage: e.target.value },
-                }))
-              }
-              className="text-sm"
-            />
+            <div className="space-y-2">
+              <Input
+                value={teamData.banner.backgroundImage}
+                onChange={(e) =>
+                  setTeamData((prev) => ({
+                    ...prev,
+                    banner: { ...prev.banner, backgroundImage: e.target.value },
+                  }))
+                }
+                placeholder="/assets/hall.jpg or https://example.com/image.jpg"
+                className="text-sm"
+              />
+              <div className="flex items-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      handleImageUpload(file);
+                    }
+                  }}
+                  className="hidden"
+                  id="banner-image-upload"
+                />
+                <label
+                  htmlFor="banner-image-upload"
+                  className="cursor-pointer bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded text-sm transition-colors"
+                >
+                  {uploadLoading ? "Uploading..." : "Upload Image"}
+                </label>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  or enter URL above
+                </span>
+              </div>
+              {teamData.banner.backgroundImage && (
+                <div className="mt-2">
+                  <img
+                    src={
+                      teamData.banner.backgroundImage.startsWith("/uploads/")
+                        ? `https://alrasheedacademyserver.onrender.com${teamData.banner.backgroundImage}`
+                        : teamData.banner.backgroundImage
+                    }
+                    alt="Banner preview"
+                    className="w-full h-32 object-cover rounded border"
+                  />
+                </div>
+              )}
+            </div>
           </div>
           <div>
             <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
@@ -278,13 +412,55 @@ const TeamCMS = ({ setSelected }) => {
               </div>
               <div>
                 <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Avatar URL
+                  Avatar
                 </label>
-                <Input
-                  value={member.avatar}
-                  onChange={(e) => updateMember(idx, "avatar", e.target.value)}
-                  className="text-sm"
-                />
+                <div className="space-y-2">
+                  <Input
+                    value={member.avatar}
+                    onChange={(e) =>
+                      updateMember(idx, "avatar", e.target.value)
+                    }
+                    placeholder="https://example.com/avatar.jpg"
+                    className="text-sm"
+                  />
+                  <div className="flex items-center gap-2">
+                    <input
+                      ref={(el) => (memberFileInputRefs.current[idx] = el)}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          handleMemberImageUpload(file, idx);
+                        }
+                      }}
+                      className="hidden"
+                      id={`member-avatar-upload-${idx}`}
+                    />
+                    <label
+                      htmlFor={`member-avatar-upload-${idx}`}
+                      className="cursor-pointer bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded text-sm transition-colors"
+                    >
+                      {uploadLoading ? "Uploading..." : "Upload Avatar"}
+                    </label>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      or enter URL above
+                    </span>
+                  </div>
+                  {member.avatar && (
+                    <div className="mt-2">
+                      <img
+                        src={
+                          member.avatar.startsWith("/uploads/")
+                            ? `https://alrasheedacademyserver.onrender.com${member.avatar}`
+                            : member.avatar
+                        }
+                        alt={`${member.name || "Member"} avatar preview`}
+                        className="w-16 h-16 object-cover rounded-full border"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
               <div>
                 <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

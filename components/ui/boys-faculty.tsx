@@ -123,7 +123,7 @@ export default function BoysFacultySection() {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 1, ease: "easeOut" }}
                 style={{
-                    backgroundImage: `url('${banner.backgroundImage}')`,
+                    backgroundImage: `url('${banner.backgroundImage.startsWith('/uploads/') ? `https://alrasheedacademyserver.onrender.com${banner.backgroundImage}` : banner.backgroundImage}')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     position: "absolute",
@@ -173,7 +173,7 @@ export default function BoysFacultySection() {
                                     transition={{ duration: 0.6, ease: "easeOut" }}
                                 >
                                     <div className="group overflow-hidden">
-                                        <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar} alt="faculty member" width="826" height="1239" />
+                                        <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar.startsWith('/uploads/') ? `https://alrasheedacademyserver.onrender.com${member.avatar}` : member.avatar} alt="faculty member" width="826" height="1239" />
                                         <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
                                             <motion.div
                                                 style={{ display: "flex", justifyContent: "space-between" }}

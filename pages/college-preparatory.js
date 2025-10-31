@@ -311,7 +311,9 @@ const CollegeGuidancePage = () => {
           className="absolute inset-0"
           style={{
             backgroundImage: `url('${
-              collegeData.banner?.backgroundImage || "/assets/hall.jpg"
+              collegeData.banner?.backgroundImage?.startsWith("/uploads/")
+                ? `https://alrasheedacademyserver.onrender.com${collegeData.banner.backgroundImage}`
+                : collegeData.banner?.backgroundImage || "/assets/hall.jpg"
             }')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
@@ -358,8 +360,10 @@ const CollegeGuidancePage = () => {
                 <div className="bg-white rounded-lg shadow-md overflow-hidden flex-1">
                   <img
                     src={
-                      collegeData.hero?.image ||
-                      "https://images.unsplash.com/photo-1760605193118-a3536e1eea61?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&q=60&w=600"
+                      collegeData.hero?.image?.startsWith("/uploads/")
+                        ? `https://alrasheedacademyserver.onrender.com${collegeData.hero.image}`
+                        : collegeData.hero?.image ||
+                          "https://images.unsplash.com/photo-1760605193118-a3536e1eea61?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&q=60&w=600"
                     }
                     alt={
                       collegeData.hero?.imageAlt ||

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Textarea } from "./textarea";
@@ -142,6 +142,9 @@ const DressCodeCMS = ({ setSelected }) => {
 
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const fileInputRef = useRef(null);
+  const gradeSectionFileInputRefs = useRef([]);
 
   useEffect(() => {
     fetchDressCodeData();
@@ -305,6 +308,53 @@ const DressCodeCMS = ({ setSelected }) => {
     });
   };
 
+  const handleImageUpload = async (file) => {
+    if (!file) return null;
+    setUploadLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const headers = {};
+      if (storedToken) headers.Authorization = `Bearer ${storedToken}`;
+
+      const res = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/upload",
+        {
+          method: "POST",
+          headers,
+          credentials: "include",
+          body: formData,
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        toast.success("Image uploaded successfully!");
+        return data.imageUrl;
+      } else {
+        toast.error("Failed to upload image");
+        return null;
+      }
+    } catch (err) {
+      console.error("Error uploading image", err);
+      toast.error("Error uploading image");
+      return null;
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
+  const handleGradeSectionImageUpload = async (file, index) => {
+    if (!file) return;
+    const imageUrl = await handleImageUpload(file);
+    if (imageUrl) {
+      handleGradeSectionChange(index, "image", imageUrl);
+    }
+  };
+
   const iconOptions = [
     { value: "ShirtIcon", label: "Shirt Icon" },
     { value: "Calendar", label: "Calendar" },
@@ -389,6 +439,49 @@ const DressCodeCMS = ({ setSelected }) => {
               placeholder="/assets/hall.jpg"
               className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
             />
+            <div className="flex gap-2 mt-2">
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const imageUrl = await handleImageUpload(file);
+                    if (imageUrl) {
+                      setDressCodeData({
+                        ...dressCodeData,
+                        banner: {
+                          ...dressCodeData.banner,
+                          backgroundImage: imageUrl,
+                        },
+                      });
+                    }
+                  }
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadLoading}
+                className="text-xs md:text-sm"
+              >
+                {uploadLoading ? "Uploading..." : "Upload Image"}
+              </Button>
+            </div>
+            {dressCodeData.banner.backgroundImage && (
+              <img
+                src={
+                  dressCodeData.banner.backgroundImage.startsWith("/uploads/")
+                    ? `https://alrasheedacademyserver.onrender.com${dressCodeData.banner.backgroundImage}`
+                    : dressCodeData.banner.backgroundImage
+                }
+                alt="banner preview"
+                className="mt-2 h-16 md:h-24 w-full object-cover rounded-md border"
+              />
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -845,6 +938,44 @@ const DressCodeCMS = ({ setSelected }) => {
                     placeholder="/assets/uniform.png"
                     className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
                   />
+                  <div className="flex gap-2 mt-2">
+                    <input
+                      type="file"
+                      ref={(el) =>
+                        (gradeSectionFileInputRefs.current[index] = el)
+                      }
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          handleGradeSectionImageUpload(file, index);
+                        }
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        gradeSectionFileInputRefs.current[index]?.click()
+                      }
+                      disabled={uploadLoading}
+                      className="text-xs md:text-sm"
+                    >
+                      {uploadLoading ? "Uploading..." : "Upload Image"}
+                    </Button>
+                  </div>
+                  {section.image && (
+                    <img
+                      src={
+                        section.image.startsWith("/uploads/")
+                          ? `https://alrasheedacademyserver.onrender.com${section.image}`
+                          : section.image
+                      }
+                      alt="grade section preview"
+                      className="mt-2 h-16 md:h-24 w-16 md:w-24 object-cover rounded-md border"
+                    />
+                  )}
                 </div>
               </div>
 

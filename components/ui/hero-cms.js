@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "./button";
 import { Input } from "./input";
@@ -30,6 +30,8 @@ const HeroCMS = ({ setSelected }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [currentPreviewImage, setCurrentPreviewImage] = useState(0);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const fileInputRefs = useRef([]);
 
   useEffect(() => {
     fetchHeroData();
@@ -125,6 +127,49 @@ const HeroCMS = ({ setSelected }) => {
       ...prev,
       backgroundImages: newImages,
     }));
+  };
+
+  const handleImageUpload = async (index, file) => {
+    if (!file) return;
+
+    setUploadLoading(true);
+    try {
+      const token = getToken();
+      if (!token) {
+        toast.error("You must be logged in to upload images");
+        setUploadLoading(false);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/upload",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const imageUrl = data.imageUrl;
+        handleImageChange(index, imageUrl);
+        toast.success(`Image ${index + 1} uploaded successfully!`);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error(error.message || "Failed to upload image");
+    } finally {
+      setUploadLoading(false);
+    }
   };
 
   if (loading) {
@@ -318,17 +363,58 @@ const HeroCMS = ({ setSelected }) => {
 
           <div className="space-y-4">
             {heroData.backgroundImages.map((image, index) => (
-              <div key={index}>
+              <div key={index} className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Image {index + 1}
                 </label>
-                <Input
-                  type="text"
-                  value={image}
-                  onChange={(e) => handleImageChange(index, e.target.value)}
-                  placeholder={`/assets/image_${index + 1}.png`}
-                  className="w-full"
-                />
+                <div className="flex gap-2">
+                  <Input
+                    type="text"
+                    value={image}
+                    onChange={(e) => handleImageChange(index, e.target.value)}
+                    placeholder={`/assets/image_${index + 1}.png`}
+                    className="flex-1"
+                  />
+                  <input
+                    type="file"
+                    ref={(el) => (fileInputRefs.current[index] = el)}
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        handleImageUpload(index, file);
+                      }
+                    }}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => fileInputRefs.current[index]?.click()}
+                    disabled={uploadLoading}
+                    variant="outline"
+                    size="sm"
+                    className="px-3 py-2"
+                  >
+                    {uploadLoading ? (
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+                    ) : (
+                      "Upload"
+                    )}
+                  </Button>
+                </div>
+                {image && (
+                  <div className="mt-2">
+                    <img
+                      src={
+                        image.startsWith("/uploads/")
+                          ? `https://alrasheedacademyserver.onrender.com${image}`
+                          : image
+                      }
+                      alt={`Preview ${index + 1}`}
+                      className="w-20 h-12 object-cover rounded border"
+                    />
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -366,7 +452,11 @@ const HeroCMS = ({ setSelected }) => {
                 key={index}
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
                 style={{
-                  backgroundImage: `url(${image})`,
+                  backgroundImage: `url(${
+                    image.startsWith("/uploads/")
+                      ? `https://alrasheedacademyserver.onrender.com${image}`
+                      : image
+                  })`,
                   opacity: index === currentPreviewImage ? 0.9 : 0,
                 }}
               />

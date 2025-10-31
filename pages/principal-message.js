@@ -36,6 +36,13 @@ export default function PrincipalMessage() {
     fetchPrincipalMessageData();
   }, []);
 
+  const getFullImageUrl = (imageUrl) => {
+    if (imageUrl && imageUrl.startsWith("/uploads/")) {
+      return `https://alrasheedacademyserver.onrender.com${imageUrl}`;
+    }
+    return imageUrl;
+  };
+
   const fetchPrincipalMessageData = async () => {
     try {
       const response = await fetch(
@@ -167,7 +174,9 @@ export default function PrincipalMessage() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="absolute inset-0"
           style={{
-            backgroundImage: `url('${principalMessageData.banner.backgroundImage}')`,
+            backgroundImage: `url('${getFullImageUrl(
+              principalMessageData.banner.backgroundImage
+            )}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

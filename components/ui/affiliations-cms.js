@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "./button";
 import { Input } from "./input";
@@ -46,6 +46,8 @@ const AffiliationsCMS = ({ setSelected }) => {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const fileInputRefs = useRef([]);
 
   useEffect(() => {
     fetchAffiliationsData();
@@ -147,6 +149,49 @@ const AffiliationsCMS = ({ setSelected }) => {
         [field]: value,
       },
     }));
+  };
+
+  const handleImageUpload = async (index, file) => {
+    if (!file) return;
+
+    setUploadLoading(true);
+    try {
+      const token = getToken();
+      if (!token) {
+        toast.error("You must be logged in to upload images");
+        setUploadLoading(false);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/upload",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const imageUrl = data.imageUrl;
+        handleLogoChange(index, "image", imageUrl);
+        toast.success(`Logo image ${index + 1} uploaded successfully!`);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error(error.message || "Failed to upload image");
+    } finally {
+      setUploadLoading(false);
+    }
   };
 
   if (loading) {
@@ -324,15 +369,43 @@ const AffiliationsCMS = ({ setSelected }) => {
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Image URL
                       </label>
-                      <Input
-                        type="text"
-                        value={logo.image}
-                        onChange={(e) =>
-                          handleLogoChange(index, "image", e.target.value)
-                        }
-                        placeholder="Enter logo image URL"
-                        className="w-full"
-                      />
+                      <div className="flex gap-2">
+                        <Input
+                          type="text"
+                          value={logo.image}
+                          onChange={(e) =>
+                            handleLogoChange(index, "image", e.target.value)
+                          }
+                          placeholder="Enter logo image URL"
+                          className="flex-1"
+                        />
+                        <input
+                          type="file"
+                          ref={(el) => (fileInputRefs.current[index] = el)}
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              handleImageUpload(index, file);
+                            }
+                          }}
+                          className="hidden"
+                        />
+                        <Button
+                          type="button"
+                          onClick={() => fileInputRefs.current[index]?.click()}
+                          disabled={uploadLoading}
+                          variant="outline"
+                          size="sm"
+                          className="px-3 py-2"
+                        >
+                          {uploadLoading ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+                          ) : (
+                            "Upload"
+                          )}
+                        </Button>
+                      </div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -352,8 +425,10 @@ const AffiliationsCMS = ({ setSelected }) => {
                     <div className="relative">
                       <img
                         src={
-                          logo.image ||
-                          "https://via.placeholder.com/150x80?text=No+Logo"
+                          logo.image.startsWith("/uploads/")
+                            ? `https://alrasheedacademyserver.onrender.com${logo.image}`
+                            : logo.image ||
+                              "https://via.placeholder.com/150x80?text=No+Logo"
                         }
                         alt={logo.alt || `Preview ${index + 1}`}
                         className="w-full h-16 object-contain rounded-lg border border-gray-200 dark:border-gray-700"
@@ -408,8 +483,10 @@ const AffiliationsCMS = ({ setSelected }) => {
                       >
                         <img
                           src={
-                            logo.image ||
-                            "https://via.placeholder.com/150x80?text=No+Logo"
+                            logo.image.startsWith("/uploads/")
+                              ? `https://alrasheedacademyserver.onrender.com${logo.image}`
+                              : logo.image ||
+                                "https://via.placeholder.com/150x80?text=No+Logo"
                           }
                           alt={logo.alt}
                           className="max-w-full max-h-full object-contain"

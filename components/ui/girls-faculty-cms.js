@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -103,6 +103,9 @@ export default function GirlsFacultyCMS({ setSelected }) {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const fileInputRef = useRef(null);
+  const memberFileInputRefs = useRef([]);
 
   useEffect(() => {
     fetchData();
@@ -206,6 +209,53 @@ export default function GirlsFacultyCMS({ setSelected }) {
     });
   };
 
+  const handleImageUpload = async (file) => {
+    if (!file) return null;
+    setUploadLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const headers = {};
+      if (storedToken) headers.Authorization = `Bearer ${storedToken}`;
+
+      const res = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/upload",
+        {
+          method: "POST",
+          headers,
+          credentials: "include",
+          body: formData,
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        toast.success("Image uploaded successfully!");
+        return data.imageUrl;
+      } else {
+        toast.error("Failed to upload image");
+        return null;
+      }
+    } catch (err) {
+      console.error("Error uploading image", err);
+      toast.error("Error uploading image");
+      return null;
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
+  const handleMemberImageUpload = async (file, index) => {
+    if (!file) return;
+    const imageUrl = await handleImageUpload(file);
+    if (imageUrl) {
+      updateMember(index, "avatar", imageUrl);
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -306,6 +356,46 @@ export default function GirlsFacultyCMS({ setSelected }) {
               }
               className="text-sm"
             />
+            <div className="flex gap-2 mt-2">
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const imageUrl = await handleImageUpload(file);
+                    if (imageUrl) {
+                      setData((prev) => ({
+                        ...prev,
+                        banner: { ...prev.banner, backgroundImage: imageUrl },
+                      }));
+                    }
+                  }
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadLoading}
+                className="text-xs md:text-sm"
+              >
+                {uploadLoading ? "Uploading..." : "Upload Image"}
+              </Button>
+            </div>
+            {data.banner.backgroundImage && (
+              <img
+                src={
+                  data.banner.backgroundImage.startsWith("/uploads/")
+                    ? `https://alrasheedacademyserver.onrender.com${data.banner.backgroundImage}`
+                    : data.banner.backgroundImage
+                }
+                alt="banner preview"
+                className="mt-2 h-16 md:h-24 w-full object-cover rounded-md border"
+              />
+            )}
           </div>
           <div>
             <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
@@ -429,6 +519,40 @@ export default function GirlsFacultyCMS({ setSelected }) {
                 onChange={(e) => updateMember(idx, "avatar", e.target.value)}
                 className="text-sm"
               />
+              <div className="flex gap-2 mt-2">
+                <input
+                  type="file"
+                  ref={(el) => (memberFileInputRefs.current[idx] = el)}
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      handleMemberImageUpload(file, idx);
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => memberFileInputRefs.current[idx]?.click()}
+                  disabled={uploadLoading}
+                  className="text-xs md:text-sm"
+                >
+                  {uploadLoading ? "Uploading..." : "Upload Image"}
+                </Button>
+              </div>
+              {member.avatar && (
+                <img
+                  src={
+                    member.avatar.startsWith("/uploads/")
+                      ? `https://alrasheedacademyserver.onrender.com${member.avatar}`
+                      : member.avatar
+                  }
+                  alt="avatar preview"
+                  className="mt-2 h-16 md:h-24 w-16 md:w-24 object-cover rounded-md border"
+                />
+              )}
             </div>
 
             <div>

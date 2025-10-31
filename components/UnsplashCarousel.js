@@ -262,7 +262,11 @@ const AboutUs = () => {
             {/* Main larger image - top right */}
             <div className="relative mb-4">
               <img
-                src={images[currentImageIndex]}
+                src={
+                  images[currentImageIndex].startsWith("/uploads/")
+                    ? `https://alrasheedacademyserver.onrender.com${images[currentImageIndex]}`
+                    : images[currentImageIndex]
+                }
                 alt="School"
                 className="w-full h-64 object-cover rounded-2xl"
                 onError={(e) => {
@@ -292,7 +296,15 @@ const AboutUs = () => {
               {/* Smaller image on the left */}
               <div className="flex-1 order-2 sm:order-1 relative">
                 <img
-                  src={images[(currentImageIndex + 1) % images.length]}
+                  src={
+                    images[(currentImageIndex + 1) % images.length].startsWith(
+                      "/uploads/"
+                    )
+                      ? `https://alrasheedacademyserver.onrender.com${
+                          images[(currentImageIndex + 1) % images.length]
+                        }`
+                      : images[(currentImageIndex + 1) % images.length]
+                  }
                   alt="School"
                   className="w-full h-40 object-cover rounded-2xl"
                 />

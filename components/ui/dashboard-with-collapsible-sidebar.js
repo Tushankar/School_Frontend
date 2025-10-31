@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   Home,
@@ -3970,7 +3970,9 @@ const MissionVisionCMS = ({ setSelected }) => {
         "We recognize that we exist in a worldwide community and that our educational program must reflect global needs. Our goal is to provide a positive Islamic learning environment that challenges students to grow mentally, academically, physically, and socially while ultimately preparing students to become productive members of society.",
     },
   });
+  const [uploadLoading, setUploadLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const fileInputRefs = useRef({ banner: null, philosophy: null });
 
   useEffect(() => {
     fetchMissionVisionData();
@@ -4264,6 +4266,56 @@ const MissionVisionCMS = ({ setSelected }) => {
     });
   };
 
+  const handleImageUpload = async (file, section, field) => {
+    if (!file) return;
+
+    // Store the current value to revert if upload fails
+    const currentValue = missionVisionData[section][field];
+
+    setUploadLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/upload-image",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${
+              typeof window !== "undefined" ? localStorage.getItem("token") : ""
+            }`,
+          },
+          credentials: "include",
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        // Update with the server URL only after successful upload
+        handleNestedChange(section, field, data.imageUrl);
+        toast.success("Image uploaded successfully!");
+
+        // Clear the file input so the same file can be selected again
+        if (fileInputRefs.current[section]) {
+          fileInputRefs.current[section].value = "";
+        }
+      } else {
+        // Revert to the previous value if upload failed
+        handleNestedChange(section, field, currentValue);
+        toast.error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      // Revert to the previous value if upload failed
+      handleNestedChange(section, field, currentValue);
+      toast.error("Error uploading image");
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -4293,20 +4345,67 @@ const MissionVisionCMS = ({ setSelected }) => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Background Image URL
+                Background Image
               </label>
-              <Input
-                value={missionVisionData.banner.backgroundImage || ""}
-                onChange={(e) =>
-                  handleNestedChange(
-                    "banner",
-                    "backgroundImage",
-                    e.target.value
-                  )
-                }
-                placeholder="/assets/hall.jpg"
-                className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
-              />
+              <div className="space-y-3">
+                <Input
+                  value={missionVisionData.banner.backgroundImage || ""}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      "banner",
+                      "backgroundImage",
+                      e.target.value
+                    )
+                  }
+                  placeholder="/assets/hall.jpg or https://example.com/image.jpg"
+                  className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
+                />
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    or
+                  </span>
+                  <input
+                    ref={(el) => (fileInputRefs.current.banner = el)}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        // Upload the file first, then update preview on success
+                        handleImageUpload(file, "banner", "backgroundImage");
+                      }
+                    }}
+                    disabled={uploadLoading}
+                    className="text-sm text-gray-600 dark:text-gray-400 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-300"
+                  />
+                  {uploadLoading && (
+                    <span className="text-sm text-blue-600">Uploading...</span>
+                  )}
+                </div>
+              </div>
+              {missionVisionData.banner.backgroundImage && (
+                <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Preview:
+                  </p>
+                  <div className="relative w-full h-32 rounded-lg overflow-hidden">
+                    <img
+                      src={
+                        missionVisionData.banner.backgroundImage.startsWith(
+                          "http"
+                        )
+                          ? missionVisionData.banner.backgroundImage
+                          : `https://alrasheedacademyserver.onrender.com${missionVisionData.banner.backgroundImage}`
+                      }
+                      alt="Banner background"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src = "/assets/hall.jpg"; // fallback image
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -4466,20 +4565,72 @@ const MissionVisionCMS = ({ setSelected }) => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Background Image URL
+                Background Image
               </label>
-              <Input
-                value={missionVisionData.philosophy.backgroundImage || ""}
-                onChange={(e) =>
-                  handleNestedChange(
-                    "philosophy",
-                    "backgroundImage",
-                    e.target.value
-                  )
-                }
-                placeholder="https://example.com/image.jpg"
-                className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
-              />
+              <div className="space-y-3">
+                <Input
+                  value={missionVisionData.philosophy.backgroundImage || ""}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      "philosophy",
+                      "backgroundImage",
+                      e.target.value
+                    )
+                  }
+                  placeholder="https://example.com/image.jpg"
+                  className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
+                />
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    or
+                  </span>
+                  <input
+                    ref={(el) => (fileInputRefs.current.philosophy = el)}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        // Upload the file first, then update preview on success
+                        handleImageUpload(
+                          file,
+                          "philosophy",
+                          "backgroundImage"
+                        );
+                      }
+                    }}
+                    disabled={uploadLoading}
+                    className="text-sm text-gray-600 dark:text-gray-400 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-300"
+                  />
+                  {uploadLoading && (
+                    <span className="text-sm text-blue-600">Uploading...</span>
+                  )}
+                </div>
+              </div>
+              {missionVisionData.philosophy.backgroundImage && (
+                <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Preview:
+                  </p>
+                  <div className="relative w-full h-32 rounded-lg overflow-hidden">
+                    <img
+                      src={
+                        missionVisionData.philosophy.backgroundImage.startsWith(
+                          "http"
+                        )
+                          ? missionVisionData.philosophy.backgroundImage
+                          : `https://alrasheedacademyserver.onrender.com${missionVisionData.philosophy.backgroundImage}`
+                      }
+                      alt="Philosophy background"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src =
+                          "https://i.pinimg.com/1200x/31/43/2d/31432d4612d4070c1389cb2ecd7.jpg"; // fallback image
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -4776,6 +4927,8 @@ const SupplyListCMS = ({ setSelected }) => {
 const IslamicStudiesCMS = ({ setSelected }) => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const slideFileInputRefs = useRef([]);
 
   useEffect(() => {
     fetchSlides();
@@ -4883,6 +5036,48 @@ const IslamicStudiesCMS = ({ setSelected }) => {
     setSlides(updatedSlides);
   };
 
+  const handleImageUpload = async (file, slideIndex) => {
+    if (!file) return;
+
+    setUploadLoading(true);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/upload-image",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${
+              typeof window !== "undefined" ? localStorage.getItem("token") : ""
+            }`,
+          },
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        updateSlide(slideIndex, "img", data.imageUrl);
+        toast.success("Image uploaded successfully!");
+        // Clear the file input
+        if (slideFileInputRefs.current[slideIndex]) {
+          slideFileInputRefs.current[slideIndex].value = "";
+        }
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Error uploading image");
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -4937,12 +5132,38 @@ const IslamicStudiesCMS = ({ setSelected }) => {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Slide Image URL
                 </label>
-                <Input
-                  value={slide.img || ""}
-                  onChange={(e) => updateSlide(index, "img", e.target.value)}
-                  placeholder="e.g., /assets/istudies_1.png"
-                  className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
-                />
+                <div className="space-y-2">
+                  <Input
+                    value={slide.img || ""}
+                    onChange={(e) => updateSlide(index, "img", e.target.value)}
+                    placeholder="e.g., /assets/istudies_1.png"
+                    className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
+                  />
+                  <div className="flex items-center gap-2">
+                    <input
+                      ref={(el) => (slideFileInputRefs.current[index] = el)}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          handleImageUpload(file, index);
+                        }
+                      }}
+                      className="hidden"
+                      id={`slide-image-upload-${index}`}
+                    />
+                    <label
+                      htmlFor={`slide-image-upload-${index}`}
+                      className="cursor-pointer bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded text-sm transition-colors"
+                    >
+                      {uploadLoading ? "Uploading..." : "Upload Image"}
+                    </label>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      or enter URL above
+                    </span>
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -4979,7 +5200,11 @@ const IslamicStudiesCMS = ({ setSelected }) => {
                   </p>
                   <div className="relative w-full h-32 sm:h-40 md:h-40 rounded-lg overflow-hidden">
                     <img
-                      src={slide.img}
+                      src={
+                        slide.img.startsWith("/uploads/")
+                          ? `https://alrasheedacademyserver.onrender.com${slide.img}`
+                          : slide.img
+                      }
                       alt={slide.heading}
                       className="w-full h-full object-cover"
                     />
@@ -4997,6 +5222,8 @@ const IslamicStudiesCMS = ({ setSelected }) => {
 const CurricularCMS = ({ setSelected }) => {
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const sectionFileInputRefs = useRef([]);
 
   useEffect(() => {
     fetchSections();
@@ -5086,6 +5313,48 @@ const CurricularCMS = ({ setSelected }) => {
     setSections(updatedSections);
   };
 
+  const handleImageUpload = async (file, sectionIndex) => {
+    if (!file) return;
+
+    setUploadLoading(true);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/upload-image",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${
+              typeof window !== "undefined" ? localStorage.getItem("token") : ""
+            }`,
+          },
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        updateSection(sectionIndex, "imageSrc", data.imageUrl);
+        toast.success("Image uploaded successfully!");
+        // Clear the file input
+        if (sectionFileInputRefs.current[sectionIndex]) {
+          sectionFileInputRefs.current[sectionIndex].value = "";
+        }
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Error uploading image");
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -5170,14 +5439,40 @@ const CurricularCMS = ({ setSelected }) => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Image URL
                   </label>
-                  <Input
-                    value={section.imageSrc || ""}
-                    onChange={(e) =>
-                      updateSection(index, "imageSrc", e.target.value)
-                    }
-                    placeholder="/assets/image.png"
-                    className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
-                  />
+                  <div className="space-y-2">
+                    <Input
+                      value={section.imageSrc || ""}
+                      onChange={(e) =>
+                        updateSection(index, "imageSrc", e.target.value)
+                      }
+                      placeholder="/assets/image.png"
+                      className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
+                    />
+                    <div className="flex items-center gap-2">
+                      <input
+                        ref={(el) => (sectionFileInputRefs.current[index] = el)}
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            handleImageUpload(file, index);
+                          }
+                        }}
+                        className="hidden"
+                        id={`section-image-upload-${index}`}
+                      />
+                      <label
+                        htmlFor={`section-image-upload-${index}`}
+                        className="cursor-pointer bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded text-sm transition-colors"
+                      >
+                        {uploadLoading ? "Uploading..." : "Upload Image"}
+                      </label>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        or enter URL above
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Textarea } from "./textarea";
@@ -74,6 +74,9 @@ const CollegePreparatoryCMS = ({ setSelected }) => {
 
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const fileInputRef = useRef(null);
+  const heroFileInputRef = useRef(null);
 
   useEffect(() => {
     fetchCollegeData();
@@ -228,6 +231,60 @@ const CollegePreparatoryCMS = ({ setSelected }) => {
     });
   };
 
+  const handleImageUpload = async (file, imageType) => {
+    if (!file) return;
+
+    setUploadLoading(true);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch(
+        "https://alrasheedacademyserver.onrender.com/api/auth/cms/upload-image",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${
+              typeof window !== "undefined" ? localStorage.getItem("token") : ""
+            }`,
+          },
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        if (imageType === "banner") {
+          setCollegeData((prev) => ({
+            ...prev,
+            banner: { ...prev.banner, backgroundImage: data.imageUrl },
+          }));
+        } else if (imageType === "hero") {
+          setCollegeData((prev) => ({
+            ...prev,
+            hero: { ...prev.hero, image: data.imageUrl },
+          }));
+        }
+        toast.success("Image uploaded successfully!");
+        // Clear the file input
+        if (imageType === "banner" && fileInputRef.current) {
+          fileInputRef.current.value = "";
+        } else if (imageType === "hero" && heroFileInputRef.current) {
+          heroFileInputRef.current.value = "";
+        }
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Error uploading image");
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -285,24 +342,63 @@ const CollegePreparatoryCMS = ({ setSelected }) => {
           Banner Section
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
+          <div className="md:col-span-3">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Background Image URL
             </label>
-            <Input
-              value={collegeData.banner.backgroundImage}
-              onChange={(e) =>
-                setCollegeData({
-                  ...collegeData,
-                  banner: {
-                    ...collegeData.banner,
-                    backgroundImage: e.target.value,
-                  },
-                })
-              }
-              placeholder="/assets/hall.jpg"
-              className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
-            />
+            <div className="space-y-2">
+              <Input
+                value={collegeData.banner.backgroundImage}
+                onChange={(e) =>
+                  setCollegeData({
+                    ...collegeData,
+                    banner: {
+                      ...collegeData.banner,
+                      backgroundImage: e.target.value,
+                    },
+                  })
+                }
+                placeholder="/assets/hall.jpg"
+                className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
+              />
+              <div className="flex items-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      handleImageUpload(file, "banner");
+                    }
+                  }}
+                  className="hidden"
+                  id="banner-image-upload"
+                />
+                <label
+                  htmlFor="banner-image-upload"
+                  className="cursor-pointer bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded text-sm transition-colors"
+                >
+                  {uploadLoading ? "Uploading..." : "Upload Image"}
+                </label>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  or enter URL above
+                </span>
+              </div>
+              {collegeData.banner.backgroundImage && (
+                <div className="mt-2">
+                  <img
+                    src={
+                      collegeData.banner.backgroundImage.startsWith("/uploads/")
+                        ? `https://alrasheedacademyserver.onrender.com${collegeData.banner.backgroundImage}`
+                        : collegeData.banner.backgroundImage
+                    }
+                    alt="Banner preview"
+                    className="w-full h-32 object-cover rounded border"
+                  />
+                </div>
+              )}
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -382,20 +478,59 @@ const CollegePreparatoryCMS = ({ setSelected }) => {
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Hero Image URL
             </label>
-            <Input
-              value={collegeData.hero.image}
-              onChange={(e) =>
-                setCollegeData({
-                  ...collegeData,
-                  hero: {
-                    ...collegeData.hero,
-                    image: e.target.value,
-                  },
-                })
-              }
-              placeholder="https://images.unsplash.com/..."
-              className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
-            />
+            <div className="space-y-2">
+              <Input
+                value={collegeData.hero.image}
+                onChange={(e) =>
+                  setCollegeData({
+                    ...collegeData,
+                    hero: {
+                      ...collegeData.hero,
+                      image: e.target.value,
+                    },
+                  })
+                }
+                placeholder="https://images.unsplash.com/..."
+                className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
+              />
+              <div className="flex items-center gap-2">
+                <input
+                  ref={heroFileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      handleImageUpload(file, "hero");
+                    }
+                  }}
+                  className="hidden"
+                  id="hero-image-upload"
+                />
+                <label
+                  htmlFor="hero-image-upload"
+                  className="cursor-pointer bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded text-sm transition-colors"
+                >
+                  {uploadLoading ? "Uploading..." : "Upload Image"}
+                </label>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  or enter URL above
+                </span>
+              </div>
+              {collegeData.hero.image && (
+                <div className="mt-2">
+                  <img
+                    src={
+                      collegeData.hero.image.startsWith("/uploads/")
+                        ? `https://alrasheedacademyserver.onrender.com${collegeData.hero.image}`
+                        : collegeData.hero.image
+                    }
+                    alt="Hero preview"
+                    className="w-full h-32 object-cover rounded border"
+                  />
+                </div>
+              )}
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

@@ -77,7 +77,7 @@ export default function TeamSectionDemo() {
             <div
                 className="absolute inset-0"
                 style={{
-                    backgroundImage: `url('${banner.backgroundImage}')`,
+                    backgroundImage: `url('${banner.backgroundImage.startsWith("/uploads/") ? `https://alrasheedacademyserver.onrender.com${banner.backgroundImage}` : banner.backgroundImage}')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                 }}
@@ -95,7 +95,7 @@ export default function TeamSectionDemo() {
                     <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
                         {members.map((member, index) => (
                             <div key={index} className="group overflow-hidden">
-                                <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar} alt="team member" width="826" height="1239" />
+                                <img className="h-96 w-full rounded-md object-cover object-top transition-all duration-500 hover:grayscale group-hover:h-[22.5rem] group-hover:rounded-xl" src={member.avatar.startsWith("/uploads/") ? `https://alrasheedacademyserver.onrender.com${member.avatar}` : member.avatar} alt="team member" width="826" height="1239" />
                                 <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
                                     <div className="flex justify-between">
                                         <h3 className="text-title text-base font-medium transition-all duration-500 group-hover:tracking-wider">{member.name}</h3>

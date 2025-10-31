@@ -91,7 +91,11 @@ const SectionCard = ({
               ? "md:max-h-[420px]"
               : "md:max-h-[360px]"
           } md:h-full`}
-          src={imageSrc}
+          src={
+            imageSrc.startsWith("/uploads/")
+              ? `https://alrasheedacademyserver.onrender.com${imageSrc}`
+              : imageSrc
+          }
           style={{ maxWidth: "100%" }}
         />
       </motion.div>

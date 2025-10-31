@@ -106,7 +106,7 @@ export function Demo() {
             {[...affiliationsData.logos, ...affiliationsData.logos].map((logo, index) => (
               <div key={`${logo.id}-${index}`} className="h-32 flex items-center justify-center flex-shrink-0">
                 <img
-                  src={logo.image}
+                  src={logo.image.startsWith("/uploads/") ? `https://alrasheedacademyserver.onrender.com${logo.image}` : logo.image}
                   alt={logo.alt}
                   className="max-w-full max-h-full object-contain"
                   onError={(e) => {
