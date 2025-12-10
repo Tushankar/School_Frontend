@@ -219,10 +219,12 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
 
   const downloadPhoto = async () => {
     try {
-      const response = await fetch(`https://alrasheedacademyserver.onrender.com/${enrollmentData.studentPhoto}`);
+      const response = await fetch(
+        `https://alrasheedacademyserver.onrender.com/${enrollmentData.studentPhoto}`
+      );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = `student-photo-${enrollmentData.firstName}-${enrollmentData.lastName}.jpg`;
       document.body.appendChild(link);
@@ -230,10 +232,12 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error downloading photo:', error);
-      alert('Failed to download photo. Please try again.');
+      console.error("Error downloading photo:", error);
+      alert("Failed to download photo. Please try again.");
     }
   };
+
+  const fetchEnrollmentDetails = async (id) => {
     try {
       setLoading(true);
       const response = await fetch(
@@ -414,7 +418,7 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
           onClick={() => setSelected("New Enrollment")}
           className="text-gray-600 dark:text-gray-400 w-full md:w-auto"
         >
-          â† Back to List
+          ← Back to List
         </Button>
       </div>
 
