@@ -4,7 +4,7 @@ import Head from "next/head";
 import NavBarOnly from "../components/NavBarOnly";
 import Footer from "../components/Footer";
 import Ticker from "../components/Ticker";
-import EnrollmentForm from "../forms/App";
+import NewEnrollmentForm from "../forms/NewEnrollmentForm";
 import { motion } from "framer-motion";
 
 export default function Enrollment() {
@@ -32,7 +32,7 @@ export default function Enrollment() {
           style={{
             backgroundImage: "url('/assets/hall.jpg')",
             backgroundSize: "cover",
-            backgroundPosition: "center"
+            backgroundPosition: "center",
           }}
         />
         <div className="absolute inset-0 bg-black/50"></div>
@@ -57,7 +57,7 @@ export default function Enrollment() {
       </div>
 
       <main className="flex-grow">
-        <EnrollmentForm />
+        <NewEnrollmentForm />
       </main>
 
       <Footer />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { Button } from "./button";
 import { Input } from "./input";
 import {
@@ -25,24 +25,24 @@ const EnrollmentTable = ({ setSelected }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        "https://alrasheedacademyserver.onrender.com/api/forms/enrollments"
+        "https://alrasheedacademyserver.onrender.com/api/forms/new-enrollment"
       );
       const data = await response.json();
 
       if (data.success) {
         // Transform backend data to match frontend expectations
         const transformedEnrollments = data.enrollments.map((enrollment) => ({
-          id: enrollment.id,
-          firstName: enrollment.studentRegistration?.firstName || "",
-          lastName: enrollment.studentRegistration?.lastName || "",
-          gradeLevel: enrollment.studentRegistration?.gradeLevel || "",
-          dateOfBirth: enrollment.studentRegistration?.dateOfBirth || "",
-          parentEmail:
-            enrollment.studentRegistration?.fatherEmail ||
-            enrollment.studentRegistration?.motherEmail ||
-            "",
-          status: enrollment.status,
-          submittedAt: enrollment.submittedAt,
+          id: enrollment._id,
+          firstName: enrollment.studentFullName.split(" ")[0] || "",
+          lastName:
+            enrollment.studentFullName.split(" ").slice(1).join(" ") || "",
+          gradeLevel: enrollment.classGrade || "",
+          dateOfBirth: enrollment.dateOfBirth
+            ? new Date(enrollment.dateOfBirth).toISOString().split("T")[0]
+            : "",
+          parentEmail: enrollment.email || "",
+          status: "Pending", // Default status
+          submittedAt: enrollment.createdAt || enrollment.submittedAt,
         }));
         setEnrollments(transformedEnrollments);
       } else {
@@ -217,11 +217,27 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
     }
   }, [enrollmentId]);
 
-  const fetchEnrollmentDetails = async (id) => {
+  const downloadPhoto = async () => {
+    try {
+      const response = await fetch(`https://alrasheedacademyserver.onrender.com/${enrollmentData.studentPhoto}`);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `student-photo-${enrollmentData.firstName}-${enrollmentData.lastName}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading photo:', error);
+      alert('Failed to download photo. Please try again.');
+    }
+  };
     try {
       setLoading(true);
       const response = await fetch(
-        `https://alrasheedacademyserver.onrender.com/api/forms/enrollments/${id}`
+        `https://alrasheedacademyserver.onrender.com/api/forms/new-enrollment/${id}`
       );
       const data = await response.json();
 
@@ -229,145 +245,112 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
         // Transform backend data to match frontend expectations
         const enrollment = data.enrollment;
         const transformedData = {
-          // Student Registration Form Fields
-          firstName: enrollment.studentRegistration?.firstName || "",
-          lastName: enrollment.studentRegistration?.lastName || "",
-          gender: enrollment.studentRegistration?.gender || "",
-          dateOfBirth: enrollment.studentRegistration?.dateOfBirth || "",
-          gradeLevel: enrollment.studentRegistration?.gradeLevel || "",
-          houseNumber: enrollment.studentRegistration?.houseNumber || "",
-          addressLine1: enrollment.studentRegistration?.addressLine1 || "",
-          addressLine2: enrollment.studentRegistration?.addressLine2 || "",
-          city: enrollment.studentRegistration?.city || "",
-          state: enrollment.studentRegistration?.state || "",
-          zipCode: enrollment.studentRegistration?.zipCode || "",
-          citizenship: enrollment.studentRegistration?.citizenship || "",
-          ethnicity: enrollment.studentRegistration?.ethnicity || "",
+          // Student Information
+          firstName: enrollment.studentFullName.split(" ")[0] || "",
+          lastName:
+            enrollment.studentFullName.split(" ").slice(1).join(" ") || "",
+          gender: enrollment.gender || "",
+          dateOfBirth: enrollment.dateOfBirth
+            ? new Date(enrollment.dateOfBirth).toLocaleDateString()
+            : "",
+          gradeLevel: enrollment.classGrade || "",
+          houseNumber: "", // Not in NewEnrollment
+          addressLine1: enrollment.residentialAddress || "",
+          addressLine2: "",
+          city: enrollment.city || "",
+          state: enrollment.state || "",
+          zipCode: enrollment.zipCode || "",
+          citizenship: "", // Not in NewEnrollment
+          ethnicity: "", // Not in NewEnrollment
 
-          // Father's Information
-          fatherFirstName:
-            enrollment.studentRegistration?.fatherFirstName || "",
-          fatherLastName: enrollment.studentRegistration?.fatherLastName || "",
-          fatherAddress1: enrollment.studentRegistration?.fatherAddress1 || "",
-          fatherAddress2: enrollment.studentRegistration?.fatherAddress2 || "",
-          fatherCity: enrollment.studentRegistration?.fatherCity || "",
-          fatherState: enrollment.studentRegistration?.fatherState || "",
-          fatherZip: enrollment.studentRegistration?.fatherZip || "",
-          fatherPhone: enrollment.studentRegistration?.fatherPhone || "",
-          fatherEmail: enrollment.studentRegistration?.fatherEmail || "",
-          fatherOccupation:
-            enrollment.studentRegistration?.fatherOccupation || "",
-          fatherEmployment:
-            enrollment.studentRegistration?.fatherEmployment || "",
-          fatherWorkPhone:
-            enrollment.studentRegistration?.fatherWorkPhone || "",
+          // Father's Information (using parent info)
+          fatherFirstName: enrollment.parentFullName.split(" ")[0] || "",
+          fatherLastName:
+            enrollment.parentFullName.split(" ").slice(1).join(" ") || "",
+          fatherAddress1: enrollment.streetAddress || "",
+          fatherAddress2: "",
+          fatherCity: enrollment.city || "",
+          fatherState: enrollment.state || "",
+          fatherZip: enrollment.zipCode || "",
+          fatherPhone: enrollment.primaryPhone || "",
+          fatherEmail: enrollment.email || "",
+          fatherOccupation: "", // Not in NewEnrollment
+          fatherEmployment: "", // Not in NewEnrollment
+          fatherWorkPhone: enrollment.alternatePhone || "",
 
-          // Mother's Information
-          motherFirstName:
-            enrollment.studentRegistration?.motherFirstName || "",
-          motherLastName: enrollment.studentRegistration?.motherLastName || "",
-          motherAddress1: enrollment.studentRegistration?.motherAddress1 || "",
-          motherAddress2: enrollment.studentRegistration?.motherAddress2 || "",
-          motherCity: enrollment.studentRegistration?.motherCity || "",
-          motherState: enrollment.studentRegistration?.motherState || "",
-          motherZip: enrollment.studentRegistration?.motherZip || "",
-          motherPhone: enrollment.studentRegistration?.motherPhone || "",
-          motherEmail: enrollment.studentRegistration?.motherEmail || "",
-          motherOccupation:
-            enrollment.studentRegistration?.motherOccupation || "",
-          motherEmployment:
-            enrollment.studentRegistration?.motherEmployment || "",
+          // Mother's Information (same as father for now)
+          motherFirstName: "",
+          motherLastName: "",
+          motherAddress1: "",
+          motherAddress2: "",
+          motherCity: "",
+          motherState: "",
+          motherZip: "",
+          motherPhone: "",
+          motherEmail: "",
+          motherOccupation: "",
+          motherEmployment: "",
 
           // School History
-          publicSchoolName:
-            enrollment.studentRegistration?.publicSchoolName || "",
-          publicDistrict: enrollment.studentRegistration?.publicDistrict || "",
-          previousSchoolName:
-            enrollment.studentRegistration?.previousSchoolName || "",
-          previousSchoolPhone:
-            enrollment.studentRegistration?.previousSchoolPhone || "",
-          previousSchoolAddress:
-            enrollment.studentRegistration?.previousSchoolAddress || "",
-          reasonForLeaving:
-            enrollment.studentRegistration?.reasonForLeaving || "",
-          repeatedGrade: enrollment.studentRegistration?.repeatedGrade || "",
-          disciplinaryAction:
-            enrollment.studentRegistration?.disciplinaryAction || "",
-          subjectsExcel: enrollment.studentRegistration?.subjectsExcel || "",
-          subjectsStruggle:
-            enrollment.studentRegistration?.subjectsStruggle || "",
-          extracurricularActivities:
-            enrollment.studentRegistration?.extracurricularActivities || "",
+          publicSchoolName: enrollment.previousSchoolName || "",
+          publicDistrict: "",
+          previousSchoolName: enrollment.previousSchoolName || "",
+          previousSchoolPhone: "",
+          previousSchoolAddress: "",
+          reasonForLeaving: "",
+          repeatedGrade: "",
+          disciplinaryAction: "",
+          subjectsExcel: "",
+          subjectsStruggle: "",
+          extracurricularActivities: "",
+          siblings: [], // Not in NewEnrollment
 
-          // Siblings
-          siblings: enrollment.studentRegistration?.siblings || [],
+          // Health Form Fields (not in NewEnrollment)
+          insuranceCompany: "",
+          physicianName: "",
+          physicianNumber: "",
+          hasDisabilities: "",
+          disabilityExplanation: "",
+          medicalConditions: {},
+          pastDiseases: {},
+          takesRegularMedication: "",
+          medicationExplanation: "",
+          hasAllergies: "",
+          allergiesList: "",
 
-          // Health Form Fields
-          insuranceCompany: enrollment.healthForm?.insuranceCompany || "",
-          physicianName: enrollment.healthForm?.physicianName || "",
-          physicianNumber: enrollment.healthForm?.physicianNumber || "",
-          hasDisabilities: enrollment.healthForm?.hasDisabilities || "",
-          disabilityExplanation:
-            enrollment.healthForm?.disabilityExplanation || "",
-          medicalConditions: enrollment.healthForm?.medicalConditions || {},
-          pastDiseases: enrollment.healthForm?.pastDiseases || {},
-          takesRegularMedication:
-            enrollment.healthForm?.takesRegularMedication || "",
-          medicationExplanation:
-            enrollment.healthForm?.medicationExplanation || "",
-          hasAllergies: enrollment.healthForm?.hasAllergies || "",
-          allergiesList: enrollment.healthForm?.allergiesList || "",
+          // Emergency Contact Form Fields (not in NewEnrollment)
+          emergencyContact1Name: "",
+          emergencyContact1Phone: "",
+          emergencyContact1Relationship: "",
+          emergencyContact2Name: "",
+          emergencyContact2Phone: "",
+          emergencyContact2Relationship: "",
+          emergencyContact3Name: "",
+          emergencyContact3Phone: "",
+          emergencyContact3Relationship: "",
 
-          // Emergency Contact Form Fields
-          emergencyContact1Name:
-            enrollment.emergencyContact?.emergencyContact1Name || "",
-          emergencyContact1Phone:
-            enrollment.emergencyContact?.emergencyContact1Phone || "",
-          emergencyContact1Relationship:
-            enrollment.emergencyContact?.emergencyContact1Relationship || "",
-          emergencyContact2Name:
-            enrollment.emergencyContact?.emergencyContact2Name || "",
-          emergencyContact2Phone:
-            enrollment.emergencyContact?.emergencyContact2Phone || "",
-          emergencyContact2Relationship:
-            enrollment.emergencyContact?.emergencyContact2Relationship || "",
-          emergencyContact3Name:
-            enrollment.emergencyContact?.emergencyContact3Name || "",
-          emergencyContact3Phone:
-            enrollment.emergencyContact?.emergencyContact3Phone || "",
-          emergencyContact3Relationship:
-            enrollment.emergencyContact?.emergencyContact3Relationship || "",
+          // Authorized Pickup Persons (not in NewEnrollment)
+          authorizedPerson1Name: "",
+          authorizedPerson1Relation: "",
+          authorizedPerson1Phone: "",
+          authorizedPerson2Name: "",
+          authorizedPerson2Relation: "",
+          authorizedPerson2Phone: "",
+          authorizedPerson3Name: "",
+          authorizedPerson3Relation: "",
+          authorizedPerson3Phone: "",
 
-          // Authorized Pickup Persons
-          authorizedPerson1Name:
-            enrollment.emergencyContact?.emergencyContact1Name || "",
-          authorizedPerson1Relation:
-            enrollment.emergencyContact?.emergencyContact1Relationship || "",
-          authorizedPerson1Phone:
-            enrollment.emergencyContact?.emergencyContact1Phone || "",
-          authorizedPerson2Name:
-            enrollment.emergencyContact?.emergencyContact2Name || "",
-          authorizedPerson2Relation:
-            enrollment.emergencyContact?.emergencyContact2Relationship || "",
-          authorizedPerson2Phone:
-            enrollment.emergencyContact?.emergencyContact2Phone || "",
-          authorizedPerson3Name:
-            enrollment.emergencyContact?.emergencyContact3Name || "",
-          authorizedPerson3Relation:
-            enrollment.emergencyContact?.emergencyContact3Relationship || "",
-          authorizedPerson3Phone:
-            enrollment.emergencyContact?.emergencyContact3Phone || "",
-
-          // Medical Authorization
-          hospitalChoice: enrollment.emergencyContact?.hospitalChoice || "",
+          // Medical Authorization (not in NewEnrollment)
+          hospitalChoice: "",
 
           // Signatures
-          printName: enrollment.studentRegistration?.printName || "",
-          healthFormSignature: enrollment.healthForm?.healthFormSignature || "",
-          emergencyFormSignature:
-            enrollment.emergencyContact?.emergencyFormSignature || "",
-
-          submittedAt: enrollment.submittedAt,
+          printName: enrollment.agreementSignature || "",
+          healthFormSignature: "",
+          emergencyFormSignature: "",
+          submittedAt: enrollment.createdAt
+            ? new Date(enrollment.createdAt).toLocaleDateString()
+            : "",
+          studentPhoto: enrollment.studentPhoto || "",
         };
 
         setEnrollmentData(transformedData);
@@ -431,11 +414,11 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
           onClick={() => setSelected("New Enrollment")}
           className="text-gray-600 dark:text-gray-400 w-full md:w-auto"
         >
-          ← Back to List
+          â† Back to List
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 gap-6 md:gap-8">
         {/* Student Information */}
         <div className="space-y-6">
           <div className="border-b pb-4">
@@ -483,52 +466,17 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
                   {enrollmentData.gradeLevel}
                 </p>
               </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">
-                  House Number
-                </label>
-                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100">
-                  {enrollmentData.houseNumber}
-                </p>
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Citizenship
-                </label>
-                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100">
-                  {enrollmentData.citizenship}
-                </p>
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Ethnicity
-                </label>
-                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100">
-                  {enrollmentData.ethnicity}
-                </p>
-              </div>
             </div>
             <div className="mt-4">
               <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                 Address
               </label>
               <p className="text-gray-900 dark:text-gray-100">
-                {enrollmentData.houseNumber} {enrollmentData.addressLine1},{" "}
-                {enrollmentData.addressLine2}
+                {enrollmentData.addressLine1}
                 <br />
                 {enrollmentData.city}, {enrollmentData.state}{" "}
                 {enrollmentData.zipCode}
               </p>
-            </div>
-            <div className="mt-4">
-              <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Siblings
-              </label>
-              {enrollmentData.siblings.map((sibling, index) => (
-                <p key={index} className="text-gray-900 dark:text-gray-100">
-                  {sibling.name} - {sibling.grade}
-                </p>
-              ))}
             </div>
           </div>
 
@@ -579,14 +527,6 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
                   {enrollmentData.fatherOccupation}
                 </p>
               </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Employment
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.fatherEmployment}
-                </p>
-              </div>
             </div>
             <div className="mt-4">
               <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -601,67 +541,6 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
             </div>
           </div>
 
-          {/* Mother's Information */}
-          <div className="border-b pb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Mother's Information
-            </h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Name
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.motherFirstName}{" "}
-                  {enrollmentData.motherLastName}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Phone
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.motherPhone}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Email
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.motherEmail}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Occupation
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.motherOccupation}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Employment
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.motherEmployment}
-                </p>
-              </div>
-            </div>
-            <div className="mt-4">
-              <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Mother's Address
-              </label>
-              <p className="text-gray-900 dark:text-gray-100">
-                {enrollmentData.motherAddress1}, {enrollmentData.motherAddress2}
-                <br />
-                {enrollmentData.motherCity}, {enrollmentData.motherState}{" "}
-                {enrollmentData.motherZip}
-              </p>
-            </div>
-          </div>
-
           {/* School History */}
           <div className="border-b pb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
@@ -670,107 +549,10 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
             <div className="grid grid-cols-1 gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Public School
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.publicSchoolName}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Public District
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.publicDistrict}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
                   Previous School
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
                   {enrollmentData.previousSchoolName}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Previous School Phone
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.previousSchoolPhone}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Previous School Address
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.previousSchoolAddress}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Reason for Leaving
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.reasonForLeaving}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Repeated Grade
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.repeatedGrade}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Disciplinary Actions
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.disciplinaryAction}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Subjects Excel In
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.subjectsExcel}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Subjects Struggle With
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.subjectsStruggle}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Extracurricular Activities
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.extracurricularActivities}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Medical Authorization */}
-          <div className="border-b pb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Medical Authorization
-            </h3>
-            <div className="grid grid-cols-1 gap-4">
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Preferred Hospital
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.hospitalChoice}
                 </p>
               </div>
             </div>
@@ -784,26 +566,10 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
             <div className="grid grid-cols-1 gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Print Name
+                  Agreement Signature
                 </label>
                 <p className="text-gray-900 dark:text-gray-100">
                   {enrollmentData.printName}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Health Form Signature
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.healthFormSignature}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Emergency Form Signature
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.emergencyFormSignature}
                 </p>
               </div>
               <div>
@@ -816,217 +582,28 @@ const EnrollmentDetailView = ({ enrollmentId, setSelected }) => {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Health & Emergency Info */}
-        <div className="space-y-6">
-          <div className="border-b pb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Health Information
-            </h3>
-            <div className="grid grid-cols-1 gap-4">
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Insurance Company
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.insuranceCompany}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Physician
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.physicianName} -{" "}
-                  {enrollmentData.physicianNumber}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Has Disabilities
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.hasDisabilities}
-                </p>
-                {enrollmentData.disabilityExplanation && (
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {enrollmentData.disabilityExplanation}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Medical Conditions
-                </label>
-                <div className="text-sm text-gray-900 dark:text-gray-100">
-                  {Object.entries(enrollmentData.medicalConditions)
-                    .filter(([key, value]) => value)
-                    .map(([key, value]) => (
-                      <span
-                        key={key}
-                        className="inline-block bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300 px-2 py-1 rounded text-xs mr-2 mb-1"
-                      >
-                        {key
-                          .replace(/([A-Z])/g, " $1")
-                          .replace(/^./, (str) => str.toUpperCase())}
-                      </span>
-                    ))}
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Past Diseases
-                </label>
-                <div className="text-sm text-gray-900 dark:text-gray-100">
-                  {Object.entries(enrollmentData.pastDiseases)
-                    .filter(([key, value]) => value)
-                    .map(([key, value]) => (
-                      <span
-                        key={key}
-                        className="inline-block bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300 px-2 py-1 rounded text-xs mr-2 mb-1"
-                      >
-                        {key
-                          .replace(/([A-Z])/g, " $1")
-                          .replace(/^./, (str) => str.toUpperCase())}
-                      </span>
-                    ))}
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Takes Regular Medication
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.takesRegularMedication}
-                </p>
-                {enrollmentData.medicationExplanation && (
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {enrollmentData.medicationExplanation}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Has Allergies
-                </label>
-                <p className="text-gray-900 dark:text-gray-100">
-                  {enrollmentData.hasAllergies}
-                </p>
-                {enrollmentData.allergiesList && (
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {enrollmentData.allergiesList}
-                  </p>
-                )}
+          {/* Student Photo */}
+          {enrollmentData.studentPhoto && (
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                Student Photo
+              </h3>
+              <div className="flex flex-col items-center gap-4">
+                <img
+                  src={`https://alrasheedacademyserver.onrender.com/${enrollmentData.studentPhoto}`}
+                  alt="Student Photo"
+                  className="max-w-xs max-h-64 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+                />
+                <Button
+                  onClick={downloadPhoto}
+                  variant="outline"
+                  className="text-gray-600 dark:text-gray-400"
+                >
+                  Download Photo
+                </Button>
               </div>
             </div>
-          </div>
-
-          {/* Emergency Contacts */}
-          <div className="border-b pb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Emergency Contacts
-            </h3>
-            <div className="space-y-4">
-              <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded">
-                <h4 className="font-medium text-gray-900 dark:text-gray-100">
-                  Contact 1
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.emergencyContact1Name}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.emergencyContact1Phone}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.emergencyContact1Relationship}
-                </p>
-              </div>
-              <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded">
-                <h4 className="font-medium text-gray-900 dark:text-gray-100">
-                  Contact 2
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.emergencyContact2Name}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.emergencyContact2Phone}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.emergencyContact2Relationship}
-                </p>
-              </div>
-              {enrollmentData.emergencyContact3Name && (
-                <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded">
-                  <h4 className="font-medium text-gray-900 dark:text-gray-100">
-                    Contact 3
-                  </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {enrollmentData.emergencyContact3Name}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {enrollmentData.emergencyContact3Phone}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {enrollmentData.emergencyContact3Relationship}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Authorized Pickup Persons */}
-          <div className="border-b pb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Authorized Pickup Persons
-            </h3>
-            <div className="space-y-4">
-              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded">
-                <h4 className="font-medium text-gray-900 dark:text-gray-100">
-                  Person 1
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.authorizedPerson1Name}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.authorizedPerson1Phone}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.authorizedPerson1Relation}
-                </p>
-              </div>
-              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded">
-                <h4 className="font-medium text-gray-900 dark:text-gray-100">
-                  Person 2
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.authorizedPerson2Name}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.authorizedPerson2Phone}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {enrollmentData.authorizedPerson2Relation}
-                </p>
-              </div>
-              {enrollmentData.authorizedPerson3Name && (
-                <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded">
-                  <h4 className="font-medium text-gray-900 dark:text-gray-100">
-                    Person 3
-                  </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {enrollmentData.authorizedPerson3Name}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {enrollmentData.authorizedPerson3Phone}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {enrollmentData.authorizedPerson3Relation}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

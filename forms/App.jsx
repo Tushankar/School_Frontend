@@ -13,12 +13,9 @@ import StudentRegistrationForm from "./StudentRegistrationForm";
 import { cn } from "../lib/utils";
 
 const steps = [
-  { id: "registration", title: "Registration" },
-  { id: "health", title: "Health Info" },
-  { id: "records", title: "Records Transfer" },
-  { id: "emergency", title: "Emergency Contact" },
-  { id: "authorization", title: "Authorization" },
-  { id: "tuition", title: "Tuition Contract" },
+  { id: "parents", title: "Parents" },
+  { id: "students", title: "Students" },
+  { id: "agreement", title: "Enrollment Agreement" },
 ];
 
 const contentVariants = {
@@ -38,7 +35,7 @@ const carouselImages = [
 const EnrollmentForm = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [currentImage, setCurrentImage] = useState(0);
-  const totalPages = 6;
+  const totalPages = 3;
 
   // Generate unique enrollment ID once when form loads
   const [enrollmentId] = useState(() => {
